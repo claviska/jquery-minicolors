@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+	<head>
+		<title>jQuery miniColors v0.1</title>
+		
+		<style type="text/css">
+			BODY {
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 10pt;
+				line-height: 1.5;
+			}
+		</style>
+		
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+		
+		<script type="text/javascript" src="jquery.miniColors.js"></script>
+		<link type="text/css" rel="stylesheet" href="jquery.miniColors.css" />
+		
+		<script type="text/javascript">
+			
+			$(document).ready( function() {
+				
+				//
+				// Enabling miniColors
+				//
+				
+				$(".colors").miniColors({
+					
+					change: function(hex, rgb) {
+						$("#console").prepend('HEX: ' + hex + ' (RGB: ' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br />');
+					}
+					
+				});
+				
+				
+				
+				
+				//
+				// Only for the demo
+				//
+				
+				$("#disable").click( function() {
+					$("#console").prepend('disable<br />');
+					$(".miniColors").miniColors('disabled', true);
+					$("#disable").attr('disabled', true);
+					$("#enable").attr('disabled', false);
+				});
+				
+				$("#enable").click( function() {
+					$("#console").prepend('enable<br />');
+					$(".miniColors").miniColors('disabled', false);
+					$("#disable").attr('disabled', false);
+					$("#enable").attr('disabled', true);
+				});
+				
+				$("#makeReadonly").click( function() {
+					$("#console").prepend('readonly = true<br />');
+					$(".miniColors").miniColors('readonly', true);
+					$("#unmakeReadonly").attr('disabled', false);
+					$("#makeReadonly").attr('disabled', true);
+				});
+				
+				$("#unmakeReadonly").click( function() {
+					$("#console").prepend('readonly = false<br />');
+					$(".miniColors").miniColors('readonly', false);
+					$("#unmakeReadonly").attr('disabled', true);
+					$("#makeReadonly").attr('disabled', false);
+				});
+				
+				$("#destroy").click( function() {
+					$("#console").prepend('destroy<br />');
+					$(".miniColors").miniColors('destroy');
+					$("INPUT[type=button]:not(#create)").attr('disabled', true);
+					$("#destroy").attr('disabled', true);
+					$("#create").attr('disabled', false);
+				});
+				
+				$("#create").click( function() {
+					$("#console").prepend('create<br />');
+					$(".miniColors").miniColors();
+					$("#set-to-black, #makeReadonly, #disable, #destroy").attr('disabled', false);
+					$("#destroy").attr('disabled', false);
+					$("#create").attr('disabled', true);
+				});
+				
+				$("#set-to-black").click( function() {
+					$("#console").prepend('black<br />');
+					$(".miniColors").miniColors('value', '#000000');
+				});
+				
+			});
+			
+		</script>
+		
+	</head>
+	
+	<body>
+	
+		<h1>jQuery miniColors v0.1</h1>
+		<p>
+			A miniature color selector for input elements.
+		</p>
+		
+		<div id="console" style="width: 500px; float: right; color: #FFF; background: #000; font: 12px monospace; padding: 1em; margin: 1em 0; height: 350px; overflow: auto;"></div>
+		
+		<p style="margin-top: 500px;">
+			Default<br /><input type="text" name="color1" class="colors" size="7" />
+		</p>
+		
+		<p>
+			Black theme (set class=&quot;black&quot; on the input element)<br />
+			<input type="text" name="color2" class="colors black" size="7" />
+		</p>
+		
+		<p>
+			Preset value (set value attribute on the input element)<br />
+			<input type="text" name="color3" class="colors" size="7" value="#005294" />
+		</p>
+		
+		<p>
+			Attached to a hidden input<br />
+			<input type="hidden" name="color4" class="colors" size="7" />
+		</p>
+		
+		
+		
+		<p style="margin-top: 50px;">
+			Select an action to apply to all of the controls on this page:
+			<br />
+			<input type="button" id="makeReadonly" value="Read-only" />
+			<input type="button" id="unmakeReadonly" value="Not Read-only" disabled="disabled" /><br />
+			<input type="button" id="disable" value="Disable" />
+			<input type="button" id="enable" value="Enable" disabled="disabled" /><br />
+			<input type="button" id="destroy" value="Destroy" />
+			<input type="button" id="create" value="Create" disabled="disabled" /><br />
+			<input type="button" id="set-to-black" value="Set all to Black" />
+		</p>
+		
+	</body>
+	
+</html>
