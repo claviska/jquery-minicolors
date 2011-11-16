@@ -1,0 +1,48 @@
+Usage
+
+	1. Link to jQuery: <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+	2. Link to miniColors: <script type="text/javascript" src="jquery.miniColors.js"></script>
+	3. Include miniColors stylesheet: <link type="text/css" rel="stylesheet" href="jquery.miniColors.css" />
+	4. Apply $([selector]).miniColors() to one or more INPUT elements
+
+
+Options
+
+	disabled		[true|false]
+
+	readonly		[true|false]
+
+	Specify options on creation:
+
+		$([selector]).miniColors({
+			optionName: value,
+			optionName: value,
+			...
+		});
+
+
+Methods
+
+	Call a method using: $([selector]).miniColors('methodName', [value]);
+	
+	disabled		[true|false]
+	readonly		[true|false]
+	value			[hex value]
+	destroy
+
+
+Events
+
+	change(hex, rgb) - called when the color value changes; 'this' will refer to the original input element
+	
+	Example:
+
+	$([selector]).miniColors({
+		change: function(hex, rgb) { ... }
+	});
+
+
+ Attribution
+
+	- The color picker icon is based on an icon from the amazing Fugue icon set: http://p.yusukekamiyamane.com/
+	- The gradient image, the hue image, and the math functions are courtesy of the eyecon.co jQuery color picker: http://www.eyecon.ro/colorpicker/
