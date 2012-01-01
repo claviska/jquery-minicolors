@@ -6,6 +6,11 @@ Usage
 	4. Apply $([selector]).miniColors() to one or more INPUT elements
 
 
+Demo
+
+	http://labs.abeautifulsite.dev/jquery-miniColors/
+
+
 Options
 
 	disabled		[true|false]
