@@ -180,7 +180,8 @@ if(jQuery) (function($) {
 				input.data('huePicker', selector.find('.miniColors-huePicker'));
 				input.data('colorPicker', selector.find('.miniColors-colorPicker'));
 				input.data('mousebutton', 0);
-				
+				var oldValue = input.val();
+
 				$('BODY').append(selector);
 				selector.fadeIn(100);
 				
@@ -208,7 +209,11 @@ if(jQuery) (function($) {
 					}
 					
 					if( $(event.target).parents().andSelf().hasClass('miniColors') ) return;
-					
+
+					if(input.val() != oldValue) {
+						input.trigger('change');
+					}
+
 					hide(input);
 				});
 				
