@@ -26,13 +26,10 @@
 				//
 				
 				$(".colors").miniColors({
-					
-					letters: 'uppercase',
-					
+					letterCase: 'uppercase',
 					change: function(hex, rgb) {
 						$("#console").prepend('HEX: ' + hex + ' (RGB: ' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br />');
 					}
-					
 				});
 				
 				
@@ -99,7 +96,7 @@
 	
 	<body>
 	
-		<h1>jQuery miniColors v0.1</h1>
+		<h1>jQuery miniColors</h1>
 		<p>
 			A miniature color selector for input elements.
 		</p>
