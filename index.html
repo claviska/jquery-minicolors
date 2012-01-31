@@ -12,7 +12,7 @@
 			}
 		</style>
 		
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		
 		<script type="text/javascript" src="jquery.miniColors.js"></script>
 		<link type="text/css" rel="stylesheet" href="jquery.miniColors.css" />
@@ -26,6 +26,8 @@
 				//
 				
 				$(".colors").miniColors({
+					
+					letters: 'uppercase',
 					
 					change: function(hex, rgb) {
 						$("#console").prepend('HEX: ' + hex + ' (RGB: ' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br />');
@@ -43,45 +45,45 @@
 				$("#disable").click( function() {
 					$("#console").prepend('disable<br />');
 					$(".miniColors").miniColors('disabled', true);
-					$("#disable").attr('disabled', true);
-					$("#enable").attr('disabled', false);
+					$("#disable").prop('disabled', true);
+					$("#enable").prop('disabled', false);
 				});
 				
 				$("#enable").click( function() {
 					$("#console").prepend('enable<br />');
 					$(".miniColors").miniColors('disabled', false);
-					$("#disable").attr('disabled', false);
-					$("#enable").attr('disabled', true);
+					$("#disable").prop('disabled', false);
+					$("#enable").prop('disabled', true);
 				});
 				
 				$("#makeReadonly").click( function() {
 					$("#console").prepend('readonly = true<br />');
 					$(".miniColors").miniColors('readonly', true);
-					$("#unmakeReadonly").attr('disabled', false);
-					$("#makeReadonly").attr('disabled', true);
+					$("#unmakeReadonly").prop('disabled', false);
+					$("#makeReadonly").prop('disabled', true);
 				});
 				
 				$("#unmakeReadonly").click( function() {
 					$("#console").prepend('readonly = false<br />');
 					$(".miniColors").miniColors('readonly', false);
-					$("#unmakeReadonly").attr('disabled', true);
-					$("#makeReadonly").attr('disabled', false);
+					$("#unmakeReadonly").prop('disabled', true);
+					$("#makeReadonly").prop('disabled', false);
 				});
 				
 				$("#destroy").click( function() {
 					$("#console").prepend('destroy<br />');
 					$(".miniColors").miniColors('destroy');
-					$("INPUT[type=button]:not(#create)").attr('disabled', true);
-					$("#destroy").attr('disabled', true);
-					$("#create").attr('disabled', false);
+					$("INPUT[type=button]:not(#create)").prop('disabled', true);
+					$("#destroy").prop('disabled', true);
+					$("#create").prop('disabled', false);
 				});
 				
 				$("#create").click( function() {
 					$("#console").prepend('create<br />');
 					$(".miniColors").miniColors();
-					$("#set-to-black, #makeReadonly, #disable, #destroy").attr('disabled', false);
-					$("#destroy").attr('disabled', false);
-					$("#create").attr('disabled', true);
+					$("#set-to-black, #makeReadonly, #disable, #destroy").prop('disabled', false);
+					$("#destroy").prop('disabled', false);
+					$("#create").prop('disabled', true);
 				});
 				
 				$("#set-to-black").click( function() {
@@ -105,22 +107,22 @@
 		<div id="console" style="width: 500px; float: right; color: #FFF; background: #000; font: 12px monospace; padding: 1em; margin: 1em 0; height: 350px; overflow: auto;"></div>
 		
 		<p>
-			Default<br /><input type="text" name="color1" class="colors" size="7" />
+			Default<br /><input type="text" name="color1" class="colors" size="6" />
 		</p>
 		
 		<p>
 			Black theme (set class=&quot;black&quot; on the input element)<br />
-			<input type="text" name="color2" class="colors black" size="7" />
+			<input type="text" name="color2" class="colors black" size="6" />
 		</p>
 		
 		<p>
 			Preset value (set value attribute on the input element)<br />
-			<input type="text" name="color3" class="colors" size="7" value="#005294" />
+			<input type="text" name="color3" class="colors" size="6" value="#abCdeF" />
 		</p>
 		
 		<p>
 			Attached to a hidden input<br />
-			<input type="hidden" name="color4" class="colors" size="7" />
+			<input type="hidden" name="color4" class="colors" size="6" />
 		</p>
 		
 		
