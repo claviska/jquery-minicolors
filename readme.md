@@ -5,17 +5,17 @@ _Copyright 2011 Cory LaViska for A Beautiful Site, LLC. (http://abeautifulsite.n
 _Dual licensed under the MIT / GPLv2 licenses_
 
 
+## Demo
+
+http://labs.abeautifulsite.net/jquery-miniColors/
+
+
 ## Usage
 
 1. Link to jQuery: <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
 2. Link to miniColors: <script type="text/javascript" src="jquery.miniColors.js"></script>
 3. Include miniColors stylesheet: <link type="text/css" rel="stylesheet" href="jquery.miniColors.css" />
 4. Apply $([selector]).miniColors() to one or more INPUT elements
-
-
-## Demo
-
-http://labs.abeautifulsite.net/jquery-miniColors/
 
 
 ## Options
