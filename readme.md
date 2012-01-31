@@ -51,9 +51,9 @@ Methods are called using this syntax:
 
 ## Events
 
-	change(hex, rgb) - called when the color value changes; 'this' will refer to the original input element
+* __change__*(hex, rgb)* - called when the color value changes; 'this' refers to the original input element
 	
-	Example:
+### Example
 
 	$([selector]).miniColors({
 		change: function(hex, rgb) { ... }
