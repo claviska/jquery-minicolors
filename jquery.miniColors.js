@@ -256,8 +256,8 @@ if(jQuery) (function($) {
 					position.x = event.originalEvent.changedTouches[0].pageX;
 					position.y = event.originalEvent.changedTouches[0].pageY;
 				}
-				position.x = position.x - input.data('selector').find('.miniColors-colors').offset().left + $(document).scrollLeft() - 5;
-				position.y = position.y - input.data('selector').find('.miniColors-colors').offset().top + $(document).scrollTop() - 5;
+				position.x = position.x - input.data('selector').find('.miniColors-colors').offset().left - 5;
+				position.y = position.y - input.data('selector').find('.miniColors-colors').offset().top - 5;
 				if( position.x <= -5 ) position.x = -5;
 				if( position.x >= 144 ) position.x = 144;
 				if( position.y <= -5 ) position.y = -5;
@@ -300,7 +300,7 @@ if(jQuery) (function($) {
 					position.y = event.originalEvent.changedTouches[0].pageY;
 				}
 				
-				position.y = position.y - input.data('selector').find('.miniColors-colors').offset().top + $(document).scrollTop() - 1;
+				position.y = position.y - input.data('selector').find('.miniColors-colors').offset().top - 1;
 				if( position.y <= -1 ) position.y = -1;
 				if( position.y >= 149 ) position.y = 149;
 				input.data('huePosition', position);
