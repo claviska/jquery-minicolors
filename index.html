@@ -25,10 +25,10 @@
 				// Enabling miniColors
 				//
 				
-				$(".colors").miniColors({
+				$(".color-picker").miniColors({
 					letterCase: 'uppercase',
 					change: function(hex, rgb) {
-						$("#console").prepend('HEX: ' + hex + ' (RGB: ' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br />');
+						logData(hex, rgb);
 					}
 				});
 				
@@ -39,37 +39,41 @@
 				// Only for the demo
 				//
 				
+				function logData(hex, rgb) {
+					$("#console").prepend('HEX: ' + hex + ' (RGB: ' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br />');
+				}
+				
 				$("#disable").click( function() {
 					$("#console").prepend('disable<br />');
-					$(".miniColors").miniColors('disabled', true);
+					$(".color-picker").miniColors('disabled', true);
 					$("#disable").prop('disabled', true);
 					$("#enable").prop('disabled', false);
 				});
 				
 				$("#enable").click( function() {
 					$("#console").prepend('enable<br />');
-					$(".miniColors").miniColors('disabled', false);
+					$(".color-picker").miniColors('disabled', false);
 					$("#disable").prop('disabled', false);
 					$("#enable").prop('disabled', true);
 				});
 				
 				$("#makeReadonly").click( function() {
 					$("#console").prepend('readonly = true<br />');
-					$(".miniColors").miniColors('readonly', true);
+					$(".color-picker").miniColors('readonly', true);
 					$("#unmakeReadonly").prop('disabled', false);
 					$("#makeReadonly").prop('disabled', true);
 				});
 				
 				$("#unmakeReadonly").click( function() {
 					$("#console").prepend('readonly = false<br />');
-					$(".miniColors").miniColors('readonly', false);
+					$(".color-picker").miniColors('readonly', false);
 					$("#unmakeReadonly").prop('disabled', true);
 					$("#makeReadonly").prop('disabled', false);
 				});
 				
 				$("#destroy").click( function() {
 					$("#console").prepend('destroy<br />');
-					$(".miniColors").miniColors('destroy');
+					$(".color-picker").miniColors('destroy');
 					$("INPUT[type=button]:not(#create)").prop('disabled', true);
 					$("#destroy").prop('disabled', true);
 					$("#create").prop('disabled', false);
@@ -77,15 +81,19 @@
 				
 				$("#create").click( function() {
 					$("#console").prepend('create<br />');
-					$(".miniColors").miniColors();
-					$("#set-to-black, #makeReadonly, #disable, #destroy").prop('disabled', false);
+					$(".color-picker").miniColors({
+						letterCase: 'uppercase',
+						change: function(hex, rgb) {
+							logData(hex, rgb);
+						}
+					});
+					$("#makeReadonly, #disable, #destroy, #randomize").prop('disabled', false);
 					$("#destroy").prop('disabled', false);
 					$("#create").prop('disabled', true);
 				});
 				
-				$("#set-to-black").click( function() {
-					$("#console").prepend('black<br />');
-					$(".miniColors").miniColors('value', '#000000');
+				$("#randomize").click( function() {
+					$(".color-picker").miniColors('value', '#' + Math.floor(Math.random() * 16777215).toString(16));
 				});
 				
 			});
@@ -104,22 +112,22 @@
 		<div id="console" style="width: 500px; float: right; color: #FFF; background: #000; font: 12px monospace; padding: 1em; margin: 1em 0; height: 350px; overflow: auto;"></div>
 		
 		<p>
-			Default<br /><input type="text" name="color1" class="colors" size="6" />
+			Default<br /><input type="text" name="color1" class="color-picker" size="6" autocomplete="on" maxlength="10" />
 		</p>
 		
 		<p>
 			Black theme (set class=&quot;black&quot; on the input element)<br />
-			<input type="text" name="color2" class="colors black" size="6" />
+			<input type="text" name="color2" class="color-picker black" size="6" />
 		</p>
 		
 		<p>
 			Preset value (set value attribute on the input element)<br />
-			<input type="text" name="color3" class="colors" size="6" value="#abCdeF" />
+			<input type="text" name="color3" class="color-picker" size="6" value="#abCdeF" />
 		</p>
 		
 		<p>
 			Attached to a hidden input<br />
-			<input type="hidden" name="color4" class="colors" size="6" />
+			<input type="hidden" name="color4" class="color-picker" size="6" />
 		</p>
 		
 		
@@ -133,7 +141,7 @@
 			<input type="button" id="enable" value="Enable" disabled="disabled" /><br />
 			<input type="button" id="destroy" value="Destroy" />
 			<input type="button" id="create" value="Create" disabled="disabled" /><br />
-			<input type="button" id="set-to-black" value="Set all to Black" />
+			<input type="button" id="randomize" value="Random Color" />
 		</p>
 		
 	</body>

@@ -13,7 +13,6 @@ if(jQuery) (function($) {
 		miniColors: function(o, data) {
 			
 			var create = function(input, o, data) {
-				
 				//
 				// Creates a new instance of the miniColors selector
 				//
@@ -30,12 +29,14 @@ if(jQuery) (function($) {
 				// Set input data and update attributes
 				input
 					.addClass('miniColors')
-					.attr('maxlength', 7)
-					.attr('autocomplete', 'off')
+					.data('original-maxlength', input.attr('maxlength') || null)
+					.data('original-autocomplete', input.attr('autocomplete') || null)
 					.data('letterCase', 'uppercase')
 					.data('trigger', trigger)
 					.data('hsb', hsb)
 					.data('change', o.change ? o.change : null)
+					.attr('maxlength', 7)
+					.attr('autocomplete', 'off')
 					.val('#' + convertCase(color, o.letterCase));
 				
 				// Handle options
@@ -86,21 +87,19 @@ if(jQuery) (function($) {
 				//
 				// Destroys an active instance of the miniColors selector
 				//
+				
 				hide();
 				input = $(input);
+				
+				// Restore to original state
 				input.data('trigger').remove();
 				input
-					.removeAttr('autocomplete')
+					.attr('autocomplete', input.data('original-autocomplete'))
+					.attr('maxlength', input.data('original-maxlength'))
 					.removeData()
-					.unbind('click.miniColors')
-					.unbind('focus.miniColors')
-					.unbind('blur.miniColors')
-					.unbind('keyup.miniColors')
-					.unbind('keydown.miniColors')
-					.unbind('paste.miniColors');
-				$(document)
-					.unbind('mousedown.miniColors touchstart.miniColors')
-					.unbind('mousemove.miniColors touchmove.miniColors');
+					.removeClass('miniColors')
+					.unbind('.miniColors');
+				$(document).unbind('.miniColors');
 			};
 			
 			var enable = function(input) {
@@ -495,6 +494,7 @@ if(jQuery) (function($) {
 				case 'readonly':
 					
 					$(this).each( function() {
+						if( !$(this).hasClass('miniColors') ) return;
 						$(this).prop('readonly', data);
 					});
 					
@@ -503,6 +503,7 @@ if(jQuery) (function($) {
 				case 'disabled':
 					
 					$(this).each( function() {
+						if( !$(this).hasClass('miniColors') ) return;
 						if( data ) {
 							disable($(this));
 						} else {
@@ -516,6 +517,7 @@ if(jQuery) (function($) {
 					
 					// Getter
 					if( data === undefined ) {
+						if( !$(this).hasClass('miniColors') ) return;
 						var input = $(this),
 							hex = expandHex(input.val());
 						return hex ? '#' + convertCase(hex, input.data('letterCase')) : null;
@@ -523,6 +525,7 @@ if(jQuery) (function($) {
 					
 					// Setter
 					$(this).each( function() {
+						if( !$(this).hasClass('miniColors') ) return;
 						$(this).val(data);
 						setColorFromInput($(this));
 					});
@@ -532,6 +535,7 @@ if(jQuery) (function($) {
 				case 'destroy':
 					
 					$(this).each( function() {
+						if( !$(this).hasClass('miniColors') ) return;
 						destroy($(this));
 					});
 										
