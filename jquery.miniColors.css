@@ -24,6 +24,10 @@
 	z-index: 999999;
 }
 
+.miniColors-selector.miniColors-with-hiddeninput {
+	height: 175px;
+}
+
 .miniColors-selector.black {
 	background: #000;
 	border-color: #000;
@@ -62,4 +66,17 @@
 	width: 26px;
 	height: 3px;
 	background: url(images/line.gif) center no-repeat;
+}
+
+.miniColors-inputs {
+  position: absolute;
+  bottom: 5px;
+  font-size: 12px;
+}
+
+.miniColors-textInput {
+  width: 97px;
+}
+
+.miniColors-buttonInput {
 }

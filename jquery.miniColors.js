@@ -143,6 +143,17 @@ if(jQuery) (function($) {
 						display: 'none'
 					})
 					.addClass( input.attr('class') );
+				if (input[0].type == 'hidden') {
+					selector
+						.append('<form class="miniColors-inputs"><input class="miniColors-textInput" input="text"><input type="submit" class="miniColors-buttonInput" value="Done"/></form>')
+						.addClass('miniColors-with-hiddeninput');
+					selector.find('.miniColors-inputs').bind('submit', function(event) {
+						event.preventDefault();
+						input.val( selector.find('.miniColors-textInput').val() );
+						setColorFromInput(input);
+						setTimeout(hide, 100);
+					});
+				}
 				
 				// Set background for colors
 				var hsb = input.data('hsb');
@@ -167,6 +178,7 @@ if(jQuery) (function($) {
 					.data('selector', selector)
 					.data('huePicker', selector.find('.miniColors-huePicker'))
 					.data('colorPicker', selector.find('.miniColors-colorPicker'))
+					.data('textInput', selector.find('.miniColors-textInput').val(input.val()))
 					.data('mousebutton', 0);
 					
 				$('BODY').append(selector);
@@ -177,6 +189,9 @@ if(jQuery) (function($) {
 				
 				$(document).bind('mousedown.miniColors touchstart.miniColors', function(event) {
 					
+					if( $(event.target).parents().andSelf().hasClass('miniColors-inputs') ) {
+						return;
+					}
 					input.data('mousebutton', 1);
 					
 					if( $(event.target).parents().andSelf().hasClass('miniColors-colors') ) {
@@ -321,6 +336,7 @@ if(jQuery) (function($) {
 				input.data('hsb', hsb);
 				var hex = hsb2hex(hsb);	
 				if( updateInput ) input.val( '#' + convertCase(hex, input.data('letterCase')) );
+				if( updateInput ) input.data('textInput').val(input.val());
 				input.data('trigger').css('backgroundColor', '#' + hex);
 				if( input.data('selector') ) input.data('selector').find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
 				
