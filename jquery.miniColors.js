@@ -233,9 +233,7 @@ if(jQuery) (function($) {
 					});
 				});
 				
-				$(document)
-					.unbind('mousedown.miniColors touchstart.miniColors')
-					.unbind('mousemove.miniColors touchmove.miniColors');
+				$(document).unbind('.miniColors');
 				
 			};
 			
