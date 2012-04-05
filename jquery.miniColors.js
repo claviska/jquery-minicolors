@@ -327,7 +327,7 @@ if(jQuery) (function($) {
 				// Fire change callback
 				if( input.data('change') ) {
 					if( hex === input.data('lastChange') ) return;
-					input.data('change').call(input, '#' + hex, hsb2rgb(hsb));
+					input.data('change').call(input.get(0), '#' + hex, hsb2rgb(hsb));
 					input.data('lastChange', hex);
 				}
 				
