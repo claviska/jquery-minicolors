@@ -154,7 +154,7 @@ if(jQuery) (function($) {
 					if((anchorDistanceFromTop + selectorHeight + anchorHeight) > windowHeight) {
 						return anchorDistanceFromTop - selectorHeight;
 					}
-					if((anchorDistanceFromTop + selectorHeight) > selectorHeight){
+					if((anchorDistanceFromTop + selectorHeight) >= selectorHeight){
 						return anchorDistanceFromTop + anchorHeight;
 					} else {
 						return anchorHeight - selectorHeight;
