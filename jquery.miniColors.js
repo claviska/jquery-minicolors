@@ -142,9 +142,24 @@ if(jQuery) (function($) {
 							return anchorLeftPosition;                        
 						} else {
 							return anchorLeftPosition - selectorWidth;
-						}					
+						}
 					}
 				};
+				
+				var getSelectorTopPosition = function(input){
+					var anchorDistanceFromTop = input.data('trigger').offset().top;
+					var selectorHeight = 162; //Is there a way to get this height programatically?
+					var anchorHeight = input.data('trigger').height();
+					var windowHeight = $(window).height();
+					if((anchorDistanceFromTop + selectorHeight + anchorHeight) > windowHeight) {
+						return anchorDistanceFromTop - selectorHeight;
+					}
+					if((anchorDistanceFromTop + selectorHeight) > selectorHeight){
+						return anchorDistanceFromTop + anchorHeight;
+					} else {
+						return anchorHeight - selectorHeight;
+					}
+				}				
 				
 				// Generate the selector
 				var selector = $('<div class="miniColors-selector"></div>');
@@ -152,7 +167,7 @@ if(jQuery) (function($) {
 					.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"></div></div>')
 					.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>')
 					.css({
-						top: input.is(':visible') ? input.offset().top + input.outerHeight() : input.data('trigger').offset().top + input.data('trigger').outerHeight(),
+						top: getSelectorTopPosition(input),
 						left: getSelectorLeftPosition(input),
 						display: 'none'
 					})
@@ -191,6 +206,7 @@ if(jQuery) (function($) {
 				
 				$(window).bind('resize', function(event){
 					selector.css('left', getSelectorLeftPosition(input));
+					selector.css('top', getSelectorTopPosition(input));
 				});
 				
 				$(document).bind('mousedown.miniColors touchstart.miniColors', function(event) {
