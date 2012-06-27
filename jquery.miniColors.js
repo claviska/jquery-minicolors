@@ -179,25 +179,26 @@ if(jQuery) (function($) {
 				$(document).bind('mousedown.miniColors touchstart.miniColors', function(event) {
 					
 					input.data('mousebutton', 1);
+					var testSubject = $(event.target).parents().andSelf();
 					
-					if( $(event.target).parents().andSelf().hasClass('miniColors-colors') ) {
+					if( testSubject.hasClass('miniColors-colors') ) {
 						event.preventDefault();
 						input.data('moving', 'colors');
 						moveColor(input, event);
 					}
 					
-					if( $(event.target).parents().andSelf().hasClass('miniColors-hues') ) {
+					if( testSubject.hasClass('miniColors-hues') ) {
 						event.preventDefault();
 						input.data('moving', 'hues');
 						moveHue(input, event);
 					}
 					
-					if( $(event.target).parents().andSelf().hasClass('miniColors-selector') ) {
+					if( testSubject.hasClass('miniColors-selector') ) {
 						event.preventDefault();
 						return;
 					}
 					
-					if( $(event.target).parents().andSelf().hasClass('miniColors') ) return;
+					if( testSubject.hasClass('miniColors') ) return;
 					
 					hide(input);
 				});
