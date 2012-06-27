@@ -85,6 +85,21 @@ if(jQuery && jQuery.miniColors) (function($) {
 						mc.setColorFromInput(input);
 					}, 5);
 				});
+
+				// Handle custom events published from model
+				input.bind('updateInput', function(event, data) {
+					input.val( '#' + convertCase(data.hex, input.data('letterCase')) );
+				});
+				input.bind('setColor', function(event, data) {
+					input.data('trigger').css('backgroundColor', '#' + data.hex);
+		
+					// Fire change callback
+					if( input.data('change') ) {
+						if( data.hex === input.data('lastChange') ) return;
+						input.data('change').call(input.get(0), '#' + data.hex, data.rgb);
+						input.data('lastChange', data.hex);
+					}
+				});
 				
 			};
 			
@@ -103,7 +118,9 @@ if(jQuery && jQuery.miniColors) (function($) {
 					.attr('maxlength', input.data('original-maxlength'))
 					.removeData()
 					.removeClass('miniColors')
-					.unbind('.miniColors');
+					.unbind('.miniColors')
+					.unbind('updateInput')
+					.unbind('setColor');
 				$(document).unbind('.miniColors');
 			};
 			
@@ -138,7 +155,7 @@ if(jQuery && jQuery.miniColors) (function($) {
 				hide();				
 				
 				// Generate the selector
-				var selector = mc.buildSelector(input);
+				var selector = mc.buildSelector( input.data('hsb') );
 				// position selector with respect to input
 				selector
 					.css({
@@ -149,20 +166,14 @@ if(jQuery && jQuery.miniColors) (function($) {
 
 				// Set input data
 				input
-					.data('selector', selector)
-					.data('huePicker', selector.find('.miniColors-huePicker'))
-					.data('colorPicker', selector.find('.miniColors-colorPicker'))
-					.data('mousebutton',0)
-					.on('updateInput', function(event, data) {
-						input.val( '#' + convertCase(data.hex, input.data('letterCase')) );
-					});
+					.data('selector', selector);
 					
 				$('BODY').append(selector);
 				selector.fadeIn(100);
 				
 				mc.bindSelectorEvents(input);
 
-				$(mc).on('clickOutsideSelector', function(event) {
+				$(mc).bind('clickOutsideSelector', function(event) {
 						hide(input);
 					});
 				

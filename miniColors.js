@@ -11,7 +11,7 @@
 	$.miniColors = function(o) {
 		var api = this;	// public methods
 
-		var buildSelector = function(input) {
+		var buildSelector = function(hsb) {
 
 			// Generate the selector
 			var selector = $('<div style="display: none;" class="miniColors-selector"></div>');
@@ -20,21 +20,18 @@
 				.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>');
 			
 			// Set background for colors
-			var hsb = input.data('hsb');
 			selector
 				.find('.miniColors-colors')
 				.css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
 			
 			// Set colorPicker position
-			var colorPosition = input.data('colorPosition');
-			if( !colorPosition ) colorPosition = getColorPositionFromHSB(hsb);
+			var colorPosition = getColorPositionFromHSB(hsb);
 			selector.find('.miniColors-colorPicker')
 				.css('top', colorPosition.y + 'px')
 				.css('left', colorPosition.x + 'px');
 			
 			// Set huePicker position
-			var huePosition = input.data('huePosition');
-			if( !huePosition ) huePosition = getHuePositionFromHSB(hsb);
+			var huePosition = getHuePositionFromHSB(hsb);
 			selector.find('.miniColors-huePicker').css('top', huePosition.y + 'px');
 			
 			// Prevent text selection in IE
@@ -46,19 +43,21 @@
 
 		var bindSelectorEvents = function(input) {
 
+			var mouseDown = false, moving;
+
 			$(document).bind('mousedown.miniColors touchstart.miniColors', function(event) {
 				
-				input.data('mousebutton', 1);
+				mouseDown = true;
 				
 				if( $(event.target).parents().andSelf().hasClass('miniColors-colors') ) {
 					event.preventDefault();
-					input.data('moving', 'colors');
+					moving = 'colors';
 					moveColor(input, event);
 				}
 				
 				if( $(event.target).parents().andSelf().hasClass('miniColors-hues') ) {
 					event.preventDefault();
-					input.data('moving', 'hues');
+					moving = 'hues';
 					moveHue(input, event);
 				}
 				
@@ -76,18 +75,19 @@
 			$(document)
 				.bind('mouseup.miniColors touchend.miniColors', function(event) {
 					event.preventDefault();
-					input.data('mousebutton', 0).removeData('moving');
+					mouseDown = false;
+					moving = undefined;
 				})
 				.bind('mousemove.miniColors touchmove.miniColors', function(event) {
 					event.preventDefault();
-					if( input.data('mousebutton') === 1 ) {
-						if( input.data('moving') === 'colors' ) moveColor(input, event);
-						if( input.data('moving') === 'hues' ) moveHue(input, event);
+					if( mouseDown ) {
+						if( moving === 'colors' ) moveColor(input, event);
+						if( moving === 'hues' ) moveHue(input, event);
 					}
 				});
 		};
 
-		var unBindSelectorEvents = function(input) {
+		var unBindSelectorEvents = function() {
 
 			$(document).unbind('.miniColors');
 
@@ -95,7 +95,9 @@
 
 		var moveColor = function(input, event) {
 
-			var colorPicker = input.data('colorPicker');
+			var selector = input.data('selector');
+
+			var colorPicker = selector.find('.miniColors-colorPicker');
 			
 			colorPicker.hide();
 			
@@ -103,20 +105,21 @@
 				x: event.pageX,
 				y: event.pageY
 			};
+
+			var offset = selector.find('.miniColors-colors').offset();
 			
 			// Touch support
 			if( event.originalEvent.changedTouches ) {
 				position.x = event.originalEvent.changedTouches[0].pageX;
 				position.y = event.originalEvent.changedTouches[0].pageY;
 			}
-			position.x = position.x - input.data('selector').find('.miniColors-colors').offset().left - 5;
-			position.y = position.y - input.data('selector').find('.miniColors-colors').offset().top - 5;
+			position.x = position.x - offset.left - 5;
+			position.y = position.y - offset.top - 5;
 			if( position.x <= -5 ) position.x = -5;
 			if( position.x >= 144 ) position.x = 144;
 			if( position.y <= -5 ) position.y = -5;
 			if( position.y >= 144 ) position.y = 144;
 			
-			input.data('colorPosition', position);
 			colorPicker.css('left', position.x).css('top', position.y).show();
 			
 			// Calculate saturation
@@ -140,7 +143,9 @@
 		
 		var moveHue = function(input, event) {
 			
-			var huePicker = input.data('huePicker');
+			var selector = input.data('selector');
+
+			var huePicker = selector.find('.miniColors-huePicker');
 			
 			huePicker.hide();
 			
@@ -148,15 +153,16 @@
 				y: event.pageY
 			};
 			
+			var offset = selector.find('.miniColors-colors').offset();
+
 			// Touch support
 			if( event.originalEvent.changedTouches ) {
 				position.y = event.originalEvent.changedTouches[0].pageY;
 			}
 			
-			position.y = position.y - input.data('selector').find('.miniColors-colors').offset().top - 1;
+			position.y = position.y - offset.top - 1;
 			if( position.y <= -1 ) position.y = -1;
 			if( position.y >= 149 ) position.y = 149;
-			input.data('huePosition', position);
 			huePicker.css('top', position.y).show();
 			
 			// Calculate hue
@@ -179,15 +185,8 @@
 			if( updateInput ) {
 				input.trigger( 'updateInput', { 'hex' : hex} );	
 			}
-			input.data('trigger').css('backgroundColor', '#' + hex);
 			if( input.data('selector') ) input.data('selector').find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
-			
-			// Fire change callback
-			if( input.data('change') ) {
-				if( hex === input.data('lastChange') ) return;
-				input.data('change').call(input.get(0), '#' + hex, hsb2rgb(hsb));
-				input.data('lastChange', hex);
-			}
+			input.trigger('setColor', { 'hex' : hex, 'hsb' : hsb, 'rgb' : hsb2rgb(hsb) });
 			
 		};
 		
@@ -204,17 +203,18 @@
 			var currentHSB = input.data('hsb');
 			if( hsb.h === currentHSB.h && hsb.s === currentHSB.s && hsb.b === currentHSB.b ) return true;
 			
-			// Set colorPicker position
-			var colorPosition = getColorPositionFromHSB(hsb);
-			var colorPicker = $(input.data('colorPicker'));
-			colorPicker.css('top', colorPosition.y + 'px').css('left', colorPosition.x + 'px');
-			input.data('colorPosition', colorPosition);
-			
-			// Set huePosition position
-			var huePosition = getHuePositionFromHSB(hsb);
-			var huePicker = $(input.data('huePicker'));
-			huePicker.css('top', huePosition.y + 'px');
-			input.data('huePosition', huePosition);
+			var selector = input.data('selector');
+			if (selector) {
+				// Set colorPicker position
+				var colorPosition = getColorPositionFromHSB(hsb);
+				var colorPicker = selector.find('.miniColors-colorPicker');
+				colorPicker.css('top', colorPosition.y + 'px').css('left', colorPosition.x + 'px');
+				
+				// Set huePosition position
+				var huePosition = getHuePositionFromHSB(hsb);
+				var huePicker = selector.find('.miniColors-huePicker');
+				huePicker.css('top', huePosition.y + 'px');
+			}
 			
 			setColor(input, hsb);
 			
