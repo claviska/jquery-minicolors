@@ -23,9 +23,9 @@ if(jQuery && jQuery.miniColors) (function($) {
 				//
 				
 				// Determine initial color (defaults to white)
-				var color = mc.expandHex(input.val());
+				var color = expandHex(input.val());
 				if( !color ) color = 'ffffff';
-				var hsb = mc.hex2hsb(color);
+				var hsb = hex2hsb(color);
 				
 				// Create trigger
 				var trigger = $('<a class="miniColors-trigger" style="background-color: #' + color + '" href="#"></a>');
@@ -64,7 +64,7 @@ if(jQuery && jQuery.miniColors) (function($) {
 				
 				// Hide on blur
 				input.bind('blur.miniColors', function(event) {
-					var hex = mc.expandHex(input.val());
+					var hex = expandHex(input.val());
 					input.val( hex ? '#' + convertCase(hex, input.data('letterCase')) : '' );
 				});
 				
@@ -75,32 +75,17 @@ if(jQuery && jQuery.miniColors) (function($) {
 				
 				// Update when color is typed in
 				input.bind('keyup.miniColors', function(event) {
-					mc.setColorFromInput(input);
+					setColorFromInput(input);
 				});
 				
 				// Handle pasting
 				input.bind('paste.miniColors', function(event) {
 					// Short pause to wait for paste to complete
 					setTimeout( function() {
-						mc.setColorFromInput(input);
+						setColorFromInput(input);
 					}, 5);
 				});
 
-				// Handle custom events published from model
-				input.bind('updateInput', function(event, data) {
-					input.val( '#' + convertCase(data.hex, input.data('letterCase')) );
-				});
-				input.bind('setColor', function(event, data) {
-					input.data('trigger').css('backgroundColor', '#' + data.hex);
-		
-					// Fire change callback
-					if( input.data('change') ) {
-						if( data.hex === input.data('lastChange') ) return;
-						input.data('change').call(input.get(0), '#' + data.hex, data.rgb);
-						input.data('lastChange', data.hex);
-					}
-				});
-				
 			};
 			
 			var destroy = function(input) {
@@ -118,9 +103,7 @@ if(jQuery && jQuery.miniColors) (function($) {
 					.attr('maxlength', input.data('original-maxlength'))
 					.removeData()
 					.removeClass('miniColors')
-					.unbind('.miniColors')
-					.unbind('updateInput')
-					.unbind('setColor');
+					.unbind('.miniColors');
 				$(document).unbind('.miniColors');
 			};
 			
@@ -164,6 +147,16 @@ if(jQuery && jQuery.miniColors) (function($) {
 					})
 					.addClass( input.attr('class') );
 
+
+				// Handle custom events published from model
+				selector.bind('updateInput', function(event, data) {
+					input.val( '#' + convertCase(data.hex, input.data('letterCase')) );
+				});
+				selector.bind('setColor', function(event, data) {
+					setColor(input, data.hex);
+				});
+				
+
 				// Set input data
 				input
 					.data('selector', selector);
@@ -171,7 +164,7 @@ if(jQuery && jQuery.miniColors) (function($) {
 				$('BODY').append(selector);
 				selector.fadeIn(100);
 				
-				mc.bindSelectorEvents(input);
+				mc.bindSelectorEvents(selector);
 
 				$(mc).bind('clickOutsideSelector', function(event) {
 						hide(input);
@@ -190,20 +183,119 @@ if(jQuery && jQuery.miniColors) (function($) {
 				
 				$(input).each( function() {
 					var selector = $(this).data('selector');
-					$(this).removeData('selector');
-					$(selector).fadeOut(100, function() {
-						$(this).remove();
-					});
+					if (selector) {
+						selector.unbind();
+						$(this).removeData('selector');
+						$(selector).fadeOut(100, function() {
+							$(this).remove();
+						});
+					}
 				});
 				
 				mc.unBindSelectorEvents();
 				
 			};
+
+			var setColor = function(input, hex) {
+
+				var hsb = hex2hsb(hex);
+				var rgb = hex2rgb(hex);
+
+				input
+					.data('hsb', hsb)
+					.data('trigger').css('backgroundColor', '#' + hex);
+	
+				// Fire change callback
+				if( input.data('change') ) {
+					if( hex === input.data('lastChange') ) return;
+					input.data('change').call(input.get(0), '#' + hex, rgb);
+					input.data('lastChange', hex);
+				}
+
+			};
 			
+			var setColorFromInput = function(input) {
+				
+				input.val('#' + cleanHex(input.val()));
+				var hex = expandHex(input.val());
+				if( !hex ) return false;
+				
+				// Get HSB equivalent
+				var hsb = hex2hsb(hex);
+				
+				// If color is the same, no change required
+				var currentHSB = input.data('hsb');
+				if( hsb.h === currentHSB.h && hsb.s === currentHSB.s && hsb.b === currentHSB.b ) return true;
+				
+				var selector = input.data('selector');
+				if (selector) {
+					mc.setSelectorColor(selector, hsb);
+				}
+				setColor(input, hex);
+				
+				return true;
+				
+			};
+
 			var convertCase = function(string, letterCase) {
 				if( letterCase === 'lowercase' ) return string.toLowerCase();
 				if( letterCase === 'uppercase' ) return string.toUpperCase();
 				return string;
+			};
+
+			var cleanHex = function(hex) {
+				return hex.replace(/[^A-F0-9]/ig, '');
+			};
+			
+			var expandHex = function(hex) {
+				hex = cleanHex(hex);
+				if( !hex ) return null;
+				if( hex.length === 3 ) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+				return hex.length === 6 ? hex : null;
+			};			
+
+			var rgb2hsb = function(rgb) {
+				var hsb = { h: 0, s: 0, b: 0 };
+				var min = Math.min(rgb.r, rgb.g, rgb.b);
+				var max = Math.max(rgb.r, rgb.g, rgb.b);
+				var delta = max - min;
+				hsb.b = max;
+				hsb.s = max !== 0 ? 255 * delta / max : 0;
+				if( hsb.s !== 0 ) {
+					if( rgb.r === max ) {
+						hsb.h = (rgb.g - rgb.b) / delta;
+					} else if( rgb.g === max ) {
+						hsb.h = 2 + (rgb.b - rgb.r) / delta;
+					} else {
+						hsb.h = 4 + (rgb.r - rgb.g) / delta;
+					}
+				} else {
+					hsb.h = -1;
+				}
+				hsb.h *= 60;
+				if( hsb.h < 0 ) {
+					hsb.h += 360;
+				}
+				hsb.s *= 100/255;
+				hsb.b *= 100/255;
+				return hsb;
+			};			
+		
+			var hex2rgb = function(hex) {
+				hex = parseInt(((hex.indexOf('#') > -1) ? hex.substring(1) : hex), 16);
+				
+				return {
+					r: hex >> 16,
+					g: (hex & 0x00FF00) >> 8,
+					b: (hex & 0x0000FF)
+				};
+			};
+		
+			var hex2hsb = function(hex) {
+				var hsb = rgb2hsb(hex2rgb(hex));
+				// Zero out hue marker for black, white, and grays (saturation === 0)
+				if( hsb.s === 0 ) hsb.h = 360;
+				return hsb;
 			};
 			
 			// Handle calls to $([selector]).miniColors()
@@ -237,7 +329,7 @@ if(jQuery && jQuery.miniColors) (function($) {
 					if( data === undefined ) {
 						if( !$(this).hasClass('miniColors') ) return;
 						var input = $(this),
-							hex = mc.expandHex(input.val());
+							hex = expandHex(input.val());
 						return hex ? '#' + convertCase(hex, input.data('letterCase')) : null;
 					}
 					
@@ -245,7 +337,7 @@ if(jQuery && jQuery.miniColors) (function($) {
 					$(this).each( function() {
 						if( !$(this).hasClass('miniColors') ) return;
 						$(this).val(data);
-						mc.setColorFromInput($(this));
+						setColorFromInput($(this));
 					});
 					
 					return $(this);

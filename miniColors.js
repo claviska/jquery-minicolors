@@ -24,24 +24,23 @@
 				.find('.miniColors-colors')
 				.css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
 			
-			// Set colorPicker position
-			var colorPosition = getColorPositionFromHSB(hsb);
-			selector.find('.miniColors-colorPicker')
-				.css('top', colorPosition.y + 'px')
-				.css('left', colorPosition.x + 'px');
-			
-			// Set huePicker position
-			var huePosition = getHuePositionFromHSB(hsb);
-			selector.find('.miniColors-huePicker').css('top', huePosition.y + 'px');
+			// initial position 
+			setSelectorPositionStyleFromHSB(selector, hsb);
 			
 			// Prevent text selection in IE
 			selector.bind('selectstart', function() { return false; });
+
+			// store initial value
+			selector.data('hsb', hsb);
 
 			return selector;
 			
 		};
 
-		var bindSelectorEvents = function(input) {
+		var updateSelector = function(selector, hsb) {
+		};
+
+		var bindSelectorEvents = function(selector) {
 
 			var mouseDown = false, moving;
 
@@ -52,13 +51,13 @@
 				if( $(event.target).parents().andSelf().hasClass('miniColors-colors') ) {
 					event.preventDefault();
 					moving = 'colors';
-					moveColor(input, event);
+					moveColor(selector, event);
 				}
 				
 				if( $(event.target).parents().andSelf().hasClass('miniColors-hues') ) {
 					event.preventDefault();
 					moving = 'hues';
-					moveHue(input, event);
+					moveHue(selector, event);
 				}
 				
 				if( $(event.target).parents().andSelf().hasClass('miniColors-selector') ) {
@@ -81,8 +80,8 @@
 				.bind('mousemove.miniColors touchmove.miniColors', function(event) {
 					event.preventDefault();
 					if( mouseDown ) {
-						if( moving === 'colors' ) moveColor(input, event);
-						if( moving === 'hues' ) moveHue(input, event);
+						if( moving === 'colors' ) moveColor(selector, event);
+						if( moving === 'hues' ) moveHue(selector, event);
 					}
 				});
 		};
@@ -93,14 +92,8 @@
 
 		};
 
-		var moveColor = function(input, event) {
+		var moveColor = function(selector, event) {
 
-			var selector = input.data('selector');
-
-			var colorPicker = selector.find('.miniColors-colorPicker');
-			
-			colorPicker.hide();
-			
 			var position = {
 				x: event.pageX,
 				y: event.pageY
@@ -120,8 +113,6 @@
 			if( position.y <= -5 ) position.y = -5;
 			if( position.y >= 144 ) position.y = 144;
 			
-			colorPicker.css('left', position.x).css('top', position.y).show();
-			
 			// Calculate saturation
 			var s = Math.round((position.x + 5) * 0.67);
 			if( s < 0 ) s = 0;
@@ -133,21 +124,15 @@
 			if( b > 100 ) b = 100;
 			
 			// Update HSB values
-			var hsb = input.data('hsb');
+			var hsb = selector.data('hsb');
 			hsb.s = s;
 			hsb.b = b;
 			
 			// Set color
-			setColor(input, hsb, true);
+			setSelectorColor(selector, hsb, true);
 		};
 		
-		var moveHue = function(input, event) {
-			
-			var selector = input.data('selector');
-
-			var huePicker = selector.find('.miniColors-huePicker');
-			
-			huePicker.hide();
+		var moveHue = function(selector, event) {
 			
 			var position = {
 				y: event.pageY
@@ -163,7 +148,6 @@
 			position.y = position.y - offset.top - 1;
 			if( position.y <= -1 ) position.y = -1;
 			if( position.y >= 149 ) position.y = 149;
-			huePicker.css('top', position.y).show();
 			
 			// Calculate hue
 			var h = Math.round((150 - position.y - 1) * 2.4);
@@ -171,54 +155,36 @@
 			if( h > 360 ) h = 360;
 			
 			// Update HSB values
-			var hsb = input.data('hsb');
+			var hsb = selector.data('hsb');
 			hsb.h = h;
 			
 			// Set color
-			setColor(input, hsb, true);
+			setSelectorColor(selector, hsb, true);
 			
 		};
+
+		var setSelectorPositionStyleFromHSB = function(selector, hsb) {
+
+			// Set colorPicker position
+			var colorPosition = getColorPositionFromHSB(hsb);
+			var colorPicker = selector.find('.miniColors-colorPicker');
+			colorPicker.css('top', colorPosition.y + 'px').css('left', colorPosition.x + 'px').show();
+			
+			// Set huePosition position
+			var huePosition = getHuePositionFromHSB(hsb);
+			var huePicker = selector.find('.miniColors-huePicker');
+			huePicker.css('top', huePosition.y + 'px').show();
+		};
 		
-		var setColor = function(input, hsb, updateInput) {
-			input.data('hsb', hsb);
+		var setSelectorColor = function(selector, hsb, updateInput) {
+			setSelectorPositionStyleFromHSB(selector, hsb);
+			selector.data('hsb', hsb);
 			var hex = hsb2hex(hsb);	
 			if( updateInput ) {
-				input.trigger( 'updateInput', { 'hex' : hex} );	
+				selector.trigger( 'updateInput', { 'hex' : hex} );	
 			}
-			if( input.data('selector') ) input.data('selector').find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
-			input.trigger('setColor', { 'hex' : hex, 'hsb' : hsb, 'rgb' : hsb2rgb(hsb) });
-			
-		};
-		
-		var setColorFromInput = function(input) {
-			
-			input.val('#' + cleanHex(input.val()));
-			var hex = expandHex(input.val());
-			if( !hex ) return false;
-			
-			// Get HSB equivalent
-			var hsb = hex2hsb(hex);
-			
-			// If color is the same, no change required
-			var currentHSB = input.data('hsb');
-			if( hsb.h === currentHSB.h && hsb.s === currentHSB.s && hsb.b === currentHSB.b ) return true;
-			
-			var selector = input.data('selector');
-			if (selector) {
-				// Set colorPicker position
-				var colorPosition = getColorPositionFromHSB(hsb);
-				var colorPicker = selector.find('.miniColors-colorPicker');
-				colorPicker.css('top', colorPosition.y + 'px').css('left', colorPosition.x + 'px');
-				
-				// Set huePosition position
-				var huePosition = getHuePositionFromHSB(hsb);
-				var huePicker = selector.find('.miniColors-huePicker');
-				huePicker.css('top', huePosition.y + 'px');
-			}
-			
-			setColor(input, hsb);
-			
-			return true;
+			selector.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
+			selector.trigger('setColor', { 'hex' : hex });
 			
 		};
 		
@@ -239,16 +205,6 @@
 			return { y: y - 1 };
 		};
 		
-		var cleanHex = function(hex) {
-			return hex.replace(/[^A-F0-9]/ig, '');
-		};
-		
-		var expandHex = function(hex) {
-			hex = cleanHex(hex);
-			if( !hex ) return null;
-			if( hex.length === 3 ) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-			return hex.length === 6 ? hex : null;
-		};			
 		
 		var hsb2rgb = function(hsb) {
 			var rgb = {};
@@ -291,58 +247,12 @@
 			return hex.join('');
 		};
 		
-		var hex2rgb = function(hex) {
-			hex = parseInt(((hex.indexOf('#') > -1) ? hex.substring(1) : hex), 16);
-			
-			return {
-				r: hex >> 16,
-				g: (hex & 0x00FF00) >> 8,
-				b: (hex & 0x0000FF)
-			};
-		};
-		
-		var rgb2hsb = function(rgb) {
-			var hsb = { h: 0, s: 0, b: 0 };
-			var min = Math.min(rgb.r, rgb.g, rgb.b);
-			var max = Math.max(rgb.r, rgb.g, rgb.b);
-			var delta = max - min;
-			hsb.b = max;
-			hsb.s = max !== 0 ? 255 * delta / max : 0;
-			if( hsb.s !== 0 ) {
-				if( rgb.r === max ) {
-					hsb.h = (rgb.g - rgb.b) / delta;
-				} else if( rgb.g === max ) {
-					hsb.h = 2 + (rgb.b - rgb.r) / delta;
-				} else {
-					hsb.h = 4 + (rgb.r - rgb.g) / delta;
-				}
-			} else {
-				hsb.h = -1;
-			}
-			hsb.h *= 60;
-			if( hsb.h < 0 ) {
-				hsb.h += 360;
-			}
-			hsb.s *= 100/255;
-			hsb.b *= 100/255;
-			return hsb;
-		};			
-		
-		var hex2hsb = function(hex) {
-			var hsb = rgb2hsb(hex2rgb(hex));
-			// Zero out hue marker for black, white, and grays (saturation === 0)
-			if( hsb.s === 0 ) hsb.h = 360;
-			return hsb;
-		};
-		
 		var hsb2hex = function(hsb) {
 			return rgb2hex(hsb2rgb(hsb));
 		};
 
 		// reveal public methods
-		api.expandHex = expandHex;
-		api.hex2hsb = hex2hsb;
-		api.setColorFromInput = setColorFromInput;
+		api.setSelectorColor = setSelectorColor;
 		api.buildSelector = buildSelector;
 		api.bindSelectorEvents = bindSelectorEvents;
 		api.unBindSelectorEvents = unBindSelectorEvents;
