@@ -147,16 +147,6 @@ if(jQuery && jQuery.miniColors) (function($) {
 					})
 					.addClass( input.attr('class') );
 
-
-				// Handle custom events published from model
-				selector.bind('updateInput', function(event, data) {
-					input.val( '#' + convertCase(data.hex, input.data('letterCase')) );
-				});
-				selector.bind('setColor', function(event, data) {
-					setColor(input, data.hex);
-				});
-				
-
 				// Set input data
 				input
 					.data('selector', selector);
@@ -166,9 +156,18 @@ if(jQuery && jQuery.miniColors) (function($) {
 				
 				mc.bindSelectorEvents(selector);
 
-				$(mc).bind('clickOutsideSelector', function(event) {
+				// Handle custom events published from model
+				selector
+					.bind('updateInput', function(event, data) {
+						input.val( '#' + convertCase(data.hex, input.data('letterCase')) );
+					})
+					.bind('setColor', function(event, data) {
+						setColor(input, data.hex);
+					})
+					.bind('clickOutsideBounds', function(event) {
 						hide(input);
 					});
+				
 				
 			};
 			

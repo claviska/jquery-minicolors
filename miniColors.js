@@ -68,7 +68,7 @@
 				if( $(event.target).parents().andSelf().hasClass('miniColors') ) return;
 				
 				// fallthrough; no click inside selector
-				$(api).trigger('clickOutsideSelector');
+				selector.trigger('clickOutsideBounds');
 			});
 			
 			$(document)
