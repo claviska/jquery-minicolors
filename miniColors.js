@@ -16,7 +16,7 @@
 			// Generate the selector
 			var selector = $('<div style="display: none;" class="miniColors-selector"></div>');
 			selector
-				.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"></div></div>')
+				.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"><div class="miniColors-colorPicker-inner"></div></div></div>')
 				.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>');
 			
 			// Set background for colors
