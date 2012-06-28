@@ -22,6 +22,7 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 
 * __disabled__ _[true,false]_ - Disables the control on init
 * __readonly__ _[true,false]_ - Makes the control read-only on init
+* __allowBlank__ _[true,false]_ - Allows blank color value
 
 
 ## Specify options on creation:

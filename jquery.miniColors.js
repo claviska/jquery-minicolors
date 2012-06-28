@@ -17,9 +17,19 @@ if(jQuery) (function($) {
 				// Creates a new instance of the miniColors selector
 				//
 				
+				// Handle options
+				if( o.readonly ) input.prop('readonly', true);
+				if( o.disabled ) disable(input);
+				if( o.allowBlank ) allowBlank = true;
+				
 				// Determine initial color (defaults to white)
 				var color = expandHex(input.val());
-				if( !color ) color = 'ffffff';
+				if( !color ){
+					if ( allowBlank )
+						color = '';
+					else
+						color = 'ffffff';
+				}
 				var hsb = hex2hsb(color);
 				
 				// Create trigger
@@ -38,12 +48,12 @@ if(jQuery) (function($) {
 					.data('close', o.close ? o.close : null)
 					.data('open', o.open ? o.open : null)
 					.attr('maxlength', 7)
-					.attr('autocomplete', 'off')
-					.val('#' + convertCase(color, o.letterCase));
-				
-				// Handle options
-				if( o.readonly ) input.prop('readonly', true);
-				if( o.disabled ) disable(input);
+					.attr('autocomplete', 'off');
+				if (allowBlank && color == ''){
+					input.val('');
+				} else {
+					input.val('#' + convertCase(color, o.letterCase));
+				}
 				
 				// Show selector when trigger is clicked
 				trigger.bind('click.miniColors', function(event) {
