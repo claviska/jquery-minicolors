@@ -35,7 +35,8 @@ if(jQuery) (function($) {
 					.data('trigger', trigger)
 					.data('hsb', hsb)
 					.data('change', o.change ? o.change : null)
-					.data('hide', o.hide ? o.hide : null)
+					.data('close', o.close ? o.close : null)
+					.data('open', o.open ? o.open : null)
 					.attr('maxlength', 7)
 					.attr('autocomplete', 'off')
 					.val('#' + convertCase(color, o.letterCase));
@@ -216,6 +217,11 @@ if(jQuery) (function($) {
 						}
 					});
 				
+				// Fire open callback
+				if( input.data('open') ) {
+					input.data('open').call(input.get(0), '#' + hsb2hex(hsb), hsb2rgb(hsb));
+				}
+				
 			};
 			
 			var hide = function(input) {
@@ -231,8 +237,10 @@ if(jQuery) (function($) {
 					var selector = $(this).data('selector');
 					$(this).removeData('selector');
 					$(selector).fadeOut(100, function() {
-						if( input.data('hide') ) {
-							input.data('hide').call(input.get(0));
+						// Fire close callback
+						if( input.data('close') ) {
+							var hsb = input.data('hsb'), hex = hsb2hex(hsb);	
+							input.data('close').call(input.get(0), '#' + hex, hsb2rgb(hsb));
 						}
 						$(this).remove();
 					});

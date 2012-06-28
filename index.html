@@ -28,7 +28,13 @@
 				$(".color-picker").miniColors({
 					letterCase: 'uppercase',
 					change: function(hex, rgb) {
-						logData(hex, rgb);
+						logData('change', hex, rgb);
+					},
+					open: function(hex, rgb) {
+						logData('open', hex, rgb);
+					},
+					close: function(hex, rgb) {
+						logData('close', hex, rgb);
 					}
 				});
 				
@@ -39,8 +45,8 @@
 				// Only for the demo
 				//
 				
-				function logData(hex, rgb) {
-					$("#console").prepend('HEX: ' + hex + ' (RGB: ' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br />');
+				function logData(type, hex, rgb) {
+					$("#console").prepend(type + ': HEX = ' + hex + ', RGB = (' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br />');
 				}
 				
 				$("#disable").click( function() {
