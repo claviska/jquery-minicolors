@@ -51,8 +51,13 @@ Methods are called using this syntax:
 
 ## Events
 
-* __change__*(hex, rgb)* - called when the color value changes; 'this' refers to the original input element
-	
+* __change__*(hex, rgb)* - called when the color value changes
+* __open__*(hex, rgb)* - called when the color picker is opened
+* __close__*(hex, rgb)* - called when the color picker is hidden
+
+*In all callbacks, 'this' refers to the original input element*
+
+
 ### Example
 
 	$([selector]).miniColors({
