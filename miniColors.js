@@ -47,25 +47,26 @@
 			$(document).bind('mousedown.miniColors touchstart.miniColors', function(event) {
 				
 				mouseDown = true;
+				var testSubject = $(event.target).parents().andSelf();
 				
-				if( $(event.target).parents().andSelf().hasClass('miniColors-colors') ) {
+				if( testSubject.hasClass('miniColors-colors') ) {
 					event.preventDefault();
 					moving = 'colors';
 					moveColor(selector, event);
 				}
 				
-				if( $(event.target).parents().andSelf().hasClass('miniColors-hues') ) {
+				if( testSubject.hasClass('miniColors-hues') ) {
 					event.preventDefault();
 					moving = 'hues';
 					moveHue(selector, event);
 				}
 				
-				if( $(event.target).parents().andSelf().hasClass('miniColors-selector') ) {
+				if( testSubject.hasClass('miniColors-selector') ) {
 					event.preventDefault();
 					return;
 				}
 				
-				if( $(event.target).parents().andSelf().hasClass('miniColors') ) return;
+				if( testSubject.hasClass('miniColors') ) return;
 				
 				// fallthrough; no click inside selector
 				selector.trigger('clickOutsideBounds');

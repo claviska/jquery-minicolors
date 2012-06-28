@@ -40,6 +40,7 @@ if(jQuery && jQuery.miniColors) (function($) {
 					.data('trigger', trigger)
 					.data('hsb', hsb)
 					.data('change', o.change ? o.change : null)
+					.data('hide', o.hide ? o.hide : null)
 					.attr('maxlength', 7)
 					.attr('autocomplete', 'off')
 					.val('#' + convertCase(color, o.letterCase));
@@ -186,6 +187,9 @@ if(jQuery && jQuery.miniColors) (function($) {
 						selector.unbind();
 						$(this).removeData('selector');
 						$(selector).fadeOut(100, function() {
+							if (input.data('hide') ) {
+								input.data('hide').call(input.get(0));
+							}
 							$(this).remove();
 						});
 					}
