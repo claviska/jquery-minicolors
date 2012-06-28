@@ -136,7 +136,7 @@ if(jQuery) (function($) {
 				// Generate the selector
 				var selector = $('<div class="miniColors-selector"></div>');
 				selector
-					.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"></div></div>')
+					.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"><div class="miniColors-colorPicker-inner"></div></div>')
 					.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>')
 					.css({
 						top: input.is(':visible') ? input.offset().top + input.outerHeight() : input.data('trigger').offset().top + input.data('trigger').outerHeight(),
@@ -231,7 +231,7 @@ if(jQuery) (function($) {
 					var selector = $(this).data('selector');
 					$(this).removeData('selector');
 					$(selector).fadeOut(100, function() {
-						if (input.data('hide') ) {
+						if( input.data('hide') ) {
 							input.data('hide').call(input.get(0));
 						}
 						$(this).remove();
