@@ -61,7 +61,7 @@ if(jQuery) (function($) {
 				
 				// Hide on blur
 				input.bind('blur.miniColors', function(event) {
-					var hex = expandHex(input.val());
+					var hex = expandHex( hsb2hex(input.data('hsb')) );
 					input.val( hex ? '#' + convertCase(hex, input.data('letterCase')) : '' );
 				});
 				
