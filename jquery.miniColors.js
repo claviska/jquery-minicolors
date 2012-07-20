@@ -231,7 +231,7 @@ if(jQuery) (function($) {
 				//
 				
 				// Hide all other instances if input isn't specified
-				if( !input ) input = $( '.miniColors' );
+				if( !input ) input = $('.miniColors');
 				
 				input.each( function() {
 					var selector = $(this).data('selector');
