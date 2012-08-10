@@ -31,7 +31,7 @@ if(jQuery) (function($) {
 					.addClass('miniColors')
 					.data('original-maxlength', input.attr('maxlength') || null)
 					.data('original-autocomplete', input.attr('autocomplete') || null)
-					.data('letterCase', 'uppercase')
+					.data('letterCase', o.letterCase ? o.letterCase : 'uppercase')
 					.data('trigger', trigger)
 					.data('hsb', hsb)
 					.data('change', o.change ? o.change : null)
