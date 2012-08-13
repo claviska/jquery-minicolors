@@ -46,7 +46,7 @@ if(jQuery) (function($) {
 				if( o.disabled ) disable(input);
 				
 				// Show selector when trigger is clicked
-				trigger.bind('click.miniColors', function(event) {
+				trigger.on('click.miniColors', function(event) {
 					event.preventDefault();
 					if( input.val() === '' ) input.val('#');
 					show(input);
@@ -54,29 +54,29 @@ if(jQuery) (function($) {
 				});
 				
 				// Show selector when input receives focus
-				input.bind('focus.miniColors', function(event) {
+				input.on('focus.miniColors', function(event) {
 					if( input.val() === '' ) input.val('#');
 					show(input);
 				});
 				
 				// Hide on blur
-				input.bind('blur.miniColors', function(event) {
+				input.on('blur.miniColors', function(event) {
 					var hex = expandHex( hsb2hex(input.data('hsb')) );
 					input.val( hex ? '#' + convertCase(hex, input.data('letterCase')) : '' );
 				});
 				
 				// Hide when tabbing out of the input
-				input.bind('keydown.miniColors', function(event) {
+				input.on('keydown.miniColors', function(event) {
 					if( event.keyCode === 9 ) hide(input);
 				});
 				
 				// Update when color is typed in
-				input.bind('keyup.miniColors', function(event) {
+				input.on('keyup.miniColors', function(event) {
 					setColorFromInput(input);
 				});
 				
 				// Handle pasting
-				input.bind('paste.miniColors', function(event) {
+				input.on('paste.miniColors', function(event) {
 					// Short pause to wait for paste to complete
 					setTimeout( function() {
 						setColorFromInput(input);
@@ -100,8 +100,8 @@ if(jQuery) (function($) {
 					.attr('maxlength', input.data('original-maxlength'))
 					.removeData()
 					.removeClass('miniColors')
-					.unbind('.miniColors');
-				$(document).unbind('.miniColors');
+					.off('.miniColors');
+				$(document).off('.miniColors');
 			};
 			
 			var enable = function(input) {
@@ -134,44 +134,12 @@ if(jQuery) (function($) {
 				// Hide all other instances 
 				hide();				
                 
-				var getSelectorLeftPosition = function(input){
-					if(input.is(':visible')){
-						return input.offset().left;
-					} else {
-						var anchorLeftPosition = input.data('trigger').offset().left;
-						var selectorWidth = 162;
-						if((anchorLeftPosition + selectorWidth) < $(window).width()){
-							return anchorLeftPosition;                        
-						} else {
-							return anchorLeftPosition - selectorWidth;
-						}
-					}
-				};
-				
-				var getSelectorTopPosition = function(input){
-					var anchorDistanceFromTop = input.data('trigger').offset().top;
-					var selectorHeight = 162; //Is there a way to get this height programatically?
-					var anchorHeight = input.data('trigger').height();
-					var windowHeight = $(window).height();
-					if((anchorDistanceFromTop + selectorHeight + anchorHeight) > windowHeight) {
-						return anchorDistanceFromTop - selectorHeight;
-					} else if((anchorDistanceFromTop + selectorHeight) >= selectorHeight){
-						return anchorDistanceFromTop + anchorHeight;
-					} else {
-						return anchorHeight - selectorHeight;
-					}
-				}				
-				
 				// Generate the selector
 				var selector = $('<div class="miniColors-selector"></div>');
 				selector
 					.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"><div class="miniColors-colorPicker-inner"></div></div>')
 					.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>')
-					.css({
-						top: getSelectorTopPosition(input),
-						left: getSelectorLeftPosition(input),
-						display: 'none'
-					})
+					.css('display', 'none')
 					.addClass( input.attr('class') );
 				
 				// Set background for colors
@@ -198,19 +166,42 @@ if(jQuery) (function($) {
 					.data('huePicker', selector.find('.miniColors-huePicker'))
 					.data('colorPicker', selector.find('.miniColors-colorPicker'))
 					.data('mousebutton', 0);
-					
+				
 				$('BODY').append(selector);
-				selector.fadeIn(100);
+				
+				// Position the selector
+				var trigger = input.data('trigger'),
+					hidden = !input.is(':visible'),
+					top = hidden ? trigger.offset().top + trigger.outerHeight() : input.offset().top + input.outerHeight(),
+					left = hidden ? trigger.offset().left : input.offset().left,
+					selectorWidth = selector.outerWidth(),
+					selectorHeight = selector.outerHeight(),
+					triggerWidth = trigger.outerWidth(),
+					triggerHeight = trigger.outerHeight(),
+					windowHeight = $(window).height(),
+					windowWidth = $(window).width(),
+					scrollTop = $(window).scrollTop(),
+					scrollLeft = $(window).scrollLeft();
+				
+				// Adjust based on viewport
+				if( (top + selectorHeight) > windowHeight + scrollTop ) top = top - selectorHeight - triggerHeight;
+				if( (left + selectorWidth) > windowWidth + scrollLeft ) left = left - selectorWidth + triggerWidth;
+				
+				// Set position and show
+				selector.css({
+					top: top,
+					left: left
+				}).fadeIn(100);
 				
 				// Prevent text selection in IE
-				selector.bind('selectstart', function() { return false; });
+				selector.on('selectstart', function() { return false; });
 				
-				$(window).bind('resize', function(event){
-					selector.css('left', getSelectorLeftPosition(input));
-					selector.css('top', getSelectorTopPosition(input));
+				// Keep in viewport on resize
+				$(window).on('resize.miniColors', function(event) {
+					hide(input);
 				});
 				
-				$(document).bind('mousedown.miniColors touchstart.miniColors', function(event) {
+				$(document).on('mousedown.miniColors touchstart.miniColors', function(event) {
 					
 					input.data('mousebutton', 1);
 					var testSubject = $(event.target).parents().andSelf();
@@ -238,11 +229,11 @@ if(jQuery) (function($) {
 				});
 				
 				$(document)
-					.bind('mouseup.miniColors touchend.miniColors', function(event) {
+					.on('mouseup.miniColors touchend.miniColors', function(event) {
 					    event.preventDefault();
 						input.data('mousebutton', 0).removeData('moving');
 					})
-					.bind('mousemove.miniColors touchmove.miniColors', function(event) {
+					.on('mousemove.miniColors touchmove.miniColors', function(event) {
 						event.preventDefault();
 						if( input.data('mousebutton') === 1 ) {
 							if( input.data('moving') === 'colors' ) moveColor(input, event);
@@ -279,7 +270,7 @@ if(jQuery) (function($) {
 					});
 				});
 				
-				$(document).unbind('.miniColors');
+				$(document).off('.miniColors');
 				
 			};
 			

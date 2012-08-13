@@ -12,7 +12,7 @@
 			}
 		</style>
 		
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		
 		<script type="text/javascript" src="jquery.miniColors.js"></script>
 		<link type="text/css" rel="stylesheet" href="jquery.miniColors.css" />
@@ -20,6 +20,7 @@
 		<script type="text/javascript">
 			
 			$(document).ready( function() {
+				
 				
 				//
 				// Enabling miniColors
@@ -37,8 +38,6 @@
 						logData('close', hex, rgb);
 					}
 				});
-				
-				
 				
 				
 				//
@@ -102,6 +101,7 @@
 					$(".color-picker").miniColors('value', '#' + Math.floor(Math.random() * 16777215).toString(16));
 				});
 				
+				
 			});
 			
 		</script>
@@ -136,19 +136,19 @@
 			<input type="hidden" name="color4" class="color-picker" size="6" />
 		</p>
         
-		<p style="position: absolute; right: 0; top: 0; padding-right: 10px;">
-			Absolute positioned in upper right-hand corner
-			<input type="hidden" name="color4" class="color-picker" size="6" />
+		<p style="position: absolute; right: 0; top: 0; margin-right: 10px;">
+			Absolutely positioned in upper-right corner
+			<input type="hidden" name="color5" class="color-picker" size="6" />
 		</p>
 		
-		<p style="position: absolute; left: 0; bottom: 0; padding-left: 10px;">
-			<input type="hidden" name="color4" class="color-picker" size="6" />
-			Absolute positioned in bottom left-hand corner			
+		<p style="position: absolute; left: 0; bottom: 0; margin-left: 10px;">
+			<input type="hidden" name="color6" class="color-picker" size="6" />
+			Absolutely positioned in bottom-left corner			
 		</p>
 		
-		<p style="position: absolute; right: 0; bottom: 0; padding-left: 10px;">
-			Absolute positioned in bottom right-hand corner			
-			<input type="hidden" name="color4" class="color-picker" size="6" />			
+		<p style="position: absolute; right: 0; bottom: 0; margin-right: 10px;">
+			Absolutely positioned in bottom-right corner			
+			<input type="hidden" name="color7" class="color-picker" size="6" />			
 		</p>		
 		
 		<p style="margin-top: 50px;">
