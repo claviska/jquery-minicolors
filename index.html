@@ -7,8 +7,13 @@
 		<style type="text/css">
 			BODY {
 				font-family: Arial, Helvetica, sans-serif;
-				font-size: 10pt;
+				font-size: 13px;
 				line-height: 1.5;
+			}
+			
+			INPUT {
+				vertical-align: middle;
+				font-size: 13px;
 			}
 		</style>
 		
@@ -89,7 +94,13 @@
 					$(".color-picker").miniColors({
 						letterCase: 'uppercase',
 						change: function(hex, rgb) {
-							logData(hex, rgb);
+							logData('change', hex, rgb);
+						},
+						open: function(hex, rgb) {
+							logData('open', hex, rgb);
+						},
+						close: function(hex, rgb) {
+							logData('close', hex, rgb);
 						}
 					});
 					$("#makeReadonly, #disable, #destroy, #randomize").prop('disabled', false);
@@ -118,37 +129,37 @@
 		<div id="console" style="width: 500px; float: right; color: #FFF; background: #000; font: 12px monospace; padding: 1em; margin: 1em 0; height: 350px; overflow: auto;"></div>
 		
 		<p>
-			Default<br /><input type="text" name="color1" class="color-picker" size="6" autocomplete="on" maxlength="10" />
+			Default<br /><input type="text" name="color1" class="color-picker" size="7" autocomplete="on" maxlength="10" />
 		</p>
 		
 		<p>
 			Black theme (set class=&quot;black&quot; on the input element)<br />
-			<input type="text" name="color2" class="color-picker black" size="6" />
+			<input type="text" name="color2" class="color-picker black" size="7" />
 		</p>
 		
 		<p>
 			Preset value (set value attribute on the input element)<br />
-			<input type="text" name="color3" class="color-picker" size="6" value="#abCdeF" />
+			<input type="text" name="color3" class="color-picker" size="7" value="#abCdeF" />
 		</p>
 		
 		<p>
 			Attached to a hidden input<br />
-			<input type="hidden" name="color4" class="color-picker" size="6" />
+			<input type="hidden" name="color4" class="color-picker" size="7" />
 		</p>
         
 		<p style="position: absolute; right: 0; top: 0; margin-right: 10px;">
 			Absolutely positioned in upper-right corner
-			<input type="hidden" name="color5" class="color-picker" size="6" />
+			<input type="hidden" name="color5" class="color-picker" size="7" />
 		</p>
 		
 		<p style="position: absolute; left: 0; bottom: 0; margin-left: 10px;">
-			<input type="hidden" name="color6" class="color-picker" size="6" />
+			<input type="hidden" name="color6" class="color-picker" size="7" />
 			Absolutely positioned in bottom-left corner			
 		</p>
 		
 		<p style="position: absolute; right: 0; bottom: 0; margin-right: 10px;">
 			Absolutely positioned in bottom-right corner			
-			<input type="hidden" name="color7" class="color-picker" size="6" />			
+			<input type="hidden" name="color7" class="color-picker" size="7" />			
 		</p>		
 		
 		<p style="margin-top: 50px;">
