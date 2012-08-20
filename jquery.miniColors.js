@@ -34,6 +34,7 @@ if(jQuery) (function($) {
 					.data('letterCase', 'uppercase')
 					.data('trigger', trigger)
 					.data('hsb', hsb)
+					.data('colorSwatches', o.colorSwatches ? o.colorSwatches : null)
 					.data('change', o.change ? o.change : null)
 					.data('close', o.close ? o.close : null)
 					.data('open', o.open ? o.open : null)
@@ -139,6 +140,7 @@ if(jQuery) (function($) {
 				selector
 					.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"><div class="miniColors-colorPicker-inner"></div></div>')
 					.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>')
+					.append('<div class="miniColors-colorSwatches"></div>')
 					.css({
 						top: input.is(':visible') ? input.offset().top + input.outerHeight() : input.data('trigger').offset().top + input.data('trigger').outerHeight(),
 						left: input.is(':visible') ? input.offset().left : input.data('trigger').offset().left,
@@ -163,6 +165,26 @@ if(jQuery) (function($) {
 				var huePosition = input.data('huePosition');
 				if( !huePosition ) huePosition = getHuePositionFromHSB(hsb);
 				selector.find('.miniColors-huePicker').css('top', huePosition.y + 'px');
+				
+				// Favorites
+				var colorSwatches = selector.find('.miniColors-colorSwatches');
+				var swatches = input.data('colorSwatches');
+				
+				if(swatches && typeof swatches == "object" && swatches.length > 0)
+					selector.css('height', '170px');
+				
+				for(idx in swatches) {
+					var swatch = $('<div class="miniColors-colorSwatch"></div>')
+						.data('swatch-color', swatches[idx])
+						.css('background-color', swatches[idx])
+						.bind('click', function(e) {
+							input.val($(this).data('swatch-color'));
+							setColorFromInput(input);
+						})
+						;
+					
+					colorSwatches.append(swatch);
+				}
 				
 				// Set input data
 				input

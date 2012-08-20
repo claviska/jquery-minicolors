@@ -49,6 +49,22 @@
 	cursor: crosshair;
 }
 
+.miniColors-colorSwatches {
+	position: absolute;
+	top: 160px;
+	left: 5px;
+	width: 170px;
+	height: 20px;
+}
+
+.miniColors-colorSwatch {
+	height:12px;
+	width:12px;
+	display:inline-block;
+	margin:0px 2px;
+	cursor: pointer;
+}
+
 .miniColors-colorPicker {
 	position: absolute;
 	width: 9px;
