@@ -41,6 +41,21 @@
 				// Allow overrides per demonstration
 				$(".color-picker").each(function() {
                     picker = $(this);
+                    
+                    // Demonstrate color swatches
+                    if(picker.attr('name') == 'color5') {
+                        options.colorSwatches = [
+        				    '#CF2C1D',
+        				    '#FEAF03',
+        				    '#57970A',
+        				    '#007CBD',
+        				    '#7047BA',
+        				    '#D5D5D5',
+        				    '#ADADAD',
+        				    '#34434E'
+        				];
+                    }
+				    
 				    picker.miniColors(options);
 			    });
 
@@ -139,7 +154,10 @@
 			<input type="hidden" name="color4" class="color-picker" size="6" />
 		</p>
 		
-		
+		<p>
+			With swatch colors<br />
+			<input type="text" name="color5" class="color-picker" size="6" />
+		</p>
 		
 		<p style="margin-top: 50px;">
 			Select an action to apply to all of the controls on this page:
