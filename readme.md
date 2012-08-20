@@ -22,6 +22,7 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 
 * __disabled__ _[true,false]_ - Disables the control on init
 * __readonly__ _[true,false]_ - Makes the control read-only on init
+* __colorSwatches__ _[array]_ - An array of HEX color codes to display as swatch presets
 
 
 ## Specify options on creation:
