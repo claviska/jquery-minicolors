@@ -25,7 +25,7 @@
 				// Enabling miniColors
 				//
 				
-				$(".color-picker").miniColors({
+				var options = {
 					letterCase: 'uppercase',
 					change: function(hex, rgb) {
 						logData('change', hex, rgb);
@@ -36,11 +36,14 @@
 					close: function(hex, rgb) {
 						logData('close', hex, rgb);
 					}
-				});
-				
-				
-				
-				
+				};
+
+				// Allow overrides per demonstration
+				$(".color-picker").each(function() {
+                    picker = $(this);
+				    picker.miniColors(options);
+			    });
+
 				//
 				// Only for the demo
 				//
