@@ -7,10 +7,14 @@
 	display: inline-block;
 	outline: none;
 }
+.miniColors-triggerHolder {
+	background: url(images/trigger_bg.png) center no-repeat;
+	display: inline-block;
+}
 
 .miniColors-selector {
 	position: absolute;
-	width: 175px;
+	width: 200px;
 	height: 150px;
 	background: white;
 	border: solid 1px #BBB;
@@ -49,6 +53,16 @@
 	cursor: crosshair;
 }
 
+.miniColors-alpha {
+	position: absolute;
+	top: 5px;
+	left: 185px;
+	width: 20px;
+	height: 150px;
+	background: url(images/alpha.png) left no-repeat;
+	cursor: crosshair;
+}
+
 .miniColors-colorPicker {
 	position: absolute;
 	width: 9px;
@@ -70,7 +84,8 @@
 	border-radius: 9px;
 }
 
-.miniColors-huePicker {
+.miniColors-huePicker,
+.miniColors-alphaPicker {
 	position: absolute;
 	left: -3px;
 	width: 24px;

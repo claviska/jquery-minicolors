@@ -32,7 +32,7 @@
 				//
 				
 				$(".color-picker").miniColors({
-					letterCase: 'uppercase',
+					// letterCase: 'uppercase',
 					change: function(hex, rgb) {
 						logData('change', hex, rgb);
 					},
@@ -138,8 +138,13 @@
 		</p>
 		
 		<p>
-			Preset value (set value attribute on the input element)<br />
-			<input type="text" name="color3" class="color-picker" size="7" value="#abCdeF" />
+			Preset HEX value (set value attribute on the input element)<br />
+			<input type="text" name="color3" class="color-picker" size="7" value="#abcdef" />
+		</p>
+
+		<p>
+			Preset RGBA value (set value attribute on the input element)<br />
+			<input type="text" name="color3" class="color-picker" size="28" value="rgba(156, 194, 232, 0.64)" />
 		</p>
 		
 		<p>

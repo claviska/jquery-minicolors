@@ -17,29 +17,42 @@ if(jQuery) (function($) {
 				// Creates a new instance of the miniColors selector
 				//
 				
-				// Determine initial color (defaults to white)
-				var color = expandHex(input.val());
-				if( !color ) color = 'ffffff';
-				var hsb = hex2hsb(color);
-				
+				var color = input.val(), 
+					hsb = null,
+					rgba = null;
+
+				// Determine if the initial color is RGBA or HEX
+				if (color.substring(0,4) == 'rgba') {
+					rgba = extractRGBA(color);
+					hsb = rgb2hsb(rgba);
+					color = 'rgba('+rgba.r+', '+rgba.g+', '+rgba.b+', '+rgba.a+');';
+					input.data('alphaPosition', { y:Math.round(150-((rgba.a/1) * 150)) });
+				} else {
+					hsb = hex2hsb(color);
+					color = (expandHex(color)) ? '#'+expandHex(color) : '';
+				}
+
 				// Create trigger
-				var trigger = $('<a class="miniColors-trigger" style="background-color: #' + color + '" href="#"></a>');
-				trigger.insertAfter(input);
+				var trigger = $('<a class="miniColors-trigger" style="background-color: ' + color + '" href="#"></a>');
+				var triggerHolder = $('<div class="miniColors-triggerHolder"></div>');
+				triggerHolder.append(trigger);
+				triggerHolder.insertAfter(input);
 				
 				// Set input data and update attributes
 				input
 					.addClass('miniColors')
 					.data('original-maxlength', input.attr('maxlength') || null)
 					.data('original-autocomplete', input.attr('autocomplete') || null)
-					.data('letterCase', o.letterCase ? o.letterCase : 'uppercase')
+					.data('letterCase', o.letterCase ? o.letterCase : 'lowercase')
 					.data('trigger', trigger)
 					.data('hsb', hsb)
+					.data('rgba', rgba)
 					.data('change', o.change ? o.change : null)
 					.data('close', o.close ? o.close : null)
 					.data('open', o.open ? o.open : null)
-					.attr('maxlength', 7)
+					// .attr('maxlength', 7)
 					.attr('autocomplete', 'off')
-					.val('#' + convertCase(color, o.letterCase));
+					.val(convertCase(color, o.letterCase));
 				
 				// Handle options
 				if( o.readonly ) input.prop('readonly', true);
@@ -48,21 +61,26 @@ if(jQuery) (function($) {
 				// Show selector when trigger is clicked
 				trigger.on('click.miniColors', function(event) {
 					event.preventDefault();
-					if( input.val() === '' ) input.val('#');
+					// if( input.val() === '' ) input.val('#');
 					show(input);
 
 				});
 				
 				// Show selector when input receives focus
 				input.on('focus.miniColors', function(event) {
-					if( input.val() === '' ) input.val('#');
+					// if( input.val() === '' ) input.val('#');
 					show(input);
 				});
 				
 				// Hide on blur
 				input.on('blur.miniColors', function(event) {
-					var hex = expandHex( hsb2hex(input.data('hsb')) );
-					input.val( hex ? '#' + convertCase(hex, input.data('letterCase')) : '' );
+					var rgba = input.data('rgba');
+					if (rgba) {
+						input.val( rgba ? 'rgba('+rgba.r+', '+rgba.g+', '+rgba.b+', '+(1-rgba.a)+')' : '' );
+					} else {
+						var hex = expandHex( hsb2hex(input.data('hsb')) );
+						input.val( hex ? '#' + convertCase(hex, input.data('letterCase')) : '' );
+					}
 				});
 				
 				// Hide when tabbing out of the input
@@ -76,12 +94,12 @@ if(jQuery) (function($) {
 				});
 				
 				// Handle pasting
-				input.on('paste.miniColors', function(event) {
-					// Short pause to wait for paste to complete
-					setTimeout( function() {
-						setColorFromInput(input);
-					}, 5);
-				});
+				// input.on('paste.miniColors', function(event) {
+				// 	// Short pause to wait for paste to complete
+				// 	setTimeout( function() {
+				// 		setColorFromInput(input);
+				// 	}, 100);
+				// });
 				
 			};
 			
@@ -139,6 +157,7 @@ if(jQuery) (function($) {
 				selector
 					.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"><div class="miniColors-colorPicker-inner"></div></div>')
 					.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>')
+					.append('<div class="miniColors-alpha"><div class="miniColors-alphaPicker"></div></div>')
 					.css('display', 'none')
 					.addClass( input.attr('class') );
 				
@@ -147,7 +166,11 @@ if(jQuery) (function($) {
 				selector
 					.find('.miniColors-colors')
 					.css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
-				
+
+				selector
+					.find('.miniColors-alpha')
+					.css('backgroundColor', '#' + hsb2hex(hsb));
+
 				// Set colorPicker position
 				var colorPosition = input.data('colorPosition');
 				if( !colorPosition ) colorPosition = getColorPositionFromHSB(hsb);
@@ -160,11 +183,18 @@ if(jQuery) (function($) {
 				if( !huePosition ) huePosition = getHuePositionFromHSB(hsb);
 				selector.find('.miniColors-huePicker').css('top', huePosition.y + 'px');
 				
+				// Set alphaPicker position
+				var alphaPosition = input.data('alphaPosition');
+				console.log('show: '+alphaPosition);
+				if( !alphaPosition ) alphaPosition = { y:-1 };
+				selector.find('.miniColors-alphaPicker').css('top', alphaPosition.y + 'px');
+
 				// Set input data
 				input
 					.data('selector', selector)
 					.data('huePicker', selector.find('.miniColors-huePicker'))
 					.data('colorPicker', selector.find('.miniColors-colorPicker'))
+					.data('alphaPicker', selector.find('.miniColors-alphaPicker'))
 					.data('mousebutton', 0);
 				
 				$('BODY').append(selector);
@@ -220,6 +250,12 @@ if(jQuery) (function($) {
 						moveHue(input, event);
 					}
 					
+					if( testSubject.hasClass('miniColors-alpha') ) {
+						event.preventDefault();
+						input.data('moving', 'alpha');
+						moveAlpha(input, event);
+					}
+
 					if( testSubject.hasClass('miniColors-selector') ) {
 						event.preventDefault();
 						return;
@@ -240,6 +276,7 @@ if(jQuery) (function($) {
 						if( input.data('mousebutton') === 1 ) {
 							if( input.data('moving') === 'colors' ) moveColor(input, event);
 							if( input.data('moving') === 'hues' ) moveHue(input, event);
+							if( input.data('moving') === 'alpha' ) moveAlpha(input, event);
 						}
 					});
 				
@@ -356,28 +393,87 @@ if(jQuery) (function($) {
 				
 			};
 			
+			var moveAlpha = function(input, event) {
+				
+				var alphaPicker = input.data('alphaPicker');
+				
+				alphaPicker.hide();
+				
+				var position = {
+					y: event.pageY
+				};
+				
+				// Touch support
+				if( event.originalEvent.changedTouches ) {
+					position.y = event.originalEvent.changedTouches[0].pageY;
+				}
+				
+				position.y = position.y - input.data('selector').find('.miniColors-colors').offset().top - 1;
+				if( position.y <= -1 ) position.y = -1;
+				if( position.y >= 149 ) position.y = 149;
+				input.data('alphaPosition', position);
+				alphaPicker.css('top', position.y).show();
+				
+				// Update HSB values
+				var hsb = input.data('hsb');
+				// hsb.h = h;
+			
+				// Set color
+				setColor(input, hsb, true);
+			};
+
 			var setColor = function(input, hsb, updateInput) {
 				input.data('hsb', hsb);
+
+				var alpha = input.data('alphaPosition');
+				if( !alpha ) alpha = { y:-1 };
+
 				var hex = hsb2hex(hsb);	
-				if( updateInput ) input.val( '#' + convertCase(hex, input.data('letterCase')) );
-				input.data('trigger').css('backgroundColor', '#' + hex);
-				if( input.data('selector') ) input.data('selector').find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
-				
+
+				if ( alpha.y > 0 ) {
+					var rgba = hsb2rgb(hsb);
+					var max = input.data('selector').find('.miniColors-alpha').height() - input.data('selector').find('.miniColors-alphaPicker').height();
+					rgba.a = (alpha.y/max);
+					rgba.a = Math.round(rgba.a*Math.pow(10,2))/Math.pow(10,2);
+					input.data('rgba', rgba);
+					if( updateInput ) input.val( 'rgba('+rgba.r+', '+rgba.g+', '+rgba.b+', '+(1-rgba.a)+')' );
+					input.data('trigger').css('backgroundColor', 'rgba('+rgba.r+', '+rgba.g+', '+rgba.b+', '+(1-rgba.a)+')');
+				} else {
+					if( updateInput ) input.val( '#' + convertCase(hex, input.data('letterCase')) );
+					input.data('trigger').css('backgroundColor', '#' + hex);
+					input.data('rgba', null);
+				}	
+
+				if( input.data('selector') ) { 
+					input.data('selector').find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 }));
+					input.data('selector').find('.miniColors-alpha').css('backgroundColor', '#' + hex);
+				}
+
 				// Fire change callback
 				if( input.data('change') ) {
 					if( hex === input.data('lastChange') ) return;
 					input.data('change').call(input.get(0), '#' + hex, hsb2rgb(hsb));
 					input.data('lastChange', hex);
-				}
-				
+				}			
 			};
 			
 			var setColorFromInput = function(input) {
-				
-				input.val('#' + cleanHex(input.val()));
-				var hex = expandHex(input.val());
-				if( !hex ) return false;
-				
+				var hex, rgba;
+
+				if (input.val().substring(0,4) == 'rgba') {
+					rgba = extractRGBA(input.val());
+					console.log(input.val());
+					if( !rgba ) return false;
+					input.val('rgba('+rgba.r+', '+rgba.g+', '+rgba.b+', '+rgba.a+')');
+					hex = rgb2hex(rgba);
+				} else if (input.val() != '') {
+					input.val('#' + cleanHex(input.val()));
+					hex = expandHex(input.val());
+					if( !hex ) return false;
+				}
+
+				console.log(hex);
+
 				// Get HSB equivalent
 				var hsb = hex2hsb(hex);
 				
@@ -397,6 +493,13 @@ if(jQuery) (function($) {
 				huePicker.css('top', huePosition.y + 'px');
 				input.data('huePosition', huePosition);
 				
+				// Set alphaPosition position
+				var alphaPosition = { y: -1 };
+				if (rgba) alphaPosition = getAlphaPositionFromAlpha(rgba.a);
+				var alphaPicker = $(input.data('alphaPicker'));
+				alphaPicker.css('top', alphaPosition.y + 'px');
+				input.data('alphaPosition', alphaPosition);
+
 				setColor(input, hsb);
 				
 				return true;
@@ -425,7 +528,14 @@ if(jQuery) (function($) {
 				if( y > 150 ) h = 150;				
 				return { y: y - 1 };
 			};
-			
+
+			var getAlphaPositionFromAlpha = function(alpha) {
+				var y = 150 - (alpha / 2 * 3 * 100);
+				if( y < 0 ) y = 0;
+				if( y > 150 ) y = 150;
+				return { y: y - 1 };
+			};
+
 			var cleanHex = function(hex) {
 				return hex.replace(/[^A-F0-9]/ig, '');
 			};
@@ -435,7 +545,18 @@ if(jQuery) (function($) {
 				if( !hex ) return null;
 				if( hex.length === 3 ) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
 				return hex.length === 6 ? hex : null;
-			};			
+			};
+
+			var extractRGBA = function(rgba) {
+				rgba = rgba.slice(rgba.indexOf('(') + 1, rgba.indexOf(')'));
+				rgba = rgba.split(',');
+				return (rgba.length === 4) ? {
+				    r: parseFloat(rgba[0]),
+				    g: parseFloat(rgba[1]),
+				    b: parseFloat(rgba[2]),
+				    a: parseFloat(rgba[3])
+				} : null;
+			};	
 			
 			var hsb2rgb = function(hsb) {
 				var rgb = {};
@@ -524,7 +645,6 @@ if(jQuery) (function($) {
 				return rgb2hex(hsb2rgb(hsb));
 			};
 
-			
 			// Handle calls to $([selector]).miniColors()
 			switch(o) {
 			
@@ -596,7 +716,6 @@ if(jQuery) (function($) {
 					});
 					
 					return $(this);
-					
 			}
 			
 		}
