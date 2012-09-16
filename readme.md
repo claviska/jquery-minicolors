@@ -33,11 +33,11 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 		...
 	});
 
-### Preset color:
+__Preset color:__
 
 `<input type="text" name="color1" value="#FFCC00" />`
 
-### Preset color and opacity:
+__Preset color and opacity:__
 
 `<input type="text" name="color2" value="#FFCC00" data-opacity=".5" />`
 
