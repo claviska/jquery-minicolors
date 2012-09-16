@@ -33,13 +33,13 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 		...
 	});
 
-## Preset color:
+### Preset color:
 
-<input type="text" name="color1" value="#FFCC00" />
+`<input type="text" name="color1" value="#FFCC00" />`
 
-## Preset color and opacity:
+### Preset color and opacity:
 
-<input type="text" name="color2" value="#FFCC00" data-opacity=".5" />
+`<input type="text" name="color2" value="#FFCC00" data-opacity=".5" />`
 
 
 ## Methods
