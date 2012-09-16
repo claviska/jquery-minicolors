@@ -22,6 +22,7 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 
 * __disabled__ _[true,false]_ - Disables the control on init
 * __readonly__ _[true,false]_ - Makes the control read-only on init
+* __opacity__ _[true, false]_ - Enables/disables the opacity slider
 
 
 ## Specify options on creation:
@@ -31,6 +32,14 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 		optionName: value,
 		...
 	});
+
+## Preset color:
+
+<input type="text" name="color1" value="#FFCC00" />
+
+## Preset color and opacity:
+
+<input type="text" name="color2" value="#FFCC00" data-opacity=".5" />
 
 
 ## Methods
@@ -44,6 +53,8 @@ Methods are called using this syntax:
 * __letterCase__ _[uppercase|lowercase|null]_ - forces the hex value into upper or lowercase
 * __disabled__ _[true|false]_ - sets the disabled status
 * __readonly__ _[true|false]_ - sets the readonly status
+* __opacity__ _(none)_ - gets the opacity level
+* __opacity__ _(0-1)_ - sets the opacity level
 * __value__ _(none)_ - gets the current value; guaranteed to return a valid hex color
 * __value__ _[hex value]_ - sets the control's value
 * __destroy__ _(none)_
@@ -51,11 +62,11 @@ Methods are called using this syntax:
 
 ## Events
 
-* __change__*(hex, rgb)* - called when the color value changes
-* __open__*(hex, rgb)* - called when the color picker is opened
-* __close__*(hex, rgb)* - called when the color picker is hidden
+* __change__*(hex, rgb, opacity)* - called when the color value changes
+* __open__*(hex, rgb, opacity)* - called when the color picker is opened
+* __close__*(hex, rgb, opacity)* - called when the color picker is hidden
 
-*In all callbacks, 'this' refers to the original input element*
+*In all callbacks, 'this' refers to the original input element. The _opacity_ argument will only be present if opacity is enabled.*
 
 
 ### Example
@@ -64,6 +75,9 @@ Methods are called using this syntax:
 		change: function(hex, rgb) { ... }
 	});
 
+## Known Issues
+
+* IE7/8 do not show opacity in the trigger since it uses RGBA
 
 ## Attribution
 

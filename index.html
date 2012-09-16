@@ -26,73 +26,10 @@
 			
 			$(document).ready( function() {
 				
-				
-				//
-				// Enabling miniColors
-				//
-				
-				$(".color-picker").miniColors({
-					// letterCase: 'uppercase',
-					change: function(hex, rgb) {
-						logData('change', hex, rgb);
-					},
-					open: function(hex, rgb) {
-						logData('open', hex, rgb);
-					},
-					close: function(hex, rgb) {
-						logData('close', hex, rgb);
-					}
-				});
-				
-				
-				//
-				// Only for the demo
-				//
-				
-				function logData(type, hex, rgb) {
-					$("#console").prepend(type + ': HEX = ' + hex + ', RGB = (' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br />');
-				}
-				
-				$("#disable").click( function() {
-					$("#console").prepend('disable<br />');
-					$(".color-picker").miniColors('disabled', true);
-					$("#disable").prop('disabled', true);
-					$("#enable").prop('disabled', false);
-				});
-				
-				$("#enable").click( function() {
-					$("#console").prepend('enable<br />');
-					$(".color-picker").miniColors('disabled', false);
-					$("#disable").prop('disabled', false);
-					$("#enable").prop('disabled', true);
-				});
-				
-				$("#makeReadonly").click( function() {
-					$("#console").prepend('readonly = true<br />');
-					$(".color-picker").miniColors('readonly', true);
-					$("#unmakeReadonly").prop('disabled', false);
-					$("#makeReadonly").prop('disabled', true);
-				});
-				
-				$("#unmakeReadonly").click( function() {
-					$("#console").prepend('readonly = false<br />');
-					$(".color-picker").miniColors('readonly', false);
-					$("#unmakeReadonly").prop('disabled', true);
-					$("#makeReadonly").prop('disabled', false);
-				});
-				
-				$("#destroy").click( function() {
-					$("#console").prepend('destroy<br />');
-					$(".color-picker").miniColors('destroy');
-					$("INPUT[type=button]:not(#create)").prop('disabled', true);
-					$("#destroy").prop('disabled', true);
-					$("#create").prop('disabled', false);
-				});
-				
-				$("#create").click( function() {
-					$("#console").prepend('create<br />');
-					$(".color-picker").miniColors({
-						letterCase: 'uppercase',
+				function init() {
+					
+					// Enabling miniColors
+					$('.color-picker').miniColors({
 						change: function(hex, rgb) {
 							logData('change', hex, rgb);
 						},
@@ -103,15 +40,78 @@
 							logData('close', hex, rgb);
 						}
 					});
+					
+					// With opacity
+					$('.color-picker-opacity').miniColors({
+						opacity: true,
+						change: function(hex, rgb, opacity) {
+							logData('change', hex, rgb, opacity);
+						},
+						open: function(hex, rgb, opacity) {
+							logData('open', hex, rgb, opacity);
+						},
+						close: function(hex, rgb, opacity) {
+							logData('close', hex, rgb, opacity);
+						}
+					});
+					
+				}				
+				
+				function logData(type, hex, rgb, opacity) {
+					var text = type + ': ' + hex + ', rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+					if( opacity ) text += ', opacity(' + opacity + ')';
+					$('#console').prepend(text + '<br>');
+				}
+				
+				init();
+				
+				$('#disable').click( function() {
+					$('#console').prepend('disable<br />');
+					$('.color-picker, .color-picker-opacity').miniColors('disabled', true);
+					$("#disable").prop('disabled', true);
+					$("#enable").prop('disabled', false);
+				});
+				
+				$('#enable').click( function() {
+					$('#console').prepend('enable<br />');
+					$('.color-picker, .color-picker-opacity').miniColors('disabled', false);
+					$("#disable").prop('disabled', false);
+					$("#enable").prop('disabled', true);
+				});
+				
+				$('#makeReadonly').click( function() {
+					$('#console').prepend('readonly = true<br />');
+					$('.color-picker, .color-picker-opacity').miniColors('readonly', true);
+					$("#unmakeReadonly").prop('disabled', false);
+					$("#makeReadonly").prop('disabled', true);
+				});
+				
+				$('#unmakeReadonly').click( function() {
+					$('#console').prepend('readonly = false<br />');
+					$('.color-picker, .color-picker-opacity').miniColors('readonly', false);
+					$("#unmakeReadonly").prop('disabled', true);
+					$("#makeReadonly").prop('disabled', false);
+				});
+				
+				$('#destroy').click( function() {
+					$('#console').prepend('destroy<br />');
+					$('.color-picker, .color-picker-opacity').miniColors('destroy');
+					$("INPUT[type=button]:not(#create)").prop('disabled', true);
+					$("#destroy").prop('disabled', true);
+					$("#create").prop('disabled', false);
+				});
+				
+				$('#create').click( function() {
+					$('#console').prepend('create<br />');
+					init();
 					$("#makeReadonly, #disable, #destroy, #randomize").prop('disabled', false);
 					$("#destroy").prop('disabled', false);
 					$("#create").prop('disabled', true);
 				});
 				
-				$("#randomize").click( function() {
-					$(".color-picker").miniColors('value', '#' + Math.floor(Math.random() * 16777215).toString(16));
+				$('#randomize').click( function() {
+					$('.color-picker, .color-picker-opacity').miniColors('value', '#' + Math.floor(Math.random() * 16777215).toString(16));
 				});
-				
 				
 			});
 			
@@ -123,28 +123,28 @@
 	
 		<h1>jQuery miniColors</h1>
 		<p>
-			A miniature color selector for input elements.
+			A compact color selector for input elements.
 		</p>
 		
 		<div id="console" style="width: 500px; float: right; color: #FFF; background: #000; font: 12px monospace; padding: 1em; margin: 1em 0; height: 350px; overflow: auto;"></div>
 		
 		<p>
-			Default<br /><input type="text" name="color1" class="color-picker" size="7" autocomplete="on" maxlength="10" />
+			Default<br /><input type="text" name="color1" class="color-picker" size="7" autocomplete="on" value="#fff" />
 		</p>
 		
 		<p>
-			Black theme (set class=&quot;black&quot; on the input element)<br />
+			Black theme (set class=&quot;black&quot; on the input)<br />
 			<input type="text" name="color2" class="color-picker black" size="7" />
 		</p>
 		
 		<p>
-			Preset HEX value (set value attribute on the input element)<br />
-			<input type="text" name="color3" class="color-picker" size="7" value="#abcdef" />
+			Preset HEX value (set value attribute for preset)<br />
+			<input type="text" name="color3" class="color-picker" size="7" value="#fff666" />
 		</p>
 
 		<p>
-			Preset RGBA value (set value attribute on the input element)<br />
-			<input type="text" name="color3" class="color-picker" size="28" value="rgba(156, 194, 232, 0.64)" />
+			With Opacity (set data-opacity attribute for preset)<br />
+			<input type="text" name="color3" class="color-picker-opacity" size="7" value="#005294" data-opacity=".5" />
 		</p>
 		
 		<p>
