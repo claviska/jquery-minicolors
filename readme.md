@@ -1,6 +1,6 @@
 # jQuery miniColors: A small color selector
 
-_Copyright 2012 Cory LaViska for A Beautiful Site, LLC. (http://abeautifulsite.net/)_
+_Copyright 2012 Cory LaViska for A Beautiful Site, LLC. (http://www.abeautifulsite.net/)_
 
 _Dual licensed under the MIT / GPLv2 licenses_
 
