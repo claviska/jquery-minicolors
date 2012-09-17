@@ -31,37 +31,31 @@
 					// Enabling miniColors
 					$('.color-picker').miniColors({
 						change: function(hex, rgb) {
-							logData('change', hex, rgb);
+							$('#console').prepend('change: ' + hex + ', rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br>');
 						},
 						open: function(hex, rgb) {
-							logData('open', hex, rgb);
+							$('#console').prepend('open: ' + hex + ', rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br>');
 						},
 						close: function(hex, rgb) {
-							logData('close', hex, rgb);
+							$('#console').prepend('close: ' + hex + ', rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')<br>');
 						}
 					});
 					
 					// With opacity
 					$('.color-picker-opacity').miniColors({
 						opacity: true,
-						change: function(hex, rgb, opacity) {
-							logData('change', hex, rgb, opacity);
+						change: function(hex, rgba) {
+							$('#console').prepend('change: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
 						},
-						open: function(hex, rgb, opacity) {
-							logData('open', hex, rgb, opacity);
+						open: function(hex, rgba) {
+							$('#console').prepend('open: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
 						},
-						close: function(hex, rgb, opacity) {
-							logData('close', hex, rgb, opacity);
+						close: function(hex, rgba) {
+							$('#console').prepend('close: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
 						}
 					});
 					
 				}				
-				
-				function logData(type, hex, rgb, opacity) {
-					var text = type + ': ' + hex + ', rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
-					if( opacity ) text += ', opacity(' + opacity + ')';
-					$('#console').prepend(text + '<br>');
-				}
 				
 				init();
 				

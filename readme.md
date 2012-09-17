@@ -53,7 +53,7 @@ Methods are called using this syntax:
 * __letterCase__ _[uppercase|lowercase|null]_ - forces the hex value into upper or lowercase
 * __disabled__ _[true|false]_ - sets the disabled status
 * __readonly__ _[true|false]_ - sets the readonly status
-* __opacity__ _(none)_ - gets the opacity level
+* __opacity__ _(none)_ - gets the opacity level (0-1)
 * __opacity__ _(0-1)_ - sets the opacity level
 * __value__ _(none)_ - gets the current value; guaranteed to return a valid hex color
 * __value__ _[hex value]_ - sets the control's value
@@ -62,18 +62,32 @@ Methods are called using this syntax:
 
 ## Events
 
-* __change__*(hex, rgb, opacity)* - called when the color value changes
-* __open__*(hex, rgb, opacity)* - called when the color picker is opened
-* __close__*(hex, rgb, opacity)* - called when the color picker is hidden
+* __change__*(hex, rgb)* - called when the color value changes
+* __open__*(hex, rgb)* - called when the color picker is opened
+* __close__*(hex, rgb)* - called when the color picker is hidden
 
-*In all callbacks, 'this' refers to the original input element. The _opacity_ argument will only be present if opacity is enabled.*
+* In all callbacks, `this` refers to the original input element.
+* `hex` is the hex color code of the selected color
+* `rgb` is an object containing red, green, and blue values; if opacity is enabled, it will also contain an alpha value (rgb.a)
 
 
-### Example
-
+### Examples
+	
+	// Get hex color code on change
 	$([selector]).miniColors({
-		change: function(hex, rgb) { ... }
+		change: function(hex, rgb) {
+			console.log(hex);
+		}
 	});
+	
+	// Get RGBA values on change
+	$([selector]).miniColors({
+		opacity: true,
+		change: function(hex, rgba) {
+			console.log('rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')');
+		}
+	});
+
 
 ## Known Issues
 

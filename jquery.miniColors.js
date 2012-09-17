@@ -52,8 +52,8 @@ if(jQuery) (function($) {
 					.val('#' + convertCase(color, o.letterCase));
 				
 				// Handle options
-				if( o.readonly ) input.prop('readonly', true);
-				if( o.disabled ) disable(input);
+				if( o.readonly || input.prop('readonly') ) input.prop('readonly', true);
+				if( o.disabled || input.prop('disabled') ) disable(input);
 				
 				// Show selector when trigger is clicked
 				trigger.on('click.miniColors', function(event) {
@@ -99,7 +99,6 @@ if(jQuery) (function($) {
 				//
 				// Destroys an active instance of the miniColors selector
 				//
-				
 				hide();
 				input = $(input);
 				
@@ -130,7 +129,7 @@ if(jQuery) (function($) {
 				hide(input);
 				input
 					.prop('disabled', true)
-					.data('trigger').parent().addClass('disabled');;
+					.data('trigger').parent().addClass('disabled');
 			};
 			
 			var show = function(input) {
@@ -224,40 +223,39 @@ if(jQuery) (function($) {
 					});
 				}
 				
-				$(document).on('mousedown.miniColors touchstart.miniColors', function(event) {
-					
-					input.data('mousebutton', 1);
-					var testSubject = $(event.target).parents().andSelf();
-					
-					if( testSubject.hasClass('miniColors-colors') ) {
-						event.preventDefault();
-						input.data('moving', 'colors');
-						moveColor(input, event);
-					}
-					
-					if( testSubject.hasClass('miniColors-hues') ) {
-						event.preventDefault();
-						input.data('moving', 'hues');
-						moveHue(input, event);
-					}
-					
-					if( testSubject.hasClass('miniColors-opacity') ) {
-						event.preventDefault();
-						input.data('moving', 'opacity');
-						moveOpacity(input, event);
-					}
-					
-					if( testSubject.hasClass('miniColors-selector') ) {
-						event.preventDefault();
-						return;
-					}
-					
-					if( testSubject.hasClass('miniColors') ) return;
-					
-					hide(input);
-				});
-				
 				$(document)
+					.on('mousedown.miniColors touchstart.miniColors', function(event) {
+						
+						input.data('mousebutton', 1);
+						var testSubject = $(event.target).parents().andSelf();
+						
+						if( testSubject.hasClass('miniColors-colors') ) {
+							event.preventDefault();
+							input.data('moving', 'colors');
+							moveColor(input, event);
+						}
+						
+						if( testSubject.hasClass('miniColors-hues') ) {
+							event.preventDefault();
+							input.data('moving', 'hues');
+							moveHue(input, event);
+						}
+						
+						if( testSubject.hasClass('miniColors-opacity') ) {
+							event.preventDefault();
+							input.data('moving', 'opacity');
+							moveOpacity(input, event);
+						}
+						
+						if( testSubject.hasClass('miniColors-selector') ) {
+							event.preventDefault();
+							return;
+						}
+						
+						if( testSubject.hasClass('miniColors') ) return;
+						
+						hide(input);
+					})
 					.on('mouseup.miniColors touchend.miniColors', function(event) {
 					    event.preventDefault();
 						input.data('mousebutton', 0).removeData('moving');
@@ -273,7 +271,7 @@ if(jQuery) (function($) {
 				
 				// Fire open callback
 				if( input.data('open') ) {
-					input.data('open').call(input.get(0), '#' + hsb2hex(hsb), hsb2rgb(hsb), input.attr('data-opacity'));
+					input.data('open').call(input.get(0), '#' + hsb2hex(hsb), $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
 				}
 				
 			};
@@ -294,7 +292,7 @@ if(jQuery) (function($) {
 						// Fire close callback
 						if( input.data('close') ) {
 							var hsb = input.data('hsb'), hex = hsb2hex(hsb);	
-							input.data('close').call(input.get(0), '#' + hex, hsb2rgb(hsb), input.attr('data-opacity'));
+							input.data('close').call(input.get(0), '#' + hex, $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
 						}
 						$(this).remove();
 					});
@@ -439,7 +437,7 @@ if(jQuery) (function($) {
 				// Fire change callback
 				if( input.data('change') ) {
 					if( (hex + ',' + input.attr('data-opacity')) === input.data('lastChange') ) return;
-					input.data('change').call(input.get(0), '#' + hex, hsb2rgb(hsb), input.attr('data-opacity'));
+					input.data('change').call(input.get(0), '#' + hex, $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
 					input.data('lastChange', hex + ',' + input.attr('data-opacity'));
 				}
 				
