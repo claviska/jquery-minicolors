@@ -12,6 +12,8 @@ if(jQuery) (function($) {
 		
 		miniColors: function(o, data) {
 			
+			var prefix = !o || typeof o.prefix === 'undefined' ? '#' : o.prefix ;
+			
 			var create = function(input, o, data) {
 				//
 				// Creates a new instance of the miniColors selector
@@ -49,7 +51,7 @@ if(jQuery) (function($) {
 					.data('open', o.open ? o.open : null)
 					.attr('maxlength', 7)
 					.attr('autocomplete', 'off')
-					.val('#' + convertCase(color, o.letterCase));
+					.val(prefix + convertCase(color, o.letterCase));
 				
 				// Handle options
 				if( o.readonly || input.prop('readonly') ) input.prop('readonly', true);
@@ -58,21 +60,21 @@ if(jQuery) (function($) {
 				// Show selector when trigger is clicked
 				trigger.on('click.miniColors', function(event) {
 					event.preventDefault();
-					if( input.val() === '' ) input.val('#');
+					if( input.val() === '' ) input.val(prefix);
 					show(input);
 
 				});
 				
 				// Show selector when input receives focus
 				input.on('focus.miniColors', function(event) {
-					if( input.val() === '' ) input.val('#');
+					if( input.val() === '' ) input.val(prefix);
 					show(input);
 				});
 				
 				// Hide on blur
 				input.on('blur.miniColors', function(event) {
 					var hex = expandHex( hsb2hex(input.data('hsb')) );
-					input.val( hex ? '#' + convertCase(hex, input.data('letterCase')) : '' );
+					input.val( hex ? prefix + convertCase(hex, input.data('letterCase')) : '' );
 				});
 				
 				// Hide when tabbing out of the input
@@ -418,7 +420,7 @@ if(jQuery) (function($) {
 				input.data('hsb', hsb);
 				var hex = hsb2hex(hsb), 
 					selector = $(input.data('selector'));
-				if( updateInput ) input.val( '#' + convertCase(hex, input.data('letterCase')) );
+				if( updateInput ) input.val( prefix + convertCase(hex, input.data('letterCase')) );
 				
 				selector
 					.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 })).end()
@@ -445,7 +447,7 @@ if(jQuery) (function($) {
 			
 			var setColorFromInput = function(input) {
 				
-				input.val('#' + cleanHex(input.val()));
+				input.val(prefix + cleanHex(input.val()));
 				var hex = expandHex(input.val());
 				if( !hex ) return false;
 				
@@ -638,7 +640,7 @@ if(jQuery) (function($) {
 						if( !$(this).hasClass('miniColors') ) return;
 						var input = $(this),
 							hex = expandHex(input.val());
-						return hex ? '#' + convertCase(hex, input.data('letterCase')) : null;
+						return hex ? prefix + convertCase(hex, input.data('letterCase')) : null;
 					}
 					
 					// Setter
