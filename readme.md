@@ -21,6 +21,8 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 ## Options
 
 * __disabled__ _[true,false]_ - Disables the control on init
+* __letterCase__ _[uppercase|lowercase]_ - forces the hex value into upper or lowercase
+* __opacity__ _[true,false]_ - Enables opacity selector (not required if data-opacity attribute is set on input)
 * __readonly__ _[true,false]_ - Makes the control read-only on init
 
 
@@ -49,11 +51,12 @@ Methods are called using this syntax:
 
 ### Available Methods
 
-* __letterCase__ _[uppercase|lowercase|null]_ - forces the hex value into upper or lowercase
 * __disabled__ _[true|false]_ - sets the disabled status
-* __readonly__ _[true|false]_ - sets the readonly status
+* __hide__ _(none)_ - manually hides the color picker control
 * __opacity__ _(none)_ - gets the opacity level (0-1)
 * __opacity__ _(0-1)_ - sets the opacity level
+* __readonly__ _[true|false]_ - sets the readonly status
+* __show__ _(none)_ - manually shows the color picker control
 * __value__ _(none)_ - gets the current value; guaranteed to return a valid hex color
 * __value__ _[hex value]_ - sets the control's value
 * __destroy__ _(none)_

@@ -22,7 +22,7 @@ if(jQuery) (function($) {
 					trigger;
 				
 				// Handle opacity
-				if( input.attr('data-opacity') !== undefined ) {
+				if( input.attr('data-opacity') !== undefined || o.opacity === true ) {
 					opacity = true;
 					alpha = input.attr('data-opacity');
 					if( alpha === '' ) {
@@ -83,7 +83,15 @@ if(jQuery) (function($) {
 				
 				// Hide when tabbing out of the input
 				input.on('keydown.miniColors', function(event) {
-					if( event.keyCode === 9 ) hide(input);
+					switch( event.keyCode ) {
+						case 9:
+							hide(input);
+							break;
+						case 27:
+							hide(input);
+							input.blur();
+							break;
+					}
 				});
 				
 				// Update when color is typed in
@@ -158,7 +166,7 @@ if(jQuery) (function($) {
 					scrollTop,
 					scrollLeft;
 				
-				if( input.prop('disabled') ) return false;
+				if( input.prop('disabled') || !input.is('.miniColors') ) return false;
 				
 				// Hide all other instances 
 				hide();				
@@ -659,7 +667,15 @@ if(jQuery) (function($) {
 			
 			// Handle calls to $([selector]).miniColors()
 			switch(o) {
-			
+				
+				case 'hide':
+					hide( $(this) );
+					return $(this);
+				
+				case 'show':
+					show( $(this) );
+					return $(this);
+				
 				case 'readonly':
 					
 					$(this).each( function() {
