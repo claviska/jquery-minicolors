@@ -20,10 +20,10 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 
 ## Options
 
-* __disabled__ _[true,false]_ - Disables the control on init
+* __disabled__ _[true,false]_ - When true, disables the control completely
 * __letterCase__ _[uppercase|lowercase]_ - forces the hex value into upper or lowercase
 * __opacity__ _[true,false]_ - Enables opacity selector (not required if data-opacity attribute is set on input)
-* __readonly__ _[true,false]_ - Makes the control read-only on init
+* __readonly__ _[true,false]_ - When true, prevents the user from typing in the input box
 
 
 ## Specify options on creation:
