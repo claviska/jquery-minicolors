@@ -461,7 +461,8 @@ if(jQuery) (function($) {
 			function setColor(input, hex, updateInput) {
 				
 				var selector = $(input.data('selector')),
-					rgb = hex2rgb(hex);
+					rgb = hex2rgb(hex),
+					hsb = hex2hsb(hex);
 				
 				hex = cleanHex(expandHex(hex));
 				if( !hex ) return;
@@ -470,9 +471,9 @@ if(jQuery) (function($) {
 				if( updateInput ) input.val( convertCase(hex, input.data('letterCase')) );
 				
 				input.data('hex', '#' + cleanHex(expandHex(hex)));
-				
+				console.log(hex);
 				selector
-					.find('.miniColors-colors').css('backgroundColor', hex).end()
+					.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 })).end()
 					.find('.miniColors-opacity').css('backgroundColor', hex).end();
 				
 				// Set background color (also fallback for non RGBA browsers)
