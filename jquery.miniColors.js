@@ -471,7 +471,6 @@ if(jQuery) (function($) {
 				if( updateInput ) input.val( convertCase(hex, input.data('letterCase')) );
 				
 				input.data('hex', '#' + cleanHex(expandHex(hex)));
-				console.log(hex);
 				selector
 					.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 })).end()
 					.find('.miniColors-opacity').css('backgroundColor', hex).end();
