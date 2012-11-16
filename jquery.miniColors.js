@@ -12,29 +12,34 @@ if(jQuery) (function($) {
 		
 		miniColors: function(o, data) {
 			
-			var prefix = !o || typeof o.prefix === 'undefined' ? '#' : o.prefix ;
-			
-			var create = function(input, o, data) {
-				//
-				// Creates a new instance of the miniColors selector
-				//
+			function create(input, o, data) {
 				
 				// Determine initial color (defaults to white)
-				var color = expandHex(input.val()) || 'ffffff',
-					hsb = hex2hsb(color),
-					rgb = hsb2rgb(hsb),
-					alpha = parseFloat(input.attr('data-opacity')).toFixed(2);
+				var hex = input.val() ? '#' + cleanHex(expandHex(input.val())) : '#ffffff',
+					rgb = hex2rgb(hex),
+					opacity = false,
+					alpha,
+					trigger;
 				
-				if( alpha > 1 ) alpha = 1;
-				if( alpha < 0 ) alpha = 0;
+				// Handle opacity
+				if( input.attr('data-opacity') !== undefined ) {
+					opacity = true;
+					alpha = input.attr('data-opacity');
+					if( alpha === '' ) {
+						alpha = 1;
+					} else {
+						alpha = parseFloat(alpha).toFixed(2);
+					}
+					if( alpha > 1 ) alpha = 1;
+					if( alpha < 0 ) alpha = 0;
+					input.attr('data-opacity', alpha);
+				}
 				
 				// Create trigger
-				var trigger = $('<a class="miniColors-trigger" style="background-color: #' + color + '" href="#"></a>');
-				trigger.insertAfter(input);
-				trigger.wrap('<span class="miniColors-triggerWrap"></span>');
-				if( o.opacity ) {
-					trigger.css('backgroundColor', 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + alpha + ')');
-				}
+				trigger = $('<a class="miniColors-trigger" style="background-color: ' + hex + '" href="#"></a>')
+					.insertAfter(input)
+					.wrap('<span class="miniColors-triggerWrap"></span>')
+					.css('backgroundColor', 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + alpha + ')');
 				
 				// Set input data and update attributes
 				input
@@ -42,16 +47,16 @@ if(jQuery) (function($) {
 					.data('original-maxlength', input.attr('maxlength') || null)
 					.data('original-autocomplete', input.attr('autocomplete') || null)
 					.data('letterCase', o.letterCase === 'uppercase' ? 'uppercase' : 'lowercase')
-					.data('opacity', o.opacity ? true : false)
+					.data('opacity', opacity)
 					.data('alpha', alpha)
 					.data('trigger', trigger)
-					.data('hsb', hsb)
+					.data('hex', hex)
 					.data('change', o.change ? o.change : null)
 					.data('close', o.close ? o.close : null)
 					.data('open', o.open ? o.open : null)
 					.attr('maxlength', 7)
 					.attr('autocomplete', 'off')
-					.val(prefix + convertCase(color, o.letterCase));
+					.val(convertCase('#' + cleanHex(hex), o.letterCase));
 				
 				// Handle options
 				if( o.readonly || input.prop('readonly') ) input.prop('readonly', true);
@@ -60,21 +65,20 @@ if(jQuery) (function($) {
 				// Show selector when trigger is clicked
 				trigger.on('click.miniColors', function(event) {
 					event.preventDefault();
-					if( input.val() === '' ) input.val(prefix);
+					if( input.val() === '' ) input.val('#');
 					show(input);
-
 				});
 				
 				// Show selector when input receives focus
 				input.on('focus.miniColors', function(event) {
-					if( input.val() === '' ) input.val(prefix);
+					if( input.val() === '' ) input.val('#');
 					show(input);
 				});
 				
 				// Hide on blur
 				input.on('blur.miniColors', function(event) {
-					var hex = expandHex( hsb2hex(input.data('hsb')) );
-					input.val( hex ? prefix + convertCase(hex, input.data('letterCase')) : '' );
+					var hex = input.data('hex');
+					input.val( convertCase(hex, input.data('letterCase')) );
 				});
 				
 				// Hide when tabbing out of the input
@@ -95,9 +99,9 @@ if(jQuery) (function($) {
 					}, 5);
 				});
 				
-			};
+			}
 			
-			var destroy = function(input) {
+			function destroy(input) {
 				//
 				// Destroys an active instance of the miniColors selector
 				//
@@ -113,18 +117,18 @@ if(jQuery) (function($) {
 					.removeClass('miniColors')
 					.off('.miniColors');
 				$(document).off('.miniColors');
-			};
+			}
 			
-			var enable = function(input) {
+			function enable(input) {
 				//
 				// Enables the input control and the selector
 				//
 				input
 					.prop('disabled', false)
 					.data('trigger').parent().removeClass('disabled');
-			};
+			}
 			
-			var disable = function(input) {
+			function disable(input) {
 				//
 				// Disables the input control and the selector
 				//
@@ -132,19 +136,34 @@ if(jQuery) (function($) {
 				input
 					.prop('disabled', true)
 					.data('trigger').parent().addClass('disabled');
-			};
+			}
 			
-			var show = function(input) {
-				//
-				// Shows the miniColors selector
-				//
+			function show(input) {
+				
+				var hex,
+					colorPosition,
+					huePosition,
+					opacityPosition,
+					hidden,
+					top,
+					left,
+					trigger,
+					triggerWidth,
+					triggerHeight,
+					selector = $('<div class="miniColors-selector"></div>'),
+					selectorWidth,
+					selectorHeight,
+					windowHeight,
+					windowWidth,
+					scrollTop,
+					scrollLeft;
+				
 				if( input.prop('disabled') ) return false;
 				
 				// Hide all other instances 
 				hide();				
                 
 				// Generate the selector
-				var selector = $('<div class="miniColors-selector"></div>');
 				selector
 					.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>')
 					.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"><div class="miniColors-colorPicker-inner"></div></div>')
@@ -159,25 +178,25 @@ if(jQuery) (function($) {
 				}
 				
 				// Set background for colors
-				var hsb = input.data('hsb');
+				hex = input.data('hex');
 				selector
-					.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 })).end()
-					.find('.miniColors-opacity').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: hsb.s, b: hsb.b })).end();
+					.find('.miniColors-colors').css('backgroundColor', hex).end()
+					.find('.miniColors-opacity').css('backgroundColor', hex).end();
 				
 				// Set colorPicker position
-				var colorPosition = input.data('colorPosition');
-				if( !colorPosition ) colorPosition = getColorPositionFromHSB(hsb);
+				colorPosition = input.data('colorPosition');
+				if( !colorPosition ) colorPosition = getColorPositionFromHex(hex);
 				selector.find('.miniColors-colorPicker')
 					.css('top', colorPosition.y + 'px')
 					.css('left', colorPosition.x + 'px');
 				
 				// Set huePicker position
-				var huePosition = input.data('huePosition');
-				if( !huePosition ) huePosition = getHuePositionFromHSB(hsb);
+				huePosition = input.data('huePosition');
+				if( !huePosition ) huePosition = getHuePositionFromHex(hex);
 				selector.find('.miniColors-huePicker').css('top', huePosition + 'px');
 				
 				// Set opacity position
-				var opacityPosition = input.data('opacityPosition');
+				opacityPosition = input.data('opacityPosition');
 				if( !opacityPosition ) opacityPosition = getOpacityPositionFromAlpha(input.attr('data-opacity'));
 				selector.find('.miniColors-opacityPicker').css('top', opacityPosition + 'px');
 				
@@ -192,18 +211,18 @@ if(jQuery) (function($) {
 				$('BODY').append(selector);
 				
 				// Position the selector
-				var trigger = input.data('trigger'),
-					hidden = !input.is(':visible'),
-					top = hidden ? trigger.offset().top + trigger.outerHeight() : input.offset().top + input.outerHeight(),
-					left = hidden ? trigger.offset().left : input.offset().left,
-					selectorWidth = selector.outerWidth(),
-					selectorHeight = selector.outerHeight(),
-					triggerWidth = trigger.outerWidth(),
-					triggerHeight = trigger.outerHeight(),
-					windowHeight = $(window).height(),
-					windowWidth = $(window).width(),
-					scrollTop = $(window).scrollTop(),
-					scrollLeft = $(window).scrollLeft();
+				trigger = input.data('trigger');
+				hidden = !input.is(':visible');
+				top = hidden ? trigger.offset().top + trigger.outerHeight() : input.offset().top + input.outerHeight();
+				left = hidden ? trigger.offset().left : input.offset().left;
+				selectorWidth = selector.outerWidth();
+				selectorHeight = selector.outerHeight();
+				triggerWidth = trigger.outerWidth();
+				triggerHeight = trigger.outerHeight();
+				windowHeight = $(window).height();
+				windowWidth = $(window).width();
+				scrollTop = $(window).scrollTop();
+				scrollLeft = $(window).scrollLeft();
 				
 				// Adjust based on viewport
 				if( (top + selectorHeight) > windowHeight + scrollTop ) top = top - selectorHeight - triggerHeight;
@@ -228,8 +247,9 @@ if(jQuery) (function($) {
 				$(document)
 					.on('mousedown.miniColors touchstart.miniColors', function(event) {
 						
-						input.data('mousebutton', 1);
 						var testSubject = $(event.target).parents().andSelf();
+						
+						input.data('mousebutton', 1);
 						
 						if( testSubject.hasClass('miniColors-colors') ) {
 							event.preventDefault();
@@ -272,13 +292,11 @@ if(jQuery) (function($) {
 					});
 				
 				// Fire open callback
-				if( input.data('open') ) {
-					input.data('open').call(input.get(0), '#' + hsb2hex(hsb), $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
-				}
+				if( input.data('open') ) fireCallback(input, 'open');
 				
-			};
+			}
 			
-			var hide = function(input) {
+			function hide(input) {
 				
 				//
 				// Hides one or more miniColors selectors
@@ -288,32 +306,44 @@ if(jQuery) (function($) {
 				if( !input ) input = $('.miniColors');
 				
 				input.each( function() {
+					
 					var selector = $(this).data('selector');
+					
 					$(this).removeData('selector');
 					$(selector).fadeOut(100, function() {
 						// Fire close callback
-						if( input.data('close') ) {
-							var hsb = input.data('hsb'), hex = hsb2hex(hsb);	
-							input.data('close').call(input.get(0), '#' + hex, $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
-						}
+						if( input.data('close') ) fireCallback(input, 'close');
 						$(this).remove();
 					});
+					
 				});
 				
 				$(document).off('.miniColors');
 				
-			};
+			}
 			
-			var moveColor = function(input, event) {
+			function fireCallback(input, callback) {
+				
+				var hex = input.data('hex'),
+					rgb = hex2rgb(hex);
+				
+				// Always return RGBA
+				$.extend(rgb, { a: input.data('opacity') ? parseFloat(input.attr('data-opacity')) : 1 });
+				
+				if( input.data(callback) ) input.data(callback).call(input.get(0), convertCase(hex, o.letterCase), rgb);
+				
+			}
+			
+			function moveColor(input, event) {
 
-				var colorPicker = input.data('colorPicker');
+				var s, b, hex, hsb,
+					colorPicker = input.data('colorPicker'),
+					position = {
+						x: event.pageX,
+						y: event.pageY
+					};
 				
 				colorPicker.hide();
-				
-				var position = {
-					x: event.pageX,
-					y: event.pageY
-				};
 				
 				// Touch support
 				if( event.originalEvent.changedTouches ) {
@@ -331,31 +361,33 @@ if(jQuery) (function($) {
 				colorPicker.css('left', position.x).css('top', position.y).show();
 				
 				// Calculate saturation
-				var s = Math.round((position.x + 5) * 0.67);
+				s = Math.round((position.x + 5) * 0.67);
 				if( s < 0 ) s = 0;
 				if( s > 100 ) s = 100;
 				
 				// Calculate brightness
-				var b = 100 - Math.round((position.y + 5) * 0.67);
+				b = 100 - Math.round((position.y + 5) * 0.67);
 				if( b < 0 ) b = 0;
 				if( b > 100 ) b = 100;
 				
 				// Update HSB values
-				var hsb = input.data('hsb');
+				hex = input.data('hex');
+				hsb = hex2hsb(hex);
 				hsb.s = s;
 				hsb.b = b;
+				hex = hsb2hex(hsb);
 				
 				// Set color
-				setColor(input, hsb, true);
-			};
+				setColor(input, hex, true);
+			}
 			
-			var moveHue = function(input, event) {
+			function moveHue(input, event) {
 				
-				var huePicker = input.data('huePicker');
+				var h, hex, hsb,
+					huePicker = input.data('huePicker'),
+					position = event.pageY;
 				
 				huePicker.hide();
-				
-				var position = event.pageY;
 				
 				// Touch support
 				if( event.originalEvent.changedTouches ) {
@@ -369,26 +401,28 @@ if(jQuery) (function($) {
 				huePicker.css('top', position).show();
 				
 				// Calculate hue
-				var h = Math.round((150 - position - 1) * 2.4);
+				h = Math.round((150 - position - 1) * 2.4);
 				if( h < 0 ) h = 0;
 				if( h > 360 ) h = 360;
 				
 				// Update HSB values
-				var hsb = input.data('hsb');
+				hex = input.data('hex');
+				hsb = hex2hsb(hex);
 				hsb.h = h;
+				hex = hsb2hex(hsb);
 				
 				// Set color
-				setColor(input, hsb, true);
+				setColor(input, hex, true);
 				
-			};
+			}
 			
-			var moveOpacity = function(input, event) {
+			function moveOpacity(input, event) {
 				
-				var opacityPicker = input.data('opacityPicker');
+				var alpha,
+					opacityPicker = input.data('opacityPicker'),
+					position = event.pageY;
 				
 				opacityPicker.hide();
-				
-				var position = event.pageY;
 				
 				// Touch support
 				if( event.originalEvent.changedTouches ) {
@@ -402,7 +436,7 @@ if(jQuery) (function($) {
 				opacityPicker.css('top', position).show();
 				
 				// Calculate opacity
-				var alpha = parseFloat((150 - position - 1) / 150).toFixed(2);
+				alpha = parseFloat((150 - position - 1) / 150).toFixed(2);
 				if( alpha < 0 ) alpha = 0;
 				if( alpha > 1 ) alpha = 1;
 				
@@ -412,24 +446,29 @@ if(jQuery) (function($) {
 					.attr('data-opacity', alpha);
 				
 				// Set color
-				setColor(input, input.data('hsb'), true);
+				setColor(input, input.data('hex'), true);
 				
-			};
+			}
 			
-			var setColor = function(input, hsb, updateInput) {
-				input.data('hsb', hsb);
-				var hex = hsb2hex(hsb), 
-					selector = $(input.data('selector'));
-				if( updateInput ) input.val( prefix + convertCase(hex, input.data('letterCase')) );
+			function setColor(input, hex, updateInput) {
+				
+				var selector = $(input.data('selector')),
+					rgb = hex2rgb(hex);
+				
+				hex = cleanHex(expandHex(hex));
+				if( !hex ) return;
+				hex = '#' + hex;
+				
+				if( updateInput ) input.val( convertCase(hex, input.data('letterCase')) );
+				
+				input.data('hex', '#' + cleanHex(expandHex(hex)));
 				
 				selector
-					.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 })).end()
-					.find('.miniColors-opacity').css('backgroundColor', '#' + hex).end();
-				
-				var rgb = hsb2rgb(hsb);
+					.find('.miniColors-colors').css('backgroundColor', hex).end()
+					.find('.miniColors-opacity').css('backgroundColor', hex).end();
 				
 				// Set background color (also fallback for non RGBA browsers)
-				input.data('trigger').css('backgroundColor', '#' + hex);
+				input.data('trigger').css('backgroundColor', hex);
 				
 				// Set background color + opacity
 				if( input.data('opacity') ) {
@@ -439,88 +478,98 @@ if(jQuery) (function($) {
 				// Fire change callback
 				if( input.data('change') ) {
 					if( (hex + ',' + input.attr('data-opacity')) === input.data('lastChange') ) return;
-					input.data('change').call(input.get(0), '#' + hex, $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
+					fireCallback(input, 'change');
 					input.data('lastChange', hex + ',' + input.attr('data-opacity'));
 				}
 				
-			};
+			}
 			
-			var setColorFromInput = function(input) {
+			function setColorFromInput(input) {
 				
-				input.val(prefix + cleanHex(input.val()));
-				var hex = expandHex(input.val());
+				var hex,
+					colorPosition,
+					colorPicker,
+					huePosition,
+					huePicker,
+					opacityPosition,
+					opacityPicker;
+				
+				// Get hex value
+				hex = cleanHex(input.val());
 				if( !hex ) return false;
+				hex = '#' + hex;
 				
-				// Get HSB equivalent
-				var hsb = hex2hsb(hex);
+				input.val(hex);
 				
 				// Set colorPicker position
-				var colorPosition = getColorPositionFromHSB(hsb);
-				var colorPicker = $(input.data('colorPicker'));
+				colorPosition = getColorPositionFromHex(hex);
+				colorPicker = $(input.data('colorPicker'));
 				colorPicker.css('top', colorPosition.y + 'px').css('left', colorPosition.x + 'px');
 				input.data('colorPosition', colorPosition);
 				
 				// Set huePosition position
-				var huePosition = getHuePositionFromHSB(hsb);
-				var huePicker = $(input.data('huePicker'));
+				huePosition = getHuePositionFromHex(hex);
+				huePicker = $(input.data('huePicker'));
 				huePicker.css('top', huePosition + 'px');
 				input.data('huePosition', huePosition);
 				
 				// Set opacity position
-				var opacityPosition = getOpacityPositionFromAlpha(input.attr('data-opacity'));
-				var opacityPicker = $(input.data('opacityPicker'));
+				opacityPosition = getOpacityPositionFromAlpha(input.attr('data-opacity'));
+				opacityPicker = $(input.data('opacityPicker'));
 				opacityPicker.css('top', opacityPosition + 'px');
 				input.data('opacityPosition', opacityPosition);
-				setColor(input, hsb);
+				setColor(input, hex);
 				
 				return true;
 				
-			};
+			}
 			
-			var convertCase = function(string, letterCase) {
+			function convertCase(string, letterCase) {
 				if( letterCase === 'uppercase' ) {
 					return string.toUpperCase();
 				} else {
 					return string.toLowerCase();
 				}
-			};
+			}
 			
-			var getColorPositionFromHSB = function(hsb) {				
-				var x = Math.ceil(hsb.s / 0.67);
+			function getColorPositionFromHex(hex) {
+				var hsb = hex2hsb(hex),
+					x = Math.ceil(hsb.s / 0.67);
 				if( x < 0 ) x = 0;
 				if( x > 150 ) x = 150;
 				var y = 150 - Math.ceil(hsb.b / 0.67);
 				if( y < 0 ) y = 0;
 				if( y > 150 ) y = 150;
 				return { x: x - 5, y: y - 5 };
-			};
+			}
 			
-			var getHuePositionFromHSB = function(hsb) {
-				var y = 150 - (hsb.h / 2.4);
+			function getHuePositionFromHex(hex) {
+				var hsb = hex2hsb(hex),
+					y = 150 - (hsb.h / 2.4);
 				if( y < 0 ) h = 0;
 				if( y > 150 ) h = 150;				
 				return y;
-			};
+			}
 			
-			var getOpacityPositionFromAlpha = function(alpha) {
+			function getOpacityPositionFromAlpha(alpha) {
 				var y = 150 * alpha;
 				if( y < 0 ) y = 0;
 				if( y > 150 ) y = 150;
 				return 150 - y;
-			};
+			}
 			
-			var cleanHex = function(hex) {
-				return hex.replace(/[^A-F0-9]/ig, '');
-			};
+			function cleanHex(hex) {
+				if( hex ) return hex.replace(/[^A-F0-9]/ig, '');
+			}
 			
-			var expandHex = function(hex) {
+			function expandHex(hex) {
 				hex = cleanHex(hex);
 				if( !hex ) return null;
 				if( hex.length === 3 ) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
 				return hex.length === 6 ? hex : null;
-			};			
+			}			
 			
-			var hsb2rgb = function(hsb) {
+			function hsb2rgb(hsb) {
 				var rgb = {};
 				var h = Math.round(hsb.h);
 				var s = Math.round(hsb.s*255/100);
@@ -545,9 +594,9 @@ if(jQuery) (function($) {
 					g: Math.round(rgb.g),
 					b: Math.round(rgb.b)
 				};
-			};
+			}
 			
-			var rgb2hex = function(rgb) {
+			function rgb2hex(rgb) {
 				var hex = [
 					rgb.r.toString(16),
 					rgb.g.toString(16),
@@ -557,9 +606,9 @@ if(jQuery) (function($) {
 					if (val.length === 1) hex[nr] = '0' + val;
 				});
 				return hex.join('');
-			};
+			}
 			
-			var hex2rgb = function(hex) {
+			function hex2rgb(hex) {
 				hex = parseInt(((hex.indexOf('#') > -1) ? hex.substring(1) : hex), 16);
 				
 				return {
@@ -567,9 +616,9 @@ if(jQuery) (function($) {
 					g: (hex & 0x00FF00) >> 8,
 					b: (hex & 0x0000FF)
 				};
-			};
+			}
 			
-			var rgb2hsb = function(rgb) {
+			function rgb2hsb(rgb) {
 				var hsb = { h: 0, s: 0, b: 0 };
 				var min = Math.min(rgb.r, rgb.g, rgb.b);
 				var max = Math.max(rgb.r, rgb.g, rgb.b);
@@ -594,18 +643,18 @@ if(jQuery) (function($) {
 				hsb.s *= 100/255;
 				hsb.b *= 100/255;
 				return hsb;
-			};			
+			}
 			
-			var hex2hsb = function(hex) {
+			function hex2hsb(hex) {
 				var hsb = rgb2hsb(hex2rgb(hex));
 				// Zero out hue marker for black, white, and grays (saturation === 0)
 				if( hsb.s === 0 ) hsb.h = 360;
 				return hsb;
-			};
+			}
 			
-			var hsb2hex = function(hsb) {
+			function hsb2hex(hsb) {
 				return rgb2hex(hsb2rgb(hsb));
-			};
+			}
 
 			
 			// Handle calls to $([selector]).miniColors()
@@ -640,7 +689,7 @@ if(jQuery) (function($) {
 						if( !$(this).hasClass('miniColors') ) return;
 						var input = $(this),
 							hex = expandHex(input.val());
-						return hex ? prefix + convertCase(hex, input.data('letterCase')) : null;
+						return hex ? '#' + convertCase(cleanHex(hex), input.data('letterCase')) : null;
 					}
 					
 					// Setter
@@ -660,7 +709,7 @@ if(jQuery) (function($) {
 						if( $(this).data('opacity') ) {
 							return parseFloat($(this).attr('data-opacity'));
 						} else {
-							return null;
+							return 1;
 						}
 					}
 					

@@ -27,6 +27,11 @@ INPUT.miniColors {
 	border-color: black;
 }
 
+.miniColors-selector.gray {
+	background: #DDD;
+	border-color: #EEE;
+}
+
 .miniColors-colors {
 	position: absolute;
 	top: 5px;

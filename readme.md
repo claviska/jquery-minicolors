@@ -22,7 +22,6 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 
 * __disabled__ _[true,false]_ - Disables the control on init
 * __readonly__ _[true,false]_ - Makes the control read-only on init
-* __opacity__ _[true, false]_ - Enables/disables the opacity slider
 
 
 ## Specify options on creation:
@@ -75,14 +74,13 @@ Methods are called using this syntax:
 	
 	// Get hex color code on change
 	$([selector]).miniColors({
-		change: function(hex, rgb) {
+		change: function(hex, rgba) {
 			console.log(hex);
 		}
 	});
 	
 	// Get RGBA values on change
 	$([selector]).miniColors({
-		opacity: true,
 		change: function(hex, rgba) {
 			console.log('rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')');
 		}
