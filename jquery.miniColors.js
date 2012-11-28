@@ -12,14 +12,20 @@ if(jQuery) (function($) {
 		
 		miniColors: function(o, data) {
 			
+			var prefix = !o || typeof o.prefix === 'undefined' ? '#' : o.prefix ;
+			
 			function create(input, o, data) {
 				
 				// Determine initial color (defaults to white)
-				var hex = input.val() ? '#' + cleanHex(expandHex(input.val())) : '#ffffff',
-					rgb = hex2rgb(hex),
+				var color = expandHex(input.val()) || 'ffffff',
+					hsb = hex2hsb(color),
+					rgb = hsb2rgb(hsb),
+					alpha = parseFloat(input.attr('data-opacity')).toFixed(2),
 					opacity = false,
-					alpha,
 					trigger;
+				
+				if( alpha > 1 ) alpha = 1;
+				if( alpha < 0 ) alpha = 0;
 				
 				// Handle opacity
 				if( input.attr('data-opacity') !== undefined || o.opacity === true ) {
@@ -33,13 +39,15 @@ if(jQuery) (function($) {
 					if( alpha > 1 ) alpha = 1;
 					if( alpha < 0 ) alpha = 0;
 					input.attr('data-opacity', alpha);
-				}
+				}				
 				
 				// Create trigger
-				trigger = $('<a class="miniColors-trigger" style="background-color: ' + hex + '" href="#"></a>')
-					.insertAfter(input)
-					.wrap('<span class="miniColors-triggerWrap"></span>')
-					.css('backgroundColor', 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + alpha + ')');
+				trigger = $('<a class="miniColors-trigger" style="background-color: #' + color + '" href="#"></a>');
+				trigger.insertAfter(input);
+				trigger.wrap('<span class="miniColors-triggerWrap"></span>');
+				if( o.opacity ) {
+					trigger.css('backgroundColor', 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + alpha + ')');
+				}
 				
 				// Set input data and update attributes
 				input
@@ -50,13 +58,13 @@ if(jQuery) (function($) {
 					.data('opacity', opacity)
 					.data('alpha', alpha)
 					.data('trigger', trigger)
-					.data('hex', hex)
+					.data('hsb', hsb)
 					.data('change', o.change ? o.change : null)
 					.data('close', o.close ? o.close : null)
 					.data('open', o.open ? o.open : null)
 					.attr('maxlength', 7)
 					.attr('autocomplete', 'off')
-					.val(convertCase('#' + cleanHex(hex), o.letterCase));
+					.val(prefix + convertCase(color, o.letterCase));
 				
 				// Handle options
 				if( o.readonly || input.prop('readonly') ) input.prop('readonly', true);
@@ -65,33 +73,26 @@ if(jQuery) (function($) {
 				// Show selector when trigger is clicked
 				trigger.on('click.miniColors', function(event) {
 					event.preventDefault();
-					if( input.val() === '' ) input.val('#');
+					if( input.val() === '' ) input.val(prefix);
 					show(input);
+
 				});
 				
 				// Show selector when input receives focus
 				input.on('focus.miniColors', function(event) {
-					if( input.val() === '' ) input.val('#');
+					if( input.val() === '' ) input.val(prefix);
 					show(input);
 				});
 				
 				// Hide on blur
 				input.on('blur.miniColors', function(event) {
-					var hex = input.data('hex');
-					input.val( convertCase(hex, input.data('letterCase')) );
+					var hex = expandHex(input.val());
+					input.val( hex ? prefix + convertCase(hex, input.data('letterCase')) : '#' + hsb2hex(input.data('hsb')) );
 				});
 				
 				// Hide when tabbing out of the input
 				input.on('keydown.miniColors', function(event) {
-					switch( event.keyCode ) {
-						case 9:
-							hide(input);
-							break;
-						case 27:
-							hide(input);
-							input.blur();
-							break;
-					}
+					if( event.keyCode === 9 || event.keyCode === 27 ) hide(input);
 				});
 				
 				// Update when color is typed in
@@ -110,9 +111,6 @@ if(jQuery) (function($) {
 			}
 			
 			function destroy(input) {
-				//
-				// Destroys an active instance of the miniColors selector
-				//
 				hide();
 				input = $(input);
 				
@@ -128,18 +126,12 @@ if(jQuery) (function($) {
 			}
 			
 			function enable(input) {
-				//
-				// Enables the input control and the selector
-				//
 				input
 					.prop('disabled', false)
 					.data('trigger').parent().removeClass('disabled');
 			}
 			
 			function disable(input) {
-				//
-				// Disables the input control and the selector
-				//
 				hide(input);
 				input
 					.prop('disabled', true)
@@ -158,21 +150,21 @@ if(jQuery) (function($) {
 					trigger,
 					triggerWidth,
 					triggerHeight,
-					selector = $('<div class="miniColors-selector"></div>'),
+					selector,
 					selectorWidth,
 					selectorHeight,
 					windowHeight,
 					windowWidth,
 					scrollTop,
-					scrollLeft;
+					scrollLeft;				
 				
-				if( input.prop('disabled') || !input.is('.miniColors') ) return false;
+				if( input.prop('disabled') ) return false;
 				
 				// Hide all other instances 
 				hide();				
                 
 				// Generate the selector
-				selector
+				selector = $('<div class="miniColors-selector"></div>')
 					.append('<div class="miniColors-hues"><div class="miniColors-huePicker"></div></div>')
 					.append('<div class="miniColors-colors" style="background-color: #FFF;"><div class="miniColors-colorPicker"><div class="miniColors-colorPicker-inner"></div></div>')
 					.css('display', 'none')
@@ -186,21 +178,21 @@ if(jQuery) (function($) {
 				}
 				
 				// Set background for colors
-				hex = input.data('hex');
+				hsb = input.data('hsb');
 				selector
-					.find('.miniColors-colors').css('backgroundColor', hex).end()
-					.find('.miniColors-opacity').css('backgroundColor', hex).end();
+					.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 })).end()
+					.find('.miniColors-opacity').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: hsb.s, b: hsb.b })).end();
 				
 				// Set colorPicker position
 				colorPosition = input.data('colorPosition');
-				if( !colorPosition ) colorPosition = getColorPositionFromHex(hex);
+				if( !colorPosition ) colorPosition = getColorPositionFromHSB(hsb);
 				selector.find('.miniColors-colorPicker')
 					.css('top', colorPosition.y + 'px')
 					.css('left', colorPosition.x + 'px');
 				
 				// Set huePicker position
 				huePosition = input.data('huePosition');
-				if( !huePosition ) huePosition = getHuePositionFromHex(hex);
+				if( !huePosition ) huePosition = getHuePositionFromHSB(hsb);
 				selector.find('.miniColors-huePicker').css('top', huePosition + 'px');
 				
 				// Set opacity position
@@ -285,6 +277,7 @@ if(jQuery) (function($) {
 						if( testSubject.hasClass('miniColors') ) return;
 						
 						hide(input);
+						
 					})
 					.on('mouseup.miniColors touchend.miniColors', function(event) {
 					    event.preventDefault();
@@ -300,58 +293,46 @@ if(jQuery) (function($) {
 					});
 				
 				// Fire open callback
-				if( input.data('open') ) fireCallback(input, 'open');
+				if( input.data('open') ) {
+					input.data('open').call(input.get(0), '#' + hsb2hex(hsb), $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
+				}
 				
 			}
 			
 			function hide(input) {
 				
-				//
-				// Hides one or more miniColors selectors
-				//
-				
 				// Hide all other instances if input isn't specified
 				if( !input ) input = $('.miniColors');
 				
 				input.each( function() {
-					
 					var selector = $(this).data('selector');
-					
 					$(this).removeData('selector');
 					$(selector).fadeOut(100, function() {
 						// Fire close callback
-						if( input.data('close') ) fireCallback(input, 'close');
+						if( input.data('close') ) {
+							var hsb = input.data('hsb'),
+								hex = hsb2hex(hsb);
+							input.data('close').call(input.get(0), '#' + hex, $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
+						}
 						$(this).remove();
 					});
-					
 				});
 				
 				$(document).off('.miniColors');
 				
 			}
 			
-			function fireCallback(input, callback) {
-				
-				var hex = input.data('hex'),
-					rgb = hex2rgb(hex);
-				
-				// Always return RGBA
-				$.extend(rgb, { a: input.data('opacity') ? parseFloat(input.attr('data-opacity')) : 1 });
-				
-				if( input.data(callback) ) input.data(callback).call(input.get(0), convertCase(hex, o.letterCase), rgb);
-				
-			}
-			
 			function moveColor(input, event) {
 
-				var s, b, hex, hsb,
-					colorPicker = input.data('colorPicker'),
-					position = {
-						x: event.pageX,
-						y: event.pageY
-					};
+				var colorPicker = input.data('colorPicker'),
+					position, s, b, hsb;
 				
 				colorPicker.hide();
+				
+				position = {
+					x: event.pageX,
+					y: event.pageY
+				};
 				
 				// Touch support
 				if( event.originalEvent.changedTouches ) {
@@ -379,21 +360,19 @@ if(jQuery) (function($) {
 				if( b > 100 ) b = 100;
 				
 				// Update HSB values
-				hex = input.data('hex');
-				hsb = hex2hsb(hex);
+				hsb = input.data('hsb');
 				hsb.s = s;
 				hsb.b = b;
-				hex = hsb2hex(hsb);
 				
 				// Set color
-				setColor(input, hex, true);
+				setColor(input, hsb, true);
 			}
 			
 			function moveHue(input, event) {
 				
-				var h, hex, hsb,
-					huePicker = input.data('huePicker'),
-					position = event.pageY;
+				var huePicker = input.data('huePicker'),
+					position = event.pageY,
+					h, hsb;
 				
 				huePicker.hide();
 				
@@ -414,21 +393,19 @@ if(jQuery) (function($) {
 				if( h > 360 ) h = 360;
 				
 				// Update HSB values
-				hex = input.data('hex');
-				hsb = hex2hsb(hex);
+				hsb = input.data('hsb');
 				hsb.h = h;
-				hex = hsb2hex(hsb);
 				
 				// Set color
-				setColor(input, hex, true);
+				setColor(input, hsb, true);
 				
 			}
 			
 			function moveOpacity(input, event) {
 				
-				var alpha,
-					opacityPicker = input.data('opacityPicker'),
-					position = event.pageY;
+				var opacityPicker = input.data('opacityPicker'),
+					position = event.pageY,
+					alpha;
 				
 				opacityPicker.hide();
 				
@@ -454,29 +431,26 @@ if(jQuery) (function($) {
 					.attr('data-opacity', alpha);
 				
 				// Set color
-				setColor(input, input.data('hex'), true);
+				setColor(input, input.data('hsb'), true);
 				
 			}
 			
-			function setColor(input, hex, updateInput) {
+			function setColor(input, hsb, updateInput) {
 				
-				var selector = $(input.data('selector')),
-					rgb = hex2rgb(hex),
-					hsb = hex2hsb(hex);
+				var hex = hsb2hex(hsb), 
+					selector = $(input.data('selector')),
+					rgb = hsb2rgb(hsb);
+					
+				input.data('hsb', hsb);
 				
-				hex = cleanHex(expandHex(hex));
-				if( !hex ) return;
-				hex = '#' + hex;
+				if( updateInput ) input.val( prefix + convertCase(hex, input.data('letterCase')) );
 				
-				if( updateInput ) input.val( convertCase(hex, input.data('letterCase')) );
-				
-				input.data('hex', '#' + cleanHex(expandHex(hex)));
 				selector
 					.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 })).end()
-					.find('.miniColors-opacity').css('backgroundColor', hex).end();
+					.find('.miniColors-opacity').css('backgroundColor', '#' + hex).end();
 				
 				// Set background color (also fallback for non RGBA browsers)
-				input.data('trigger').css('backgroundColor', hex);
+				input.data('trigger').css('backgroundColor', '#' + hex);
 				
 				// Set background color + opacity
 				if( input.data('opacity') ) {
@@ -486,7 +460,7 @@ if(jQuery) (function($) {
 				// Fire change callback
 				if( input.data('change') ) {
 					if( (hex + ',' + input.attr('data-opacity')) === input.data('lastChange') ) return;
-					fireCallback(input, 'change');
+					input.data('change').call(input.get(0), '#' + hex, $.extend(hsb2rgb(hsb), { a: parseFloat(input.attr('data-opacity')) }));
 					input.data('lastChange', hex + ',' + input.attr('data-opacity'));
 				}
 				
@@ -494,29 +468,23 @@ if(jQuery) (function($) {
 			
 			function setColorFromInput(input) {
 				
-				var hex,
-					colorPosition,
-					colorPicker,
-					huePosition,
-					huePicker,
-					opacityPosition,
-					opacityPicker;
+				var hex, hsb, colorPosition, colorPicker, huePosition, huePicker, opacityPosition, opacityPicker;
 				
-				// Get hex value
-				hex = cleanHex(input.val());
+				input.val(prefix + cleanHex(input.val()));
+				hex = expandHex(input.val());
 				if( !hex ) return false;
-				hex = '#' + hex;
 				
-				input.val(hex);
+				// Get HSB equivalent
+				hsb = hex2hsb(hex);
 				
 				// Set colorPicker position
-				colorPosition = getColorPositionFromHex(hex);
+				colorPosition = getColorPositionFromHSB(hsb);
 				colorPicker = $(input.data('colorPicker'));
 				colorPicker.css('top', colorPosition.y + 'px').css('left', colorPosition.x + 'px');
 				input.data('colorPosition', colorPosition);
 				
 				// Set huePosition position
-				huePosition = getHuePositionFromHex(hex);
+				huePosition = getHuePositionFromHSB(hsb);
 				huePicker = $(input.data('huePicker'));
 				huePicker.css('top', huePosition + 'px');
 				input.data('huePosition', huePosition);
@@ -526,7 +494,7 @@ if(jQuery) (function($) {
 				opacityPicker = $(input.data('opacityPicker'));
 				opacityPicker.css('top', opacityPosition + 'px');
 				input.data('opacityPosition', opacityPosition);
-				setColor(input, hex);
+				setColor(input, hsb);
 				
 				return true;
 				
@@ -540,9 +508,8 @@ if(jQuery) (function($) {
 				}
 			}
 			
-			function getColorPositionFromHex(hex) {
-				var hsb = hex2hsb(hex),
-					x = Math.ceil(hsb.s / 0.67);
+			function getColorPositionFromHSB(hsb) {				
+				var x = Math.ceil(hsb.s / 0.67);
 				if( x < 0 ) x = 0;
 				if( x > 150 ) x = 150;
 				var y = 150 - Math.ceil(hsb.b / 0.67);
@@ -551,9 +518,8 @@ if(jQuery) (function($) {
 				return { x: x - 5, y: y - 5 };
 			}
 			
-			function getHuePositionFromHex(hex) {
-				var hsb = hex2hsb(hex),
-					y = 150 - (hsb.h / 2.4);
+			function getHuePositionFromHSB(hsb) {
+				var y = 150 - (hsb.h / 2.4);
 				if( y < 0 ) h = 0;
 				if( y > 150 ) h = 150;				
 				return y;
@@ -567,7 +533,7 @@ if(jQuery) (function($) {
 			}
 			
 			function cleanHex(hex) {
-				if( hex ) return hex.replace(/[^A-F0-9]/ig, '');
+				return hex.replace(/[^A-F0-9]/ig, '');
 			}
 			
 			function expandHex(hex) {
@@ -651,7 +617,7 @@ if(jQuery) (function($) {
 				hsb.s *= 100/255;
 				hsb.b *= 100/255;
 				return hsb;
-			}
+			}			
 			
 			function hex2hsb(hex) {
 				var hsb = rgb2hsb(hex2rgb(hex));
@@ -667,15 +633,7 @@ if(jQuery) (function($) {
 			
 			// Handle calls to $([selector]).miniColors()
 			switch(o) {
-				
-				case 'hide':
-					hide( $(this) );
-					return $(this);
-				
-				case 'show':
-					show( $(this) );
-					return $(this);
-				
+			
 				case 'readonly':
 					
 					$(this).each( function() {
@@ -703,9 +661,8 @@ if(jQuery) (function($) {
 					// Getter
 					if( data === undefined ) {
 						if( !$(this).hasClass('miniColors') ) return;
-						var input = $(this),
-							hex = expandHex(input.val());
-						return hex ? '#' + convertCase(cleanHex(hex), input.data('letterCase')) : null;
+						var hex = expandHex($(this).val());
+						return hex ? prefix + convertCase(hex, $(this).data('letterCase')) : null;
 					}
 					
 					// Setter
@@ -725,7 +682,7 @@ if(jQuery) (function($) {
 						if( $(this).data('opacity') ) {
 							return parseFloat($(this).attr('data-opacity'));
 						} else {
-							return 1;
+							return null;
 						}
 					}
 					
