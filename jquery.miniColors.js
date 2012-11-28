@@ -187,8 +187,9 @@ if(jQuery) (function($) {
 				
 				// Set background for colors
 				hex = input.data('hex');
+				hsb = hex2hsb(hex);
 				selector
-					.find('.miniColors-colors').css('backgroundColor', hex).end()
+					.find('.miniColors-colors').css('backgroundColor', '#' + hsb2hex({ h: hsb.h, s: 100, b: 100 })).end()
 					.find('.miniColors-opacity').css('backgroundColor', hex).end();
 				
 				// Set colorPicker position
