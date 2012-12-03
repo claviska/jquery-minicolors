@@ -633,7 +633,15 @@ if(jQuery) (function($) {
 			
 			// Handle calls to $([selector]).miniColors()
 			switch(o) {
-			
+				
+				case 'hide':
+					hide( $(this) );
+					return $(this);
+				
+				case 'show':
+					show( $(this) );
+					return $(this);
+				
 				case 'readonly':
 					
 					$(this).each( function() {
