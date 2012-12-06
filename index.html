@@ -29,17 +29,21 @@
 				
 				function init() {
 					
-					// Attach callbacks
-					$('.color-picker').miniColors({
-						change: function(hex, rgba) {
-							$('#console').prepend('change: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
-						},
-						open: function(hex, rgba) {
-							$('#console').prepend('open: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
-						},
-						close: function(hex, rgba) {
-							$('#console').prepend('close: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
-						}
+					$('.color-picker').each( function() {
+					
+						$(this).miniColors({
+							opacity: $(this).hasClass('opacity'),
+							change: function(hex, rgba) {
+								$('#console').prepend('change: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
+							},
+							open: function(hex, rgba) {
+								$('#console').prepend('open: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
+							},
+							close: function(hex, rgba) {
+								$('#console').prepend('close: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
+							}
+						});
+						
 					});
 					
 				}
@@ -125,7 +129,7 @@
 		
 		<p>
 			With Opacity (set data-opacity attribute to 0–1 for preset)<br />
-			<input type="text" name="color4" class="color-picker" size="7" value="#F60" data-opacity=".5" />
+			<input type="text" name="color4" class="color-picker opacity" data-opacity=".5" size="7" value="#F60" />
 		</p>
 		
 		<p>

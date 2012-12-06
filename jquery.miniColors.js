@@ -20,26 +20,19 @@ if(jQuery) (function($) {
 				var color = expandHex(input.val()) || 'ffffff',
 					hsb = hex2hsb(color),
 					rgb = hsb2rgb(hsb),
-					alpha = parseFloat(input.attr('data-opacity')).toFixed(2),
-					opacity = false,
+					alpha,
 					trigger;
 				
-				if( alpha > 1 ) alpha = 1;
-				if( alpha < 0 ) alpha = 0;
-				
 				// Handle opacity
-				if( input.attr('data-opacity') !== undefined || o.opacity === true ) {
-					opacity = true;
-					alpha = input.attr('data-opacity');
-					if( alpha === '' ) {
-						alpha = 1;
-					} else {
-						alpha = parseFloat(alpha).toFixed(2);
-					}
+				if( o.opacity === true ) {
+					alpha = input.attr('data-opacity') || 1;
+					alpha = parseFloat(alpha).toFixed(2);
 					if( alpha > 1 ) alpha = 1;
 					if( alpha < 0 ) alpha = 0;
 					input.attr('data-opacity', alpha);
-				}				
+				} else {
+					input.removeAttr('data-opacity');
+				}
 				
 				// Create trigger
 				trigger = $('<a class="miniColors-trigger" style="background-color: #' + color + '" href="#"></a>');
@@ -55,7 +48,7 @@ if(jQuery) (function($) {
 					.data('original-maxlength', input.attr('maxlength') || null)
 					.data('original-autocomplete', input.attr('autocomplete') || null)
 					.data('letterCase', o.letterCase === 'uppercase' ? 'uppercase' : 'lowercase')
-					.data('opacity', opacity)
+					.data('opacity', o.opacity)
 					.data('alpha', alpha)
 					.data('trigger', trigger)
 					.data('hsb', hsb)
