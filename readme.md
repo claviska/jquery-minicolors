@@ -24,7 +24,6 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 * __letterCase__ _[uppercase|lowercase]_ - forces the hex value into upper or lowercase
 * __opacity__ _[true,false]_ - Enables opacity selector
 * __readonly__ _[true,false]_ - When true, prevents the user from typing in the input box
-* __insert__ _[before,after]_ - Inserts the color picker before or after the input box. Defaults to 'after'
 
 
 ## Specify options on creation:

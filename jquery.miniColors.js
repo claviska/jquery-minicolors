@@ -36,14 +36,7 @@ if(jQuery) (function($) {
 				
 				// Create trigger
 				trigger = $('<a class="miniColors-trigger" style="background-color: #' + color + '" href="#"></a>');
-				
-				// Insert into dom
-				if( o.insert && o.insert === 'before' ) {
-					trigger.insertBefore(input);
-				} else if( typeof o.insert === "undefined" || o.insert === 'after' ) {
-					trigger.insertAfter(input);
-				}
-				
+				trigger.insertAfter(input);
 				trigger.wrap('<span class="miniColors-triggerWrap"></span>');
 				if( o.opacity ) {
 					trigger.css('backgroundColor', 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + alpha + ')');
