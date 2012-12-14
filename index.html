@@ -33,6 +33,7 @@
 					
 						$(this).miniColors({
 							opacity: $(this).hasClass('opacity'),
+							triggerPosition: $(this).attr('data-triggerPosition'),
 							change: function(hex, rgba) {
 								$('#console').prepend('change: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
 							},
@@ -49,6 +50,24 @@
 				}
 				
 				init();
+				
+				$('#triggerBefore').click( function() {
+					$('#console').prepend('triggerPosition: before<br />');
+					$('.color-picker').attr('data-triggerPosition', 'before');
+					$('.color-picker').miniColors('destroy');
+					$("#triggerBefore").prop('disabled', true);
+					$("#triggerAfter").prop('disabled', false);
+					init();
+				});
+				
+				$('#triggerAfter').click( function() {
+					$('#console').prepend('triggerPosition: after<br />');
+					$('.color-picker').attr('data-triggerPosition', 'after');
+					$('.color-picker').miniColors('destroy');
+					$("#triggerBefore").prop('disabled', false);
+					$("#triggerAfter").prop('disabled', true);
+					init();
+				});
 				
 				$('#disable').click( function() {
 					$('#console').prepend('disable<br />');
@@ -88,8 +107,9 @@
 				
 				$('#create').click( function() {
 					$('#console').prepend('create<br />');
+					$('.color-picker').attr('data-triggerPosition', 'after');
 					init();
-					$("#makeReadonly, #disable, #destroy, #randomize").prop('disabled', false);
+					$("#makeReadonly, #disable, #destroy, #randomize, #triggerBefore").prop('disabled', false);
 					$("#destroy").prop('disabled', false);
 					$("#create").prop('disabled', true);
 				});
@@ -155,6 +175,8 @@
 		<p style="margin-top: 50px;">
 			Select an action to apply to all of the controls on this page:
 			<br />
+			<input type="button" id="triggerBefore" value="Trigger is Before" />
+			<input type="button" id="triggerAfter" value="Trigger is After" disabled="disabled" /><br />
 			<input type="button" id="makeReadonly" value="Read-only" />
 			<input type="button" id="unmakeReadonly" value="Not Read-only" disabled="disabled" /><br />
 			<input type="button" id="disable" value="Disable" />
