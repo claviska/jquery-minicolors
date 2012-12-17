@@ -31,6 +31,9 @@ if(jQuery) (function($) {
 					if( alpha < 0 ) alpha = 0;
 					input.attr('data-opacity', alpha);
 				} else {
+					// This is used in .data() so has to exist
+					o.opacity = false;
+					alpha = 1;
 					input.removeAttr('data-opacity');
 				}
 				
