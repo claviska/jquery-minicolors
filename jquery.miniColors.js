@@ -704,7 +704,30 @@ if(jQuery) (function($) {
 					});
 					
 					return $(this);
+				
+				case 'triggerPosition':
 					
+					$(this).each( function() {
+						
+						var input = $(this),
+							trigger = $(input.data('trigger')),
+							triggerWrap = trigger.parent();
+						
+						if( !input || !triggerWrap ) return;
+						
+						switch(data) {
+							case 'before':
+								input.before(triggerWrap);
+								break;
+							default:
+								input.after(triggerWrap);
+								break;
+						}
+						
+					});
+					
+					return $(this);
+				
 				case 'destroy':
 					
 					$(this).each( function() {

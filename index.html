@@ -54,19 +54,17 @@
 				$('#triggerBefore').click( function() {
 					$('#console').prepend('triggerPosition: before<br />');
 					$('.color-picker').attr('data-triggerPosition', 'before');
-					$('.color-picker').miniColors('destroy');
 					$("#triggerBefore").prop('disabled', true);
 					$("#triggerAfter").prop('disabled', false);
-					init();
+					$('.color-picker').miniColors('triggerPosition', 'before');
 				});
 				
 				$('#triggerAfter').click( function() {
 					$('#console').prepend('triggerPosition: after<br />');
 					$('.color-picker').attr('data-triggerPosition', 'after');
-					$('.color-picker').miniColors('destroy');
 					$("#triggerBefore").prop('disabled', false);
 					$("#triggerAfter").prop('disabled', true);
-					init();
+					$('.color-picker').miniColors('triggerPosition', 'after');
 				});
 				
 				$('#disable').click( function() {

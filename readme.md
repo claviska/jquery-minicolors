@@ -58,6 +58,7 @@ Methods are called using this syntax:
 * __opacity__ _(0-1)_ - sets the opacity level
 * __readonly__ _[true|false]_ - sets the readonly status
 * __show__ _(none)_ - manually shows the color picker control
+* __triggerPosition__ _[before|after]_ - sets the position of the trigger after init
 * __value__ _(none)_ - gets the current value; guaranteed to return a valid hex color
 * __value__ _[hex value]_ - sets the control's value
 * __destroy__ _(none)_
