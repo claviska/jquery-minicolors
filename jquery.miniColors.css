@@ -1,7 +1,3 @@
-INPUT.miniColors {
-	margin-right: 4px;
-}
-
 .miniColors-selector {
 	position: absolute;
 	width: 175px;
@@ -79,6 +75,7 @@ INPUT.miniColors {
 	-webkit-border-radius: 11px;
 	border-radius: 11px;
 }
+
 .miniColors-colorPicker-inner {
 	position: absolute;
 	top: 0;
