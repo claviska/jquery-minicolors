@@ -616,6 +616,12 @@ if(jQuery) (function($) {
 			.on('keyup', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
 				updateFromInput(input, true);
+			})
+			.on('paste', 'INPUT[type=minicolors]', function(event) {
+				var input = $(this);
+				setTimeout( function() {
+					updateFromInput(input, true);
+				}, 1);
 			});
 		
 	});
