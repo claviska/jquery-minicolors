@@ -27,9 +27,7 @@ if(jQuery) (function($) {
 		
 		// Refresh the controls
 		refresh: function(input) {
-			
 			input = $(input);
-			
 			if( input.length > 0 ) {
 				updateFromInput(input);
 			} else {
@@ -37,7 +35,6 @@ if(jQuery) (function($) {
 					updateFromInput($(this));
 				});
 			}
-			
 		},
 		
 		// Shows the specified control
@@ -52,38 +49,30 @@ if(jQuery) (function($) {
 		
 		// Utility to convert a hex string to RGB(A) object
 		rgbObject: function(input) {
-			
 			var hex = parseHex($(input).val(), true),
 				rgb = hex2rgb(hex),
 				opacity = input.attr('data-opacity');
-			
 			if( !rgb ) return null;
 			if( opacity !== undefined ) $.extend(rgb, { a: parseFloat(opacity) });
-			
 			return rgb;
-			
 		},
 		
 		// Utility to convert a hex string to an RGB(A) string
 		rgbString: function(input) {
-			
 			var hex = parseHex($(input).val(), true),
 				rgb = hex2rgb(hex),
 				opacity = input.attr('data-opacity');
-			
 			if( !rgb ) return null;
-			
 			if( opacity === undefined ) {
 				return 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
 			} else {
 				return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat(opacity) + ')';
 			}
-			
 		}
 		
 	};
 	
-	// Initialized all input[type=minicolors] elements
+	// Initialize all input[type=minicolors] elements
 	function init(input) {
 		
 		var minicolors = $('<span class="minicolors" />'),
@@ -126,7 +115,6 @@ if(jQuery) (function($) {
 			$.each(input.attr('data-position').split(' '), function() {
 				minicolors.addClass('minicolors-position-' + this);
 			});
-
 		}
 		
 		// The input
@@ -183,6 +171,7 @@ if(jQuery) (function($) {
 	
 	// Hides all dropdown panels
 	function hide() {
+		
 		$('.minicolors:not(.minicolors-inline)').each( function() {
 			
 			var minicolors = $(this);
