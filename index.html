@@ -1,189 +1,312 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jQuery MiniColors</title>
+	<meta name="description" content="A tiny color picker built on jQuery" />
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="jquery.minicolors.css" />
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="jquery.minicolors.js"></script>
+	<style>
+		
+		HTML,
+		BODY {
+			padding: 0;
+			margin: 0;
+		}
+		
+		BODY {
+			font: 14px sans-serif;
+			color: #666;
+			line-height: 1.7;
+			background: #F8F8F8;
+			padding: 0 20px;
+			padding-bottom: 32px;
+		}
+		
+		H1, H2, H3 {
+			font-family: Georgia, serif;
+			font-weight: normal;
+			color: black;
+		}
+		
+		A {
+			color: #08C;
+		}
+		
+		A:hover {
+			color: #0BE;
+		}
+		
+		CODE {
+			background: #F8F8F8;
+			padding: 2px;
+		}
+		
+		.alert {
+			background: #FFFCCC;
+			color: black;
+			padding: 1px 10px;
+			margin: 20px 0;
+		}
+		
+		#main {
+			max-width: 800px;
+			background: white;
+			border: solid 1px #DDD;
+			box-shadow: 0 0 30px rgba(0, 0, 0, .05);
+			padding: 30px;
+			margin: 20px auto;
+		}
+		
+		#console {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 32px;
+			font-family: monospace;
+			line-height: 32px;
+			text-align: center;
+			background: black;
+			background: rgba(0, 0, 0, .9);
+			color: black;
+			z-index: 100;
+			-moz-transition: all .5s;
+			-ms-transition: all .5s;
+			-webkit-transition: all .5s;
+			transition: all .5s;
+		}
+		
+		#console.busy {
+			color: white;
+		}
+		
+	</style>
 	
-	<head>
-		<title>jQuery miniColors</title>
-		<meta charset="utf-8" />
+	<script>
 		
-		<style type="text/css">
-			BODY {
-				font-family: Arial, Helvetica, sans-serif;
-				font-size: 13px;
-				line-height: 1.5;
-			}
+		$(document).ready( function() {
 			
-			INPUT {
-				vertical-align: middle;
-				font-size: 13px;
-			}
-		</style>
-		
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		
-		<script type="text/javascript" src="jquery.miniColors.js"></script>
-		<link type="text/css" rel="stylesheet" href="jquery.miniColors.css" />
-		
-		<script type="text/javascript">
+			var consoleTimeout;
 			
-			$(document).ready( function() {
+			$('INPUT[type=minicolors]').on('change', function() {
 				
-				function init() {
-					
-					$('.color-picker').each( function() {
-					
-						$(this).miniColors({
-							opacity: $(this).hasClass('opacity'),
-							triggerPosition: $(this).attr('data-triggerPosition'),
-							change: function(hex, rgba) {
-								$('#console').prepend('change: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
-							},
-							open: function(hex, rgba) {
-								$('#console').prepend('open: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
-							},
-							close: function(hex, rgba) {
-								$('#console').prepend('close: ' + hex + ', rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ', ' + rgba.a + ')<br>');
-							}
-						});
-						
-					});
-					
-				}
+				var input = $(this),
+					hex = input.val(),
+					opacity = input.attr('data-opacity'),
+					text;
 				
-				init();
+				// Generate text to show in console
+				text = hex;
+				if( opacity ) text += ', ' + opacity;
+				text += ' / ' + $.minicolors.rgbString(input)
 				
-				$('#triggerBefore').click( function() {
-					$('#console').prepend('triggerPosition: before<br />');
-					$('.color-picker').attr('data-triggerPosition', 'before');
-					$("#triggerBefore").prop('disabled', true);
-					$("#triggerAfter").prop('disabled', false);
-					$('.color-picker').miniColors('triggerPosition', 'before');
-				});
-				
-				$('#triggerAfter').click( function() {
-					$('#console').prepend('triggerPosition: after<br />');
-					$('.color-picker').attr('data-triggerPosition', 'after');
-					$("#triggerBefore").prop('disabled', false);
-					$("#triggerAfter").prop('disabled', true);
-					$('.color-picker').miniColors('triggerPosition', 'after');
-				});
-				
-				$('#disable').click( function() {
-					$('#console').prepend('disable<br />');
-					$('.color-picker, .color-picker').miniColors('disabled', true);
-					$("#disable").prop('disabled', true);
-					$("#enable").prop('disabled', false);
-				});
-				
-				$('#enable').click( function() {
-					$('#console').prepend('enable<br />');
-					$('.color-picker, .color-picker').miniColors('disabled', false);
-					$("#disable").prop('disabled', false);
-					$("#enable").prop('disabled', true);
-				});
-				
-				$('#makeReadonly').click( function() {
-					$('#console').prepend('readonly = true<br />');
-					$('.color-picker').miniColors('readonly', true);
-					$("#unmakeReadonly").prop('disabled', false);
-					$("#makeReadonly").prop('disabled', true);
-				});
-				
-				$('#unmakeReadonly').click( function() {
-					$('#console').prepend('readonly = false<br />');
-					$('.color-picker').miniColors('readonly', false);
-					$("#unmakeReadonly").prop('disabled', true);
-					$("#makeReadonly").prop('disabled', false);
-				});
-				
-				$('#destroy').click( function() {
-					$('#console').prepend('destroy<br />');
-					$('.color-picker').miniColors('destroy');
-					$("INPUT[type=button]:not(#create)").prop('disabled', true);
-					$("#destroy").prop('disabled', true);
-					$("#create").prop('disabled', false);
-				});
-				
-				$('#create').click( function() {
-					$('#console').prepend('create<br />');
-					$('.color-picker').attr('data-triggerPosition', 'after');
-					init();
-					$("#makeReadonly, #disable, #destroy, #randomize, #triggerBefore").prop('disabled', false);
-					$("#destroy").prop('disabled', false);
-					$("#create").prop('disabled', true);
-				});
-				
-				$('#randomize').click( function() {
-					$('.color-picker').miniColors('value', '#' + Math.floor(Math.random() * 16777215).toString(16));
-				});
+				// Show text in console; disappear after a few seconds
+				$('#console').text(text).addClass('busy');
+				clearTimeout(consoleTimeout);
+				consoleTimeout = setTimeout( function() {
+					$('#console').removeClass('busy');
+				}, 3000);
 				
 			});
 			
-		</script>
+		});
 		
-	</head>
+	</script>
 	
-	<body>
+</head>
+<body>
 	
-		<h1>jQuery miniColors</h1>
+	<div id="main">
+		<h1>jQuery MiniColors 2.0 beta</h1>
 		<p>
-			A compact color selector for input elements.
+			A project by Cory LaViska of <a href="http://www.abeautifulsite.net/">A Beautiful Site</a>. 
 		</p>
-		
-		<div id="console" style="width: 500px; float: right; color: #FFF; background: #000; font: 12px monospace; padding: 1em; margin: 1em 0; height: 350px; overflow: auto;"></div>
-		
 		<p>
-			Default<br /><input type="text" name="color1" class="color-picker" size="7" autocomplete="on" value="#005294" />
+			MiniColors is a tiny color picker built on jQuery. It's easy to use and works 
+			well on touch-enabled devices. Completely re-written for 2.0.
 		</p>
+		<div class="alert">
+			<p>
+				The MiniColors API was completely overhauled in 2.0. You will need to change your 
+				code if you are upgrading from a previous version!
+			</p>
+		</div>
 		
+		<h2>Download</h2>
 		<p>
-			Gray theme (set class=&quot;gray&quot; on the input)<br />
-			<input type="text" name="color2" class="color-picker gray" size="7" value="#888" />
+			You can <a href="https://github.com/claviska/jquery-miniColors">download the source</a> 
+			on GitHub. Help contribute to this project by posting bug reports, feature requests, and 
+			code improvements!
 		</p>
 		
+		<h2>How it Works</h2>
+		<h3>Basic Control</h3>
 		<p>
-			Black theme (set class=&quot;black&quot; on the input)<br />
-			<input type="text" name="color3" class="color-picker black" size="7" value="#000" />
+			Create an <code>&lt;input type="minicolors" /&gt;</code> element. MiniColors 
+			will automatically initialize all controls on the page.
 		</p>
-		
 		<p>
-			With Opacity (set data-opacity attribute to 0–1 for preset)<br />
-			<input type="text" name="color4" class="color-picker opacity" data-opacity=".5" size="7" value="#F60" />
+			<input type="minicolors" name="color" />
 		</p>
 		
+		<h3>Color Wheel</h3>
 		<p>
-			Attached to a hidden input<br />
-			<input type="hidden" name="color5" class="color-picker" size="7" value="#0C0" />
+			Add <code>data-type="wheel"</code> to the <code>input</code> element to use 
+			a color wheel.
 		</p>
-        
-		<p style="position: absolute; right: 0; top: 0; margin-right: 10px;">
-			Absolutely positioned in upper-right corner
-			<input type="hidden" name="color6" class="color-picker" size="7" />
+		<p>
+			<input type="minicolors" name="color" data-type="wheel" />
 		</p>
 		
-		<p style="position: absolute; left: 0; bottom: 0; margin-left: 10px;">
-			<input type="hidden" name="color7" class="color-picker" size="7" />
-			Absolutely positioned in bottom-left corner			
+		<h3>Preset Colors</h3>
+		<p>
+			Add <code>value="#ffcc00"</code> to the <code>input</code> element to set 
+			a preset color.
+		</p>
+		<p>
+			<input type="minicolors" name="color" value="#ffcc00" />
 		</p>
 		
-		<p style="position: absolute; right: 0; bottom: 0; margin-right: 10px;">
-			Absolutely positioned in bottom-right corner			
-			<input type="hidden" name="color8" class="color-picker" size="7" />			
-		</p>		
-		
-		<p style="margin-top: 50px;">
-			Select an action to apply to all of the controls on this page:
-			<br />
-			<input type="button" id="makeReadonly" value="Read-only" />
-			<input type="button" id="unmakeReadonly" value="Not Read-only" disabled="disabled" /><br />
-			<input type="button" id="disable" value="Disable" />
-			<input type="button" id="enable" value="Enable" disabled="disabled" /><br />
-			<input type="button" id="triggerBefore" value="Trigger Before" />
-			<input type="button" id="triggerAfter" value="Trigger After" disabled="disabled" /><br />
-			<input type="button" id="destroy" value="Destroy" />
-			<input type="button" id="create" value="Create" disabled="disabled" /><br />
-			<input type="button" id="randomize" value="Random Color" />
+		<h3>Default Values</h3>
+		<p>
+			Add <code>data-default="#ffffff"</code> to the <code>input</code> element to 
+			force a default hex value. Try clearing the box—it will revert to its default 
+			value.
+		</p>
+		<p>
+			<input type="minicolors" name="color" data-default="#ffffff" />
 		</p>
 		
-	</body>
+		<h3>Without Textfields</h3>
+		<p>
+			Turn the color picker into a stand-alone swatch by adding 
+			<code>data-textfield="false"</code> to the <code>input</code> element.
+		</p>
+		<p>
+			<input type="minicolors" name="color" value="#FF6600" data-textfield="false" />
+			<input type="minicolors" name="color" value="#2facd6" data-textfield="false" data-type="wheel" />
+		</p>
+		
+		<h3>With Opacity</h3>
+		<p>
+			Enable opacity by adding <code>data-opacity="0.75"</code> to the <code>input</code> element.
+		</p>
+		<p>
+			<input type="minicolors" name="color" value="#4471a3" data-opacity=".75" />
+		</p>
+		
+		<h3>Inline Controls</h3>
+		<p>
+			<input type="minicolors" name="color" value="#3c9641" data-control="inline" data-style="margin: 10px;" />
+			<input type="minicolors" name="color" value="#3099bf" data-control="inline" data-type="wheel" data-style="margin: 10px;" />
+		</p>
+		
+		<h3>Dropdown Position</h3>
+		<p>
+			Add <code>data-position="top"</code> to position the color picker above the 
+			<code>input</code> element instead of below it.  Valid options are <code>top</code>, 
+			<code>left</code>, or <code>top left</code>.
+		</p>
+		<p>
+			<input type="minicolors" name="color" data-position="top" />
+		</p>
+		
+		<h3>Swatch Position</h3>
+		<p>
+			Add <code>data-swatch-position="left"</code> to the <code>input</code> element to position
+			the swatch to the left of the <code>input</code> element instead of to the right of it.
+		</p>
+		<p>
+			<input type="minicolors" name="color" data-swatch-position="left" />
+		</p>
+		
+		<h2>Utility Functions</h2>
+		
+		<h3><code>$.minicolors.init()</code></h3>
+		<p>
+			To initialize controls that are created dynamically, simply call 
+			<code>$.minicolors.init();</code>.			
+		</p>
+		
+		<h3><code>$.minicolors.refresh()</code></h3>
+		<p>
+			You'll need to call this function if you programmatically change the value 
+			of your controls. Call it immediately after you change any values and every
+			control on the page will update.
+		</p>
+		
+		<h3><code>$.minicolors.show(<em>input</em>)</code></h3>
+		<p>
+			Show the control attached to the specified <code>input</code> element. Only 
+			one control may be shown at once.  (Doesn't affect inline controls.)
+		</p>
+		
+		<h3><code>$.minicolors.hide()</code></h3>
+		<p>
+			Hides control that may be showing.  (Doesn't affect inline controls.)
+		</p>
+		
+		<h3><code>$.minicolors.rgbObject(<em>input</em>)</code></h3>
+		<p>
+			Returns an object with <code>r</code>, <code>g</code>, <code>b</code>, and 
+			<code>a</code> properties. The <code>a</code> property will only be present 
+			if opacity is enabled on the specified control.
+		</p>
+		
+		<h3><code>$.minicolors.rgbString(<em>input</em>)</code></h3>
+		<p>
+			Returns an RGB or RGBA string suitable for use in your CSS. If opacity is 
+			enabled on the specified control, an RGBA string will be returned.  Otherwise 
+			an RGB string will be returned.
+		</p>
+		
+		<h2>Settings</h2>
+		<h3><code>$.minicolors.settings.letterCase</code></h3>
+		<p>
+			Forces the hex color's letter case to uppercase or lowercase.  Possible values 
+			are <code>lowercase</code> (default) and <code>uppercase</code>.
+		</p>
+		
+		<h3><code>$.minicolors.settings.hideSpeed</code><br /><code>$.minicolors.settings.showSpeed</code></h3>
+		<p>
+			The hide/show speed for dropdown controls. Default is <code>100</code> (milliseconds).
+		</p>
+		
+		<h2>Callbacks</h2>
+		<h3><code>change</code></h3>
+		<p>
+			Attach your <code>change</code> callback to the original <code>input</code> element. 
+			You can access the value and opacity of the control using the <code>value</code> and 
+			<code>data-opacity</code> attributes, respectively.
+		</p>
+		<p>
+			To convert a control's hex value to RGB or RGBA, use the 
+			<code>$.minicolors.rgbObject()</code> or <code>$.minicolors.rgbString()</code> 
+			utility functions.
+		</p>
+		
+		<h2>Tips</h2>
+		<ul>
+			<li>
+				You can apply one or more classes to your controls by adding <code>data-class="class1 class2..."</code> 
+				to the <code>input</code> element.  This will let you style controls individually, if necessary.
+			</li>
+			<li>
+				You can apply an inline style to your controls by adding <code>data-style="<em>[your css here]</em>"</code> 
+				to the <code>input</code> element.  This style will be applied to the control's wrapper 
+				element, which has the <code>minicolors</code> class.
+			</li>
+			<li>
+				If you change the <code>input</code> element's height or width, you'll also 
+				need to adjust <code>.minicolors-swatch</code>, <code>.minicolors-panel</code>, 
+				<code>.minicolors-position-top</code>, and <code>.minicolors-position-left</code>.
+			</li>
+		</ul>
+	</div>
 	
+	<div id="console"></div>
+
+</body>
 </html>

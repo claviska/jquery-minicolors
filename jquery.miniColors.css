@@ -1,127 +1,182 @@
-.miniColors-selector {
+.minicolors {
+	position: relative;
+	display: inline-block;
+	z-index: 1;
+}
+
+.minicolors-focus {
+	z-index: 2;
+}
+
+.minicolors INPUT {
+	margin-right: 3px;
+	border: solid 1px #CCC;
+	font: 14px sans-serif;
+	width: 65px;
+	height: 16px;
+	vertical-align: middle;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, .04);
+	outline: none;
+	padding: 2px;
+	margin-right: -1px;
+}
+
+.minicolors-swatch-left INPUT {
+	margin-left: -1px;
+	margin-right: auto;
+}
+
+.minicolors-focus INPUT,
+.minicolors-focus .minicolors-swatch {
+	border-color: #999;
+}
+
+.minicolors-hidden {
 	position: absolute;
-	width: 175px;
-	height: 150px;
-	background: white;
-	border: solid 1px #bababa;
-	-moz-box-shadow: 0 0 6px rgba(0, 0, 0, .25);
-	-webkit-box-shadow: 0 0 6px rgba(0, 0, 0, .25);
-	box-shadow: 0 0 6px rgba(0, 0, 0, .25);
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	padding: 5px;
-	z-index: 999999;
+	top: -9999em;
+	left: -9999em;
 }
 
-.miniColors.opacity.miniColors-selector {
-	width: 200px;
-}
-
-.miniColors-selector.black {
-	background: black;
-	border-color: black;
-}
-
-.miniColors-selector.gray {
-	background: #DDD;
-	border-color: #EEE;
-}
-
-.miniColors-colors {
-	position: absolute;
-	top: 5px;
-	left: 5px;
-	width: 150px;
-	height: 150px;
-	background: url(images/colors.png) -40px 0 no-repeat;
-	cursor: crosshair;
-}
-
-.miniColors.opacity .miniColors-colors {
-	left: 30px;
-}
-
-.miniColors-hues {
-	position: absolute;
-	top: 5px;
-	left: 160px;
+.minicolors-swatch {
+	position: relative;
 	width: 20px;
-	height: 150px;
-	background: url(images/colors.png) 0 0 no-repeat;
-	cursor: crosshair;
+	height: 20px;
+	background: url(jquery.minicolors.png) -360px 0;
+	border: solid 1px #CCC;
+	display: inline-block;
+	vertical-align: middle;
 }
 
-.miniColors.opacity .miniColors-hues {
-	left: 185px;
-}
-
-.miniColors-opacity {
+.minicolors-swatch SPAN {
 	position: absolute;
-	top: 5px;
-	left: 5px;
-	width: 20px;
-	height: 150px;
-	background: url(images/colors.png) -20px 0 no-repeat;
-	cursor: crosshair;
-}
-
-.miniColors-colorPicker {
-	position: absolute;
-	width: 11px;
-	height: 11px;
-	border: 1px solid black;
-	-moz-border-radius: 11px;
-	-webkit-border-radius: 11px;
-	border-radius: 11px;
-}
-
-.miniColors-colorPicker-inner {
-	position: absolute;
-	top: 0;
-	left: 0; 
-	width: 7px;
-	height: 7px;
-	border: 2px solid white;
-	-moz-border-radius: 9px;
-	-webkit-border-radius: 9px;
-	border-radius: 9px;
-}
-
-.miniColors-huePicker,
-.miniColors-opacityPicker {
-	position: absolute;
-	left: -2px;
-	width: 22px;
-	height: 2px;
-	border: 1px solid black;
-	background: white;
-	margin-top: -1px;
-	border-radius: 2px;
-}
-
-.miniColors-trigger, 
-.miniColors-triggerWrap {
-	width: 22px;
-	height: 22px;
+	width: 100%;
+	height: 100%;
+	background: none;
+	box-shadow: inset 0 9px 0 rgba(255, 255, 255, .1);
 	display: inline-block;
 }
 
-.miniColors-triggerWrap {
-	background: url(images/trigger.png) -22px 0 no-repeat;
+/* Panel (standard) */
+.minicolors-panel {
+	position: absolute;
+	top: 26px;
+	left: 0;
+	width: 173px;
+	height: 152px;
+	background: white;
+	border: solid 1px #CCC;
+	box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+	display: none;
 }
 
-.miniColors-triggerWrap.disabled {
-	filter: alpha(opacity=50);
-	opacity: .5;
+.minicolors-position-top .minicolors-panel {
+	top: -156px;
 }
 
-.miniColors-trigger {
-	vertical-align: middle;
-	outline: none;
-	background: url(images/trigger.png) 0 0 no-repeat;
+.minicolors-position-left .minicolors-panel {
+	left: -83px;
 }
 
-.miniColors-triggerWrap.disabled .miniColors-trigger {
-	cursor: default;
+.minicolors-color {
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	width: 150px;
+	height: 150px;
+	background: url(jquery.minicolors.png) -60px 0;
+	cursor: crosshair;
+}
+
+.minicolors-hue {
+	position: absolute;
+	top: 1px;
+	left: 152px;
+	width: 20px;
+	height: 150px;
+	background: white url(jquery.minicolors.png) 0 0;
+	cursor: crosshair;
+}
+
+/* Panel (color wheel) */
+.minicolors-wheel .minicolors-color {
+	background-position: -210px 0;
+}
+
+.minicolors-brightness {
+	position: absolute;
+	top: 1px;
+	left: 152px;
+	width: 20px;
+	height: 150px;
+	background: white url(jquery.minicolors.png) -20px 0;
+	cursor: crosshair;
+}
+
+/* with opacity */
+.minicolors-with-opacity .minicolors-panel {
+	width: 194px;
+}
+
+.minicolors-opacity {
+	position: absolute;
+	top: 1px;
+	left: 173px;
+	width: 20px;
+	height: 150px;
+	background: white url(jquery.minicolors.png) -40px 0;
+	display: none;
+	cursor: crosshair;
+}
+
+.minicolors-with-opacity .minicolors-opacity {
+	display: block;
+}
+
+/* Pickers */
+.minicolors-color-picker {
+	position: absolute;
+	top: 70px;
+	left: 70px;
+	width: 10px;
+	height: 10px;
+	border: solid 1px black;
+	border-radius: 10px;
+	margin-top: -6px;
+	margin-left: -6px;
+}
+
+.minicolors-color-picker SPAN {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 6px;
+	height: 6px;
+	border-radius: 6px;
+	border: solid 2px white;
+}
+
+.minicolors-hue-picker,
+.minicolors-opacity-picker,
+.minicolors-brightness-picker {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 18px;
+	height: 2px;
+	background: white;
+	border: solid 1px black;
+	margin-top: -2px;
+}
+
+/* Inline */
+.minicolors-inline INPUT,
+.minicolors-inline .minicolors-swatch {
+	display: none;
+}
+
+.minicolors-inline .minicolors-panel {
+	position: relative;
+	top: auto;
+	left: auto;
+	display: inline-block;
 }
