@@ -294,8 +294,8 @@ if(jQuery) (function($) {
 				if( phi < 0 ) phi += Math.PI * 2;
 				if( r > 75 ) {
 					r = 75;
-					sliderPos.x = 75 - (75 * Math.cos(phi));
-					sliderPos.y = 75 - (75 * Math.sin(phi));
+					gridPos.x = 69 - (75 * Math.cos(phi));
+					gridPos.y = 69 - (75 * Math.sin(phi));
 				}
 				saturation = keepWithin(r / 0.75, 0, 100);
 				hue = keepWithin(phi * 180 / Math.PI, 0, 360);
