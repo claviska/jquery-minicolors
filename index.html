@@ -4,6 +4,7 @@
 	<title>jQuery MiniColors</title>
 	<meta name="description" content="A tiny color picker built on jQuery" />
 	<meta charset="utf-8" />
+	<meta name="viewport" content="initial-scale=1.0" />
 	<link rel="stylesheet" href="jquery.minicolors.css" />
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script src="jquery.minicolors.js"></script>
@@ -28,6 +29,8 @@
 			font-family: Georgia, serif;
 			font-weight: normal;
 			color: black;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		
 		A {
@@ -69,7 +72,6 @@
 			line-height: 32px;
 			text-align: center;
 			background: black;
-			background: rgba(0, 0, 0, .9);
 			color: black;
 			z-index: 100;
 			-moz-transition: all .5s;
