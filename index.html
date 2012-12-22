@@ -41,9 +41,16 @@
 			color: #0BE;
 		}
 		
+		PRE,
 		CODE {
 			background: #F8F8F8;
 			padding: 2px;
+		}
+		
+		PRE {
+			padding: 10px;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		
 		.alert {
@@ -72,16 +79,17 @@
 			line-height: 32px;
 			text-align: center;
 			background: black;
-			color: black;
+			color: white;
 			z-index: 100;
 			-moz-transition: all .5s;
 			-ms-transition: all .5s;
 			-webkit-transition: all .5s;
 			transition: all .5s;
+			opacity: 0;
 		}
 		
 		#console.busy {
-			color: white;
+			opacity: .85;
 		}
 		
 	</style>
@@ -100,7 +108,7 @@
 					text;
 				
 				// Generate text to show in console
-				text = hex;
+				text = hex ? hex : 'transparent';
 				if( opacity ) text += ', ' + opacity;
 				text += ' / ' + $.minicolors.rgbString(input)
 				
@@ -136,6 +144,7 @@
 			</p>
 		</div>
 		
+		<!-- Download -->
 		<h2>Download</h2>
 		<p>
 			You can <a href="https://github.com/claviska/jquery-miniColors">download the source</a> 
@@ -143,111 +152,150 @@
 			code improvements!
 		</p>
 		
-		<h2>How it Works</h2>
-		<h3>Basic Control</h3>
+		<h2>Usage</h2>
 		<p>
-			Create an <code>&lt;input type="minicolors" /&gt;</code> element. MiniColors 
-			will automatically initialize all controls on the page.
+			The plugin will automatically initialize all inputs of type <code>minicolors</code>: 
+		</p>
+		<pre>&lt;input type="minicolors" /&gt;</pre>
+		<p>
+			This results in the default color picker: 
+			<input type="minicolors" />
 		</p>
 		<p>
-			<input type="minicolors" name="color" />
+			To set an initial value, use the <code>value</code> attribute:
+		</p>
+		<pre>&lt;input type="minicolors" value="#00cc00" /&gt;</pre>
+		<p>
+			This results in the default color picker with a preset value: 
+			<input type="minicolors" value="#00cc00" />
+		</p>
+		<p>
+			You can obtain the selected value any time by grabbing the original <code>input</code> 
+			element's <code>value</code>.
 		</p>
 		
-		<h3>Color Wheel</h3>
+		<!-- Options -->
+		<h2>Options</h2>
 		<p>
-			Add <code>data-type="wheel"</code> to the <code>input</code> element to use 
-			a color wheel.
-		</p>
-		<p>
-			<input type="minicolors" name="color" data-type="wheel" />
+			Options are set for each control using one or more of the HTML5 <code>data-</code> 
+			attributes mentioned below.
 		</p>
 		
-		<h3>Preset Colors</h3>
+		<h3>Slider Variations</h3>
 		<p>
-			Add <code>value="#ffcc00"</code> to the <code>input</code> element to set 
-			a preset color.
+			MiniColors has four slider variations. Set the <code>data-slider</code> attribute 
+			to use them.  Valid options are <code>hue</code> (default), <code>saturation</code>, 
+			<code>brightness</code>, and <code>wheel</code>.
 		</p>
+		<pre>&lt;input type="minicolors" data-slider="saturation" /&gt;</pre>
+		
 		<p>
-			<input type="minicolors" name="color" value="#ffcc00" />
+			<input type="minicolors" value="#d7e036" data-slider="hue" />
+			<input type="minicolors" value="#00a9bf" data-slider="saturation" />
+			<input type="minicolors" value="#b340ff" data-slider="brightness" />
+			<input type="minicolors" value="#e87262" data-slider="wheel" />
 		</p>
 		
 		<h3>Default Values</h3>
 		<p>
-			Add <code>data-default="#ffffff"</code> to the <code>input</code> element to 
-			force a default hex value. Try clearing the box—it will revert to its default 
-			value.
+			Use the <code>data-default</code> attribute to force a default hex value. Try clearing 
+			the box—it will revert to its default value. Note that the default value does not have 
+			to be the same as the initial value (set with the <code>value</code> attribute).
 		</p>
+		<pre>&lt;input type="minicolors" data-default="#ffffff" /&gt;</pre>
 		<p>
-			<input type="minicolors" name="color" data-default="#ffffff" />
-		</p>
-		
-		<h3>Without Textfields</h3>
-		<p>
-			Turn the color picker into a stand-alone swatch by adding 
-			<code>data-textfield="false"</code> to the <code>input</code> element.
-		</p>
-		<p>
-			<input type="minicolors" name="color" value="#FF6600" data-textfield="false" />
-			<input type="minicolors" name="color" value="#2facd6" data-textfield="false" data-type="wheel" />
+			<input type="minicolors" data-default="#ffffff" />
 		</p>
 		
-		<h3>With Opacity</h3>
+		<h3>No Text Field</h3>
 		<p>
-			Enable opacity by adding <code>data-opacity="0.75"</code> to the <code>input</code> element.
+			Turn the color picker into a stand-alone color swatch by setting <code>data-textfield</code> 
+			to <code>false</code>:
+		</p>
+		<pre>&lt;input type="minicolors" data-textfield="false" /&gt;</pre>
+		<p>
+			<input type="minicolors" value="#ff6600" data-textfield="false" data-slider="hue" />
+			<input type="minicolors" value="#29cf37" data-textfield="false" data-slider="saturation" />
+			<input type="minicolors" value="#b437c7" data-textfield="false" data-slider="brightness" />
+			<input type="minicolors" value="#00a4d1" data-textfield="false" data-slider="wheel" />
+		</p>
+		
+		<h3>Opacity Slider</h3>
+		<p>
+			Enable the opacity slider by adding the <code>data-opacity</code> attribute:
+		</p>
+		<pre>&lt;input type="minicolors" data-opacity=".75" /&gt;</pre>
+		<p>
+			<input type="minicolors" value="#4471a3" data-opacity=".75" />
 		</p>
 		<p>
-			<input type="minicolors" name="color" value="#4471a3" data-opacity=".75" />
+			To obtain the opacity value, grab the <code>data-opacity</code> attribute of your input 
+			element. Keep in mind that this value will not submit along with other form data, so it's 
+			best to use the <code>change</code> callback to update a hidden element in your form if 
+			you need it to be submitted.
 		</p>
 		
 		<h3>Inline Controls</h3>
 		<p>
-			<input type="minicolors" name="color" value="#3c9641" data-control="inline" data-style="margin: 10px;" />
-			<input type="minicolors" name="color" value="#3099bf" data-control="inline" data-type="wheel" data-style="margin: 10px;" />
+			Force the color picker to appear inline by setting <code>data-control</code> to <code>inline</code>:
+		</p>
+		<pre>&lt;input type="minicolors" data-control="inline" /&gt;</pre>
+		<p>
+			<input type="minicolors" value="#3c9641" data-control="inline" data-slider="hue" data-style="margin: 10px;" />
+			<input type="minicolors" value="#d49f00" data-control="inline" data-slider="saturation" data-style="margin: 10px;" />
+			<input type="minicolors" value="#5cb8ff" data-control="inline" data-slider="brightness" data-style="margin: 10px;" />
+			<input type="minicolors" value="#5bbf4c" data-control="inline" data-slider="wheel" data-style="margin: 10px;" />
 		</p>
 		
 		<h3>Dropdown Position</h3>
 		<p>
-			Add <code>data-position="top"</code> to position the color picker above the 
-			<code>input</code> element instead of below it.  Valid options are <code>top</code>, 
-			<code>left</code>, or <code>top left</code>.
+			Change the position of the dropdown panel by setting the <code>data-position</code> 
+			attribute.  Valid options are <code>top</code>, <code>left</code>, and <code>top left</code>.
 		</p>
+		<pre>&lt;input type="minicolors" data-position="top" /&gt;</pre>
 		<p>
-			<input type="minicolors" name="color" data-position="top" />
+			<input type="minicolors" data-position="top" data-opacity=".5" />
 		</p>
 		
 		<h3>Swatch Position</h3>
 		<p>
-			Add <code>data-swatch-position="left"</code> to the <code>input</code> element to position
-			the swatch to the left of the <code>input</code> element instead of to the right of it.
+			Force the color swatch to appear on the left by setting <code>data-swatch-position</code> 
+			to <code>left</code>:
 		</p>
+		<pre>&lt;input type="minicolors" data-swatch-position="left" /&gt;</pre>
 		<p>
-			<input type="minicolors" name="color" data-swatch-position="left" />
+			<input type="minicolors" data-swatch-position="left" />
 		</p>
 		
-		<h2>Utility Functions</h2>
+		<h3>Classes &amp; Styles</h3>
+		<p>
+			Use <code>data-class</code> and <code>data-style</code> to apply classes and styles 
+			to the parent element of the resulting control:
+		</p>
+		<pre>&lt;input type="minicolors" data-class="my-class" data-style="margin: 20px;" /&gt;</pre>
 		
+		<!-- Utility Functions -->
+		<h2>Utility Functions</h2>
 		<h3><code>$.minicolors.init()</code></h3>
 		<p>
-			To initialize controls that are created dynamically, simply call 
-			<code>$.minicolors.init();</code>.			
+			Call this function to initialize controls that are created dynamically. You do not 
+			need to specify a selector when calling this function.
 		</p>
 		
 		<h3><code>$.minicolors.refresh()</code></h3>
 		<p>
-			You'll need to call this function if you programmatically change the value 
-			of your controls. Call it immediately after you change any values and every
-			control on the page will update.
+			Call this function if you programmatically change the value of one or more controls.
 		</p>
 		
 		<h3><code>$.minicolors.show(<em>input</em>)</code></h3>
 		<p>
 			Show the control attached to the specified <code>input</code> element. Only 
-			one control may be shown at once.  (Doesn't affect inline controls.)
+			one control may be shown at once. (Doesn't apply to inline controls.)
 		</p>
 		
 		<h3><code>$.minicolors.hide()</code></h3>
 		<p>
-			Hides control that may be showing.  (Doesn't affect inline controls.)
+			Hides any control that may be showing. (Doesn't apply to inline controls.)
 		</p>
 		
 		<h3><code>$.minicolors.rgbObject(<em>input</em>)</code></h3>
@@ -264,18 +312,7 @@
 			an RGB string will be returned.
 		</p>
 		
-		<h2>Settings</h2>
-		<h3><code>$.minicolors.settings.letterCase</code></h3>
-		<p>
-			Forces the hex color's letter case to uppercase or lowercase.  Possible values 
-			are <code>lowercase</code> (default) and <code>uppercase</code>.
-		</p>
-		
-		<h3><code>$.minicolors.settings.hideSpeed</code><br /><code>$.minicolors.settings.showSpeed</code></h3>
-		<p>
-			The hide/show speed for dropdown controls. Default is <code>100</code> (milliseconds).
-		</p>
-		
+		<!-- Callbacks -->
 		<h2>Callbacks</h2>
 		<h3><code>change</code></h3>
 		<p>
@@ -289,23 +326,45 @@
 			utility functions.
 		</p>
 		
-		<h2>Tips</h2>
-		<ul>
-			<li>
-				You can apply one or more classes to your controls by adding <code>data-class="class1 class2..."</code> 
-				to the <code>input</code> element.  This will let you style controls individually, if necessary.
-			</li>
-			<li>
-				You can apply an inline style to your controls by adding <code>data-style="<em>[your css here]</em>"</code> 
-				to the <code>input</code> element.  This style will be applied to the control's wrapper 
-				element, which has the <code>minicolors</code> class.
-			</li>
-			<li>
-				If you change the <code>input</code> element's height or width, you'll also 
-				need to adjust <code>.minicolors-swatch</code>, <code>.minicolors-panel</code>, 
-				<code>.minicolors-position-top</code>, and <code>.minicolors-position-left</code>.
-			</li>
-		</ul>
+		<!-- Settings -->
+		<h2>Settings</h2>
+		<p>
+			Adjust plugin defaults by setting <code>$.minicolors.settings.<em>settingName</em></code>, 
+			where <code><em>settingName</em></code> is one of the following:
+		</p>
+		
+		<h3><code>animationSpeed</code> &amp; <code>animationEasing</code></h3>
+		<p>
+			The animation speed and easing effect to use when making a color selection. 
+			Defaults to <code>100</code> (milliseconds) and <code>swing</code>, respectively.
+			Set <code>animationSpeed</code> to <code>0</code> to disabled animation.
+		</p>
+		
+		<h3><code>defaultSlider</code></h3>
+		<p>
+			Sets the slider variation for all controls that don't specify it through 
+			<code>data-slider</code>. Default value is <code>hue</code>.
+		</p>
+		
+		<h3><code>letterCase</code></h3>
+		<p>
+			Forces the hex color's letter case to uppercase or lowercase.  Possible values 
+			are <code>lowercase</code> (default) and <code>uppercase</code>.
+		</p>
+		
+		<h3><code>hideSpeed</code> &amp; <code>showSpeed</code></h3>
+		<p>
+			The hide/show speed for dropdown controls. Default is <code>100</code> (milliseconds).
+		</p>
+		
+		<!-- Styling Tips -->
+		<h2>Styling Tips</h2>
+		<p>
+			If you change the <code>input</code> element's height or width via CSS, you'll also 
+			need to adjust certain style properties in <code>.minicolors-swatch</code>, 
+			<code>.minicolors-panel</code>, <code>.minicolors-position-top</code>, and 
+			<code>.minicolors-position-left</code>.
+		</p>
 	</div>
 	
 	<div id="console"></div>
