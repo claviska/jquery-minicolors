@@ -11,12 +11,16 @@ http://labs.abeautifulsite.net/jquery-miniColors/
 
 ## Quick Start
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-  <script src="jquery.minicolors.js"></script>
-  <link rel="stylesheet" href="jquery.minicolors.css" />
+```html
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="jquery.minicolors.js"></script>
+<link rel="stylesheet" href="jquery.minicolors.css" />
+```
 
 To create a color picker:
 
-  <input type="minicolors" name="color" />
+```html
+<input type="minicolors" name="color" />
+```
 
 Refer to `index.html` for complete documentation and examples.
