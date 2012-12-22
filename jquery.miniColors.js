@@ -13,9 +13,12 @@ if(jQuery) (function($) {
 		
 		// Default settings
 		settings: {
+			defaultSlider: 'hue',
 			letterCase: 'lowercase',
 			hideSpeed: 100,
-			showSpeed: 100
+			showSpeed: 100,
+			animationSpeed: 100,
+			animationEasing: 'swing'
 		},
 		
 		// Initialized all controls of type=minicolors
@@ -76,30 +79,7 @@ if(jQuery) (function($) {
 	function init(input) {
 		
 		var minicolors = $('<span class="minicolors" />'),
-			panelStandard = 
-				'<span class="minicolors-panel minicolors-standard">' + 
-					'<span class="minicolors-hue">' + 
-						'<span class="minicolors-hue-picker"></span>' +
-					'</span>' + 
-					'<span class="minicolors-opacity">' + 
-						'<span class="minicolors-opacity-picker"></span>' +
-					'</span>' +
-					'<span class="minicolors-color">' +
-						'<span class="minicolors-color-picker"><span></span></span>' +
-					'</span>' +
-				'</span>',
-			panelWheel = 
-				'<span class="minicolors-panel minicolors-wheel">' + 
-					'<span class="minicolors-brightness">' + 
-						'<span class="minicolors-brightness-picker"></span>' +
-					'</span>' + 
-					'<span class="minicolors-opacity">' + 
-						'<span class="minicolors-opacity-picker"></span>' +
-					'</span>' +
-					'<span class="minicolors-color">' +
-						'<span class="minicolors-color-picker"><span></span></span>' +
-					'</span>' +
-				'</span>';
+			sliderType = input.attr('data-slider') || $.minicolors.settings.defaultSlider;
 		
 		if( input.data('initialized') ) return;
 		
@@ -121,10 +101,24 @@ if(jQuery) (function($) {
 		input
 			.data('initialized', true)
 			.attr('data-default', input.attr('data-default') || '')
+			.attr('data-slider', sliderType)
 			.prop('size', 7)
 			.prop('maxlength', 7)
 			.wrap(minicolors)
-			.after(input.attr('data-type') === 'wheel' ? panelWheel : panelStandard);
+			.after(
+				'<span class="minicolors-panel minicolors-slider-' + sliderType + '">' + 
+					'<span class="minicolors-slider">' + 
+						'<span class="minicolors-picker"></span>' +
+					'</span>' + 
+					'<span class="minicolors-opacity-slider">' + 
+						'<span class="minicolors-picker"></span>' +
+					'</span>' +
+					'<span class="minicolors-grid">' +
+						'<span class="minicolors-grid-inner"></span>' +
+						'<span class="minicolors-picker"><span></span></span>' +
+					'</span>' +
+				'</span>'
+			);
 		
 		// Prevent text selection in IE
 		input.parent().find('.minicolors-panel').on('selectstart', function() { return false; }).end();
@@ -154,7 +148,8 @@ if(jQuery) (function($) {
 		var minicolors = input.parent(),
 			panel = minicolors.find('.minicolors-panel');
 		
-		if( !input.data('initialized') || input.prop('disabled') ) return;
+		// Do nothing if uninitialized, disabled, or already open
+		if( !input.data('initialized') || input.prop('disabled') || minicolors.hasClass('minicolors-focus') ) return;
 		
 		hide();
 		
@@ -162,8 +157,6 @@ if(jQuery) (function($) {
 		panel
 			.stop(true, true)
 			.fadeIn($.minicolors.settings.showSpeed);
-		
-		updateFromInput(input);
 		
 		return input;
 		
@@ -174,7 +167,9 @@ if(jQuery) (function($) {
 		
 		$('.minicolors:not(.minicolors-inline)').each( function() {
 			
-			var minicolors = $(this);
+			var minicolors = $(this),
+				input = minicolors.find('INPUT');
+			
 			minicolors.find('.minicolors-panel').fadeOut($.minicolors.settings.hideSpeed, function() {
 				minicolors.removeClass('minicolors-focus');
 			});
@@ -184,7 +179,7 @@ if(jQuery) (function($) {
 	}
 	
 	// Moves the selected picker
-	function move(target, event) {
+	function move(target, event, animate) {
 		
 		var input = target.parents('.minicolors').find('INPUT'),
 			picker = target.find('[class$=-picker]'),
@@ -192,7 +187,9 @@ if(jQuery) (function($) {
 			offsetY = target.offset().top,
 			x = Math.round(event.pageX - offsetX),
 			y = Math.round(event.pageY - offsetY),
+			duration = animate ? $.minicolors.settings.animationSpeed : 0,
 			wx, wy, r, phi;
+			
 		
 		// Touch support
 		if( event.originalEvent.changedTouches ) {
@@ -207,7 +204,7 @@ if(jQuery) (function($) {
 		if( y > target.height() ) y = target.height();
 		
 		// Constrain color wheel values to the wheel
-		if( target.parent().is('.minicolors-wheel') && picker.is('.minicolors-color-picker') ) {
+		if( target.parent().is('.minicolors-slider-wheel') && picker.parent().is('.minicolors-grid') ) {
 			wx = 75 - x;
 			wy = 75 - y;
 			r = Math.sqrt(wx * wx + wy * wy);
@@ -223,113 +220,148 @@ if(jQuery) (function($) {
 		}
 		
 		// Move the picker
-		if( target.is('.minicolors-color') ) {
-			picker.css({
-				top: y + 'px',
-				left: x + 'px'
-			});
+		if( target.is('.minicolors-grid') ) {
+			picker
+				.stop(true)
+				.animate({
+					top: y + 'px',
+					left: x + 'px'
+				}, duration, $.minicolors.settings.animationEasing, function() {
+					updateFromControl(input);
+				});
 		} else {
-			picker.css('top', y + 'px');
+			picker
+				.stop(true)
+				.animate({
+					top: y + 'px'
+				}, duration, $.minicolors.settings.animationEasing, function() {
+					updateFromControl(input);
+				});
 		}
-		
-		updateFromControl(input);
 		
 	}
 	
 	// Sets the input based on the color picker values
 	function updateFromControl(input) {
 		
-		function getCoords(picker, panel) {
+		function getCoords(picker, container) {
 			
 			var left, top;
-			
-			if( picker.length === 0 ) return null;
-			
+			if( !picker.length || !container ) return null;
 			left = picker.offset().left;
 			top = picker.offset().top;
 			
 			return {
-				x: left - panel.offset().left + (picker.outerWidth() / 2),
-				y: top - panel.offset().top + (picker.outerHeight() / 2)
+				x: left - container.offset().left + (picker.outerWidth() / 2),
+				y: top - container.offset().top + (picker.outerHeight() / 2)
 			};
 			
 		}
 		
-		var color, hue, saturation, brightness, opacity, rgb, hex, x, y, r, phi,
+		var hue, saturation, brightness, opacity, rgb, hex, x, y, r, phi,
 			
 			// Helpful references
 			minicolors = input.parent(),
 			panel = minicolors.find('.minicolors-panel'),
 			swatch = minicolors.find('.minicolors-swatch'),
 			hasOpacity = input.attr('data-opacity') !== undefined,
-			hasWheel = input.attr('data-type') === 'wheel',
+			sliderType = input.attr('data-slider'),
 			
 			// Panel objects
-			colorPanel = minicolors.find('.minicolors-color'),
-			huePanel = minicolors.find('.minicolors-hue'),
-			brightnessPanel = minicolors.find('.minicolors-brightness'),
-			opacityPanel = minicolors.find('.minicolors-opacity'),
+			grid = minicolors.find('.minicolors-grid'),
+			slider = minicolors.find('.minicolors-slider'),
+			opacitySlider = minicolors.find('.minicolors-opacity-slider'),
 			
 			// Picker objects
-			colorPicker = colorPanel.find('[class$=-picker]'),
-			huePicker = huePanel.find('[class$=-picker]'),
-			brightnessPicker = brightnessPanel.find('[class$=-picker]'),
-			opacityPicker = opacityPanel.find('[class$=-picker]'),
+			gridPicker = grid.find('[class$=-picker]'),
+			sliderPicker = slider.find('[class$=-picker]'),
+			opacityPicker = opacitySlider.find('[class$=-picker]'),
 			
 			// Picker positions
-			colorPos = getCoords(colorPicker, colorPanel);
-			huePos = getCoords(huePicker, huePanel);
-			brightnessPos = getCoords(brightnessPicker, brightnessPanel);
-			opacityPos = getCoords(opacityPicker, opacityPanel);
+			gridPos = getCoords(gridPicker, grid),
+			sliderPos = getCoords(sliderPicker, slider),
+			opacityPos = getCoords(opacityPicker, opacitySlider);
 		
 		// Determine HSB values
-		if( hasWheel ) {
-			// Color wheel
+		switch(sliderType) {
 			
-			// Calculate hue, saturation, and brightness
-			x = (colorPanel.width() / 2) - colorPos.x;
-			y = (colorPanel.height() / 2) - colorPos.y;
-			r = Math.sqrt(x * x + y * y);
-			phi = Math.atan2(y, x);
-			if( phi < 0 ) phi += Math.PI * 2;
-			if( r > 75 ) {
-				r = 75;
-				colorPos.x = 75 - (75 * Math.cos(phi));
-				colorPos.y = 75 - (75 * Math.sin(phi));
-			}
-			saturation = keepWithin(r / 0.75, 0, 100);
-			hue = keepWithin(phi * 180 / Math.PI, 0, 360);
-			brightness = keepWithin(100 - Math.floor(brightnessPos.y * (100 / brightnessPanel.height())), 0, 100);
-			hex = hsb2hex({
-				h: hue,
-				s: saturation,
-				b: brightness
-			});
+			case 'wheel':
+				// Calculate hue, saturation, and brightness
+				x = (grid.width() / 2) - gridPos.x;
+				y = (grid.height() / 2) - gridPos.y;
+				r = Math.sqrt(x * x + y * y);
+				phi = Math.atan2(y, x);
+				if( phi < 0 ) phi += Math.PI * 2;
+				if( r > 75 ) {
+					r = 75;
+					sliderPos.x = 75 - (75 * Math.cos(phi));
+					sliderPos.y = 75 - (75 * Math.sin(phi));
+				}
+				saturation = keepWithin(r / 0.75, 0, 100);
+				hue = keepWithin(phi * 180 / Math.PI, 0, 360);
+				brightness = keepWithin(100 - Math.floor(sliderPos.y * (100 / slider.height())), 0, 100);
+				hex = hsb2hex({
+					h: hue,
+					s: saturation,
+					b: brightness
+				});
+				
+				// Update UI
+				slider.css('backgroundColor', hsb2hex({ h: hue, s: saturation, b: 100 }));
+				break;
 			
-			// Change color panel
-			brightnessPanel.css('backgroundColor', hsb2hex({ h: hue, s: saturation, b: 100 }));
+			case 'saturation':
+				// Calculate hue, saturation, and brightness
+				hue = keepWithin(parseInt(gridPos.x * (360 / grid.width())), 0, 360);
+				saturation = keepWithin(100 - Math.floor(sliderPos.y * (100 / slider.height())), 0, 100);
+				brightness = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
+				hex = hsb2hex({
+					h: hue,
+					s: saturation,
+					b: brightness
+				});
+				
+				// Update UI
+				slider.css('backgroundColor', hsb2hex({ h: hue, s: 100, b: brightness }));
+				minicolors.find('.minicolors-grid-inner').css('opacity', saturation / 100);
+				break;
 			
-		} else {
-			// Standard
+			case 'brightness':
+				// Calculate hue, saturation, and brightness
+				hue = keepWithin(parseInt(gridPos.x * (360 / grid.width())), 0, 360);
+				saturation = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
+				brightness = keepWithin(100 - Math.floor(sliderPos.y * (100 / slider.height())), 0, 100);
+				hex = hsb2hex({
+					h: hue,
+					s: saturation,
+					b: brightness
+				});
+				
+				// Update UI
+				slider.css('backgroundColor', hsb2hex({ h: hue, s: saturation, b: 100 }));
+				minicolors.find('.minicolors-grid-inner').css('opacity', 1 - (brightness / 100));
+				break;
 			
-			// Calculate hue, saturation, and brightness
-			hue = keepWithin(360 - parseInt(huePos.y * (360 / huePanel.height())), 0, 360);
-			saturation = keepWithin(Math.floor(colorPos.x * (100 / colorPanel.height())), 0, 100);
-			brightness = keepWithin(100 - Math.floor(colorPos.y * (100 / colorPanel.height())), 0, 100);
-			hex = hsb2hex({
-				h: hue,
-				s: saturation,
-				b: brightness
-			});
-			
-			// Change color panel
-			colorPanel.css('backgroundColor', hsb2hex({ h: hue, s: 100, b: 100 }));
+			default:
+				// Calculate hue, saturation, and brightness
+				hue = keepWithin(360 - parseInt(sliderPos.y * (360 / slider.height())), 0, 360);
+				saturation = keepWithin(Math.floor(gridPos.x * (100 / grid.width())), 0, 100);
+				brightness = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
+				hex = hsb2hex({
+					h: hue,
+					s: saturation,
+					b: brightness
+				});
+				
+				// Update UI
+				grid.css('backgroundColor', hsb2hex({ h: hue, s: 100, b: 100 }));
+				break;
 			
 		}
 		
 		// Determine opacity
 		if( hasOpacity ) {
-			opacity = parseFloat(1 - (opacityPos.y) / opacityPanel.height()).toFixed(2);
+			opacity = parseFloat(1 - (opacityPos.y / opacitySlider.height())).toFixed(2);
 		} else {
 			opacity = 1;
 		}
@@ -365,19 +397,18 @@ if(jQuery) (function($) {
 			minicolors = input.parent(),
 			swatch = minicolors.find('.minicolors-swatch'),
 			hasOpacity = input.attr('data-opacity') !== undefined,
-			hasWheel = input.attr('data-type') === 'wheel',
+			sliderType = input.attr('data-slider'),
+			
 			
 			// Panel objects
-			colorPanel = minicolors.find('.minicolors-color'),
-			huePanel = minicolors.find('.minicolors-hue'),
-			brightnessPanel = minicolors.find('.minicolors-brightness'),
-			opacityPanel = minicolors.find('.minicolors-opacity'),
+			grid = minicolors.find('.minicolors-grid'),
+			slider = minicolors.find('.minicolors-slider'),
+			opacitySlider = minicolors.find('.minicolors-opacity-slider'),
 			
 			// Picker objects
-			colorPicker = colorPanel.find('[class$=-picker]'),
-			huePicker = huePanel.find('[class$=-picker]'),
-			brightnessPicker = brightnessPanel.find('[class$=-picker]'),
-			opacityPicker = opacityPanel.find('[class$=-picker]');
+			gridPicker = grid.find('[class$=-picker]'),
+			sliderPicker = slider.find('[class$=-picker]'),
+			opacityPicker = opacitySlider.find('[class$=-picker]');
 		
 		// Determine hex/HSB values
 		hex = convertCase(parseHex(input.val(), true));
@@ -394,53 +425,90 @@ if(jQuery) (function($) {
 			swatch.find('SPAN').css('opacity', opacity);
 			
 			// Set opacity picker position
-			y = keepWithin(opacityPanel.height() - (opacityPanel.height() * opacity), 0, opacityPanel.height());
+			y = keepWithin(opacitySlider.height() - (opacitySlider.height() * opacity), 0, opacitySlider.height());
 			opacityPicker.css('top', y + 'px');
-		}
-		
-		// Determine picker locations
-		if( hasWheel ) {
-			// Color wheel
-			
-			// Set color picker position
-			r = keepWithin(Math.ceil(hsb.s * 0.75), 0, colorPanel.height() / 2);
-			phi = hsb.h * Math.PI / 180;
-			x = keepWithin(75 - Math.cos(phi) * r, 0, colorPanel.height());
-			y = keepWithin(75 - Math.sin(phi) * r, 0, colorPanel.height());
-			colorPicker.css({
-				top: y + 'px',
-				left: x + 'px'
-			});
-			
-			// Set brightness
-			y = 150 - (hsb.b / (100 / colorPanel.height()));
-			if( hex === '' ) y = 0;
-			brightnessPicker.css('top', y + 'px');
-			
-		} else {
-			// Standard
-			
-			// Set color picker position
-			x = keepWithin(Math.ceil(hsb.s / (100 / colorPanel.width())), 0, colorPanel.width());
-			y = keepWithin(colorPanel.height() - Math.ceil(hsb.b / (100 / colorPanel.height())), 0, colorPanel.height());
-			colorPicker.css({
-				top: y + 'px',
-				left: x + 'px'
-			});
-			
-			// Set hue position
-			y = keepWithin(huePanel.height() - (hsb.h / (360 / huePanel.height())), 0, huePanel.height());
-			huePicker.css('top', y + 'px');
 		}
 		
 		// Update swatch
 		swatch.find('SPAN').css('backgroundColor', hex);
 		
-		// Change color panels
-		if( hasWheel ) {
-			brightnessPanel.css('backgroundColor', hsb2hex({ h: hsb.h, s: hsb.s, b: 100 }));
-		} else {
-			colorPanel.css('backgroundColor', hsb2hex({ h: hsb.h, s: 100, b: 100 }));
+		// Determine picker locations
+		switch(sliderType) {
+			
+			case 'wheel':
+				// Set grid position
+				r = keepWithin(Math.ceil(hsb.s * 0.75), 0, grid.height() / 2);
+				phi = hsb.h * Math.PI / 180;
+				x = keepWithin(75 - Math.cos(phi) * r, 0, grid.width());
+				y = keepWithin(75 - Math.sin(phi) * r, 0, grid.height());
+				gridPicker.css({
+					top: y + 'px',
+					left: x + 'px'
+				});
+				
+				// Set slider position
+				y = 150 - (hsb.b / (100 / grid.height()));
+				if( hex === '' ) y = 0;
+				sliderPicker.css('top', y + 'px');
+				
+				// Update panel color
+				slider.css('backgroundColor', hsb2hex({ h: hsb.h, s: hsb.s, b: 100 }));
+				break;
+			
+			case 'saturation':
+				// Set grid position
+				x = keepWithin((5 * hsb.h) / 12, 0, 150);
+				y = keepWithin(grid.height() - Math.ceil(hsb.b / (100 / grid.height())), 0, grid.height());
+				gridPicker.css({
+					top: y + 'px',
+					left: x + 'px'
+				});				
+				
+				// Set slider position
+				y = keepWithin(slider.height() - (hsb.s * (slider.height() / 100)), 0, slider.height());
+				sliderPicker.css('top', y + 'px');
+				
+				// Update UI
+				slider.css('backgroundColor', hsb2hex({ h: hsb.h, s: 100, b: hsb.b }));
+				minicolors.find('.minicolors-grid-inner').css('opacity', hsb.s / 100);
+				
+				break;
+			
+			case 'brightness':
+				// Set grid position
+				x = keepWithin((5 * hsb.h) / 12, 0, 150);
+				y = keepWithin(grid.height() - Math.ceil(hsb.s / (100 / grid.height())), 0, grid.height());
+				gridPicker.css({
+					top: y + 'px',
+					left: x + 'px'
+				});				
+				
+				// Set slider position
+				y = keepWithin(slider.height() - (hsb.b * (slider.height() / 100)), 0, slider.height());
+				sliderPicker.css('top', y + 'px');
+				
+				// Update UI
+				slider.css('backgroundColor', hsb2hex({ h: hsb.h, s: hsb.s, b: 100 }));
+				minicolors.find('.minicolors-grid-inner').css('opacity', 1 - (hsb.b / 100));
+				break;
+			
+			default:
+				// Set grid position
+				x = keepWithin(Math.ceil(hsb.s / (100 / grid.width())), 0, grid.width());
+				y = keepWithin(grid.height() - Math.ceil(hsb.b / (100 / grid.height())), 0, grid.height());
+				gridPicker.css({
+					top: y + 'px',
+					left: x + 'px'
+				});
+				
+				// Set slider position
+				y = keepWithin(slider.height() - (hsb.h / (360 / slider.height())), 0, slider.height());
+				sliderPicker.css('top', y + 'px');
+				
+				// Update panel color
+				grid.css('backgroundColor', hsb2hex({ h: hsb.h, s: 100, b: 100 }));
+				break;
+				
 		}
 		
 	}
@@ -559,7 +627,7 @@ if(jQuery) (function($) {
 	}
 	
 	// A bit of magic...
-	$(document).ready( function() {
+	$(window).on('load', function() {
 		
 		// Auto-initialize
 		$.minicolors.init();
@@ -567,14 +635,16 @@ if(jQuery) (function($) {
 		$(document)
 			// Hide on clicks outside of the control
 			.on('mousedown touchstart', function(event) {
-				if( !$(event.target).parents().add(event.target).hasClass('minicolors') ) hide();
+				if( !$(event.target).parents().add(event.target).hasClass('minicolors') ) {
+					hide();
+				}
 			})
 			// Start moving
-			.on('mousedown touchstart', '.minicolors-color, .minicolors-hue, .minicolors-brightness, .minicolors-opacity', function(event) {
+			.on('mousedown touchstart', '.minicolors-grid, .minicolors-slider, .minicolors-opacity-slider', function(event) {
 				var target = $(this);
 				event.preventDefault();
 				$(document).data('minicolors-target', target);
-				move(target, event);
+				move(target, event, true);
 			})
 			// Move pickers
 			.on('mousemove touchmove', function(event) {
@@ -586,7 +656,7 @@ if(jQuery) (function($) {
 				$(this).removeData('minicolors-target');
 			})
 			// Toggle panel when swatch is clicked
-			.on('click touchstart', '.minicolors-swatch', function(event) {
+			.on('mousedown touchstart', '.minicolors-swatch', function(event) {
 				var input = $(this).parent().find('INPUT'),
 					minicolors = input.parent();
 				if( minicolors.hasClass('minicolors-focus') ) {
@@ -603,13 +673,13 @@ if(jQuery) (function($) {
 			// Fix hex and hide on blur
 			.on('blur', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
-				input.val( convertCase(parseHex($(this).val() !== '' ? input.val() : convertCase(parseHex(input.attr('data-default'), true)), true)) );
+				input.val( convertCase(parseHex(input.val() !== '' ? input.val() : convertCase(parseHex(input.attr('data-default'), true)), true)) );
 				hide(input);
 			})
 			// Handle keypresses
 			.on('keydown', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
-				switch( event.keyCode ) {
+				switch(event.keyCode) {
 					case 9: // tab
 						hide();
 						break;

@@ -42,7 +42,7 @@
 	position: relative;
 	width: 20px;
 	height: 20px;
-	background: url(jquery.minicolors.png) -360px 0;
+	background: url(jquery.minicolors.png) -80px 0;
 	border: solid 1px #CCC;
 	display: inline-block;
 	vertical-align: middle;
@@ -57,7 +57,7 @@
 	display: inline-block;
 }
 
-/* Panel (standard) */
+/* Panel */
 .minicolors-panel {
 	position: absolute;
 	top: 26px;
@@ -66,7 +66,7 @@
 	height: 152px;
 	background: white;
 	border: solid 1px #CCC;
-	box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+	box-shadow: 0 0 20px rgba(0, 0, 0, .2);
 	display: none;
 }
 
@@ -78,17 +78,55 @@
 	left: -83px;
 }
 
-.minicolors-color {
+.minicolors-position-left.minicolors-with-opacity .minicolors-panel {
+	left: -104px;
+}
+
+.minicolors-with-opacity .minicolors-panel {
+	width: 194px;
+}
+
+.minicolors .minicolors-grid {
 	position: absolute;
 	top: 1px;
 	left: 1px;
 	width: 150px;
 	height: 150px;
-	background: url(jquery.minicolors.png) -60px 0;
+	background: url(jquery.minicolors.png) -120px 0;
 	cursor: crosshair;
 }
 
-.minicolors-hue {
+.minicolors .minicolors-grid-inner {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 150px;
+	height: 150px;
+	background: none;
+}
+
+.minicolors-slider-saturation .minicolors-grid {
+	background-position: -420px 0;
+}
+
+.minicolors-slider-saturation .minicolors-grid-inner {
+	background: url(jquery.minicolors.png) -270px 0;
+}
+
+.minicolors-slider-brightness .minicolors-grid {
+	background-position: -570px 0;
+}
+
+.minicolors-slider-brightness .minicolors-grid-inner {
+	background: black;
+}
+
+.minicolors-slider-wheel .minicolors-grid {
+	background-position: -720px 0;
+}
+
+.minicolors-slider,
+.minicolors-opacity-slider {
 	position: absolute;
 	top: 1px;
 	left: 152px;
@@ -98,43 +136,30 @@
 	cursor: crosshair;
 }
 
-/* Panel (color wheel) */
-.minicolors-wheel .minicolors-color {
-	background-position: -210px 0;
+.minicolors-slider-saturation .minicolors-slider {
+	background-position: -60px 0;
 }
 
-.minicolors-brightness {
-	position: absolute;
-	top: 1px;
-	left: 152px;
-	width: 20px;
-	height: 150px;
-	background: white url(jquery.minicolors.png) -20px 0;
-	cursor: crosshair;
+.minicolors-slider-brightness .minicolors-slider {
+	background-position: -20px 0;
 }
 
-/* with opacity */
-.minicolors-with-opacity .minicolors-panel {
-	width: 194px;
+.minicolors-slider-wheel .minicolors-slider {
+	background-position: -20px 0;
 }
 
-.minicolors-opacity {
-	position: absolute;
-	top: 1px;
+.minicolors-opacity-slider {
 	left: 173px;
-	width: 20px;
-	height: 150px;
-	background: white url(jquery.minicolors.png) -40px 0;
+	background-position: -40px 0;
 	display: none;
-	cursor: crosshair;
 }
 
-.minicolors-with-opacity .minicolors-opacity {
+.minicolors-with-opacity .minicolors-opacity-slider {
 	display: block;
 }
 
 /* Pickers */
-.minicolors-color-picker {
+.minicolors-grid .minicolors-picker {
 	position: absolute;
 	top: 70px;
 	left: 70px;
@@ -144,9 +169,10 @@
 	border-radius: 10px;
 	margin-top: -6px;
 	margin-left: -6px;
+	background: none;
 }
 
-.minicolors-color-picker SPAN {
+.minicolors-grid .minicolors-picker SPAN {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -156,9 +182,7 @@
 	border: solid 2px white;
 }
 
-.minicolors-hue-picker,
-.minicolors-opacity-picker,
-.minicolors-brightness-picker {
+.minicolors-picker {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -169,7 +193,7 @@
 	margin-top: -2px;
 }
 
-/* Inline */
+/* Inline controls */
 .minicolors-inline INPUT,
 .minicolors-inline .minicolors-swatch {
 	display: none;
