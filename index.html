@@ -33,6 +33,10 @@
 			text-overflow: ellipsis;
 		}
 		
+		H1, H2, H3, P {
+			margin: 20px 0;
+		}
+		
 		A {
 			color: #08C;
 		}
@@ -48,16 +52,17 @@
 		}
 		
 		PRE {
-			padding: 10px;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			padding: 10px;
+			margin: 30px 0;
 		}
 		
 		.alert {
 			background: #FFFCCC;
 			color: black;
 			padding: 1px 10px;
-			margin: 20px 0;
+			margin: 30px 0;
 		}
 		
 		#main {
@@ -67,6 +72,12 @@
 			box-shadow: 0 0 30px rgba(0, 0, 0, .05);
 			padding: 30px;
 			margin: 20px auto;
+		}
+		
+		.example {
+			background: #F8F8F8;
+			padding: 10px;
+			margin: 20px 0;
 		}
 		
 		#console {
@@ -100,6 +111,7 @@
 			
 			var consoleTimeout;
 			
+			// Display the results of the change callback on any minicolors input
 			$('INPUT[type=minicolors]').on('change', function() {
 				
 				var input = $(this),
@@ -118,6 +130,17 @@
 				consoleTimeout = setTimeout( function() {
 					$('#console').removeClass('busy');
 				}, 3000);
+				
+			});
+			
+			// Adding controls dynamically
+			$('#add-one').on('click', function() {
+				
+				// Just add an <input type="minicolors" /> control anywhere in your page
+				$('#add-one-result').append('<input type="minicolors" data-slider="' + $('#add-one-slider').val() + '" value="#ff6600" /><br /><br />');
+				
+				// ...then call $.minicolors.init() to activate the control
+				$.minicolors.init();
 				
 			});
 			
@@ -145,14 +168,14 @@
 		</div>
 		
 		<!-- Download -->
-		<h2>Download</h2>
+		<h2 id="download">Download</h2>
 		<p>
 			You can <a href="https://github.com/claviska/jquery-miniColors">download the source</a> 
 			on GitHub. Help contribute to this project by posting bug reports, feature requests, and 
 			code improvements!
 		</p>
 		
-		<h2>Usage</h2>
+		<h2 id="usage">Usage</h2>
 		<p>
 			The plugin will automatically initialize all inputs of type <code>minicolors</code>: 
 		</p>
@@ -175,7 +198,7 @@
 		</p>
 		
 		<!-- Options -->
-		<h2>Options</h2>
+		<h2 id="options">Options</h2>
 		<p>
 			Options are set for each control using one or more of the HTML5 <code>data-</code> 
 			attributes mentioned below.
@@ -275,11 +298,30 @@
 		<pre>&lt;input type="minicolors" data-class="my-class" data-style="margin: 20px;" /&gt;</pre>
 		
 		<!-- Utility Functions -->
-		<h2>Utility Functions</h2>
+		<h2 id="utility-functions">Utility Functions</h2>
 		<h3><code>$.minicolors.init()</code></h3>
 		<p>
 			Call this function to initialize controls that are created dynamically. You do not 
-			need to specify a selector when calling this function.
+			need to specify a selector when calling this function.  Example:
+		</p>
+		
+		<div class="example">
+			<p>
+				<select id="add-one-slider">
+					<option value="hue">Hue Picker</option>
+					<option value="saturation">Saturation Picker</option>
+					<option value="brightness">Brightness Picker</option>
+					<option value="wheel">Wheel Picker</option>
+				</select>
+				<button id="add-one">Add it!</button>
+			</p>
+			<div id="add-one-result"></div>
+		</div>
+		
+		<h3><code>$.minicolors.remove(<em>input</em>)</code></h3>
+		<p>
+			Call this function to remove a control from the DOM. (You can also remove any of the 
+			control's parent elements with the same effect.)
 		</p>
 		
 		<h3><code>$.minicolors.refresh()</code></h3>
@@ -313,7 +355,7 @@
 		</p>
 		
 		<!-- Callbacks -->
-		<h2>Callbacks</h2>
+		<h2 id="callbacks">Callbacks</h2>
 		<h3><code>change</code></h3>
 		<p>
 			Attach your <code>change</code> callback to the original <code>input</code> element. 
@@ -327,7 +369,7 @@
 		</p>
 		
 		<!-- Settings -->
-		<h2>Settings</h2>
+		<h2 id="settings">Settings</h2>
 		<p>
 			Adjust plugin defaults by setting <code>$.minicolors.settings.<em>settingName</em></code>, 
 			where <code><em>settingName</em></code> is one of the following:
@@ -358,7 +400,7 @@
 		</p>
 		
 		<!-- Styling Tips -->
-		<h2>Styling Tips</h2>
+		<h2 id="styling-tips">Styling Tips</h2>
 		<p>
 			If you change the <code>input</code> element's height or width via CSS, you'll also 
 			need to adjust certain style properties in <code>.minicolors-swatch</code>, 

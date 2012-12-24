@@ -28,16 +28,18 @@ if(jQuery) (function($) {
 			});
 		},
 		
+		// Remove the specified control from the DOM
+		remove: function(input) {
+			$(input).each( function() {
+				remove($(this));
+			});
+		},
+		
 		// Refresh the controls
-		refresh: function(input) {
-			input = $(input);
-			if( input.length > 0 ) {
-				updateFromInput(input);
-			} else {
-				$('INPUT[type=minicolors]').each( function() {
-					updateFromInput($(this));
-				});
-			}
+		refresh: function() {
+			$('INPUT[type=minicolors]').each( function() {
+				refresh($(this));
+			});
 		},
 		
 		// Shows the specified control
@@ -142,6 +144,19 @@ if(jQuery) (function($) {
 		
 	}
 	
+	// Refresh the specified control
+	function refresh(input) {
+		updateFromInput(input);
+	}
+	
+	// Removes the specified control
+	function remove(input) {
+		var minicolors = input.parent();
+		if( input.data('initialized') && minicolors.hasClass('minicolors') ) {
+			minicolors.remove();
+		}
+	}
+	
 	// Shows the specified dropdown panel
 	function show(input) {
 		
@@ -157,8 +172,6 @@ if(jQuery) (function($) {
 		panel
 			.stop(true, true)
 			.fadeIn($.minicolors.settings.showSpeed);
-		
-		return input;
 		
 	}
 	
@@ -668,17 +681,20 @@ if(jQuery) (function($) {
 			// Show on focus
 			.on('focus', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
+				if( !input.data('initialized') ) return;
 				show(input);
 			})
 			// Fix hex and hide on blur
 			.on('blur', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
+				if( !input.data('initialized') ) return;
 				input.val( convertCase(parseHex(input.val() !== '' ? input.val() : convertCase(parseHex(input.attr('data-default'), true)), true)) );
 				hide(input);
 			})
 			// Handle keypresses
 			.on('keydown', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
+				if( !input.data('initialized') ) return;
 				switch(event.keyCode) {
 					case 9: // tab
 						hide();
@@ -692,11 +708,13 @@ if(jQuery) (function($) {
 			// Update on keyup
 			.on('keyup', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
+				if( !input.data('initialized') ) return;
 				updateFromInput(input, true);
 			})
 			// Update on paste
 			.on('paste', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
+				if( !input.data('initialized') ) return;
 				setTimeout( function() {
 					updateFromInput(input, true);
 				}, 1);
