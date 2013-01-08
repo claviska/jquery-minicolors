@@ -171,7 +171,9 @@ if(jQuery) (function($) {
 		minicolors.addClass('minicolors-focus');
 		panel
 			.stop(true, true)
-			.fadeIn($.minicolors.settings.showSpeed);
+			.fadeIn($.minicolors.settings.showSpeed, function() {
+				input.trigger('show');
+			});
 		
 	}
 	
