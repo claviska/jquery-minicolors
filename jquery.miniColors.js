@@ -183,12 +183,14 @@ if(jQuery) (function($) {
 			var minicolors = $(this),
 				input = minicolors.find('INPUT');
 			
-			minicolors.find('.minicolors-panel').fadeOut($.minicolors.settings.hideSpeed, function() {
+			minicolors.find('.minicolors-panel').fadeOut($.minicolors.settings.hideSpeed, function(e) {
+				if(minicolors.hasClass('minicolors-focus')) {
+					input.trigger('hide');
+				}
 				minicolors.removeClass('minicolors-focus');
-			});
-			
+			});			
+						
 		});
-		
 	}
 	
 	// Moves the selected picker
