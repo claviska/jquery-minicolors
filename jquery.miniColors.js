@@ -185,7 +185,7 @@ if(jQuery) (function($) {
 			var minicolors = $(this),
 				input = minicolors.find('INPUT');
 			
-			minicolors.find('.minicolors-panel').fadeOut($.minicolors.settings.hideSpeed, function(e) {
+			minicolors.find('.minicolors-panel').fadeOut($.minicolors.settings.hideSpeed, function() {
 				if(minicolors.hasClass('minicolors-focus')) {
 					input.trigger('hide', input);
 				}
