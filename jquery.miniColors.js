@@ -172,7 +172,7 @@ if(jQuery) (function($) {
 		panel
 			.stop(true, true)
 			.fadeIn($.minicolors.settings.showSpeed, function() {
-				input.trigger('show');
+				input.trigger('show', input);
 			});
 		
 	}
@@ -187,7 +187,7 @@ if(jQuery) (function($) {
 			
 			minicolors.find('.minicolors-panel').fadeOut($.minicolors.settings.hideSpeed, function(e) {
 				if(minicolors.hasClass('minicolors-focus')) {
-					input.trigger('hide');
+					input.trigger('hide', input);
 				}
 				minicolors.removeClass('minicolors-focus');
 			});			
