@@ -171,7 +171,9 @@ if(jQuery) (function($) {
 		minicolors.addClass('minicolors-focus');
 		panel
 			.stop(true, true)
-			.fadeIn($.minicolors.settings.showSpeed);
+			.fadeIn($.minicolors.settings.showSpeed, function() {
+				input.trigger('show', input);
+			});
 		
 	}
 	
@@ -184,11 +186,13 @@ if(jQuery) (function($) {
 				input = minicolors.find('INPUT');
 			
 			minicolors.find('.minicolors-panel').fadeOut($.minicolors.settings.hideSpeed, function() {
+				if(minicolors.hasClass('minicolors-focus')) {
+					input.trigger('hide', input);
+				}
 				minicolors.removeClass('minicolors-focus');
-			});
-			
+			});			
+						
 		});
-		
 	}
 	
 	// Moves the selected picker
