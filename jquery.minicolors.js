@@ -8,7 +8,7 @@
 */
 if(jQuery) (function($) {
 	
-	// The minicolors object (public methods and settings)
+	// The minicolors object
 	$.minicolors = {
 		
 		// Default settings
@@ -22,8 +22,11 @@ if(jQuery) (function($) {
 		},
 		
 		// Initialized all controls of type=minicolors
-		init: function() {
-			$('INPUT[type=minicolors]').each( function() {
+		init: function(input) {
+			
+			if( input === undefined ) input = $('INPUT[type=minicolors]');
+			
+			$(input).each( function() {
 				init( $(this) );
 			});
 		},
@@ -83,7 +86,8 @@ if(jQuery) (function($) {
 		var minicolors = $('<span class="minicolors" />'),
 			sliderType = input.attr('data-slider') || $.minicolors.settings.defaultSlider;
 		
-		if( input.data('initialized') ) return;
+		// Do nothing if already initialized
+		if( input.data('minicolors-initialized') ) return;
 		
 		// The wrapper
 		minicolors
@@ -101,7 +105,7 @@ if(jQuery) (function($) {
 		
 		// The input
 		input
-			.data('initialized', true)
+			.data('minicolors-initialized', true)
 			.attr('data-default', input.attr('data-default') || '')
 			.attr('data-slider', sliderType)
 			.prop('size', 7)
@@ -152,7 +156,7 @@ if(jQuery) (function($) {
 	// Removes the specified control
 	function remove(input) {
 		var minicolors = input.parent();
-		if( input.data('initialized') && minicolors.hasClass('minicolors') ) {
+		if( input.data('minicolors-initialized') && minicolors.hasClass('minicolors') ) {
 			minicolors.remove();
 		}
 	}
@@ -164,7 +168,7 @@ if(jQuery) (function($) {
 			panel = minicolors.find('.minicolors-panel');
 		
 		// Do nothing if uninitialized, disabled, or already open
-		if( !input.data('initialized') || input.prop('disabled') || minicolors.hasClass('minicolors-focus') ) return;
+		if( !input.data('minicolors-initialized') || input.prop('disabled') || minicolors.hasClass('minicolors-focus') ) return;
 		
 		hide();
 		
@@ -394,9 +398,9 @@ if(jQuery) (function($) {
 		});
 		
 		// Fire change event
-		if( hex + opacity !== input.data('last-change') ) {
+		if( hex + opacity !== input.data('minicolors-lastChange') ) {
 			input
-				.data('last-change', hex + opacity)
+				.data('minicolors-lastChange', hex + opacity)
 				.trigger('change', input);
 		}
 		
@@ -646,7 +650,7 @@ if(jQuery) (function($) {
 	// A bit of magic...
 	$(window).on('load', function() {
 		
-		// Auto-initialize
+		// Auto-initialize controls with type 'minicolors'
 		$.minicolors.init();
 		
 		$(document)
@@ -685,20 +689,20 @@ if(jQuery) (function($) {
 			// Show on focus
 			.on('focus', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
-				if( !input.data('initialized') ) return;
+				if( !input.data('minicolors-initialized') ) return;
 				show(input);
 			})
 			// Fix hex and hide on blur
 			.on('blur', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
-				if( !input.data('initialized') ) return;
+				if( !input.data('minicolors-initialized') ) return;
 				input.val( convertCase(parseHex(input.val() !== '' ? input.val() : convertCase(parseHex(input.attr('data-default'), true)), true)) );
 				hide(input);
 			})
 			// Handle keypresses
 			.on('keydown', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
-				if( !input.data('initialized') ) return;
+				if( !input.data('minicolors-initialized') ) return;
 				switch(event.keyCode) {
 					case 9: // tab
 						hide();
@@ -712,13 +716,13 @@ if(jQuery) (function($) {
 			// Update on keyup
 			.on('keyup', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
-				if( !input.data('initialized') ) return;
+				if( !input.data('minicolors-initialized') ) return;
 				updateFromInput(input, true);
 			})
 			// Update on paste
 			.on('paste', 'INPUT[type=minicolors]', function(event) {
 				var input = $(this);
-				if( !input.data('initialized') ) return;
+				if( !input.data('minicolors-initialized') ) return;
 				setTimeout( function() {
 					updateFromInput(input, true);
 				}, 1);
