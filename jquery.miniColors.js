@@ -22,8 +22,9 @@ if(jQuery) (function($) {
 		},
 		
 		// Initialized all controls of type=minicolors
-		init: function() {
-			$('INPUT[type=minicolors]').each( function() {
+		init: function(inputs) {
+			if(arguments.length == 0) inputs = $('INPUT[type=minicolors]');
+			inputs.each( function() {
 				init( $(this) );
 			});
 		},
