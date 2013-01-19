@@ -8,23 +8,27 @@
 	z-index: 2;
 }
 
-.minicolors INPUT {
+.minicolors.minicolors-default-theme INPUT {
+    margin: 0px;
 	margin-right: 3px;
 	border: solid 1px #CCC;
 	font: 14px sans-serif;
 	width: 65px;
 	height: 16px;
-	vertical-align: middle;
 	border-radius: 0;
 	box-shadow: inset 0 2px 4px rgba(0, 0, 0, .04);
-	outline: none;
 	padding: 2px;
 	margin-right: -1px;
 }
 
-.minicolors-swatch-left INPUT {
-	margin-left: -1px;
-	margin-right: auto;
+.minicolors INPUT {
+	vertical-align: middle;
+	outline: none;
+}
+
+.minicolors-default-theme.minicolors-swatch-left INPUT {
+    margin-left: -1px;
+    margin-right: auto;
 }
 
 .minicolors-focus INPUT,
