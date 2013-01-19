@@ -115,8 +115,32 @@
 		#console.busy {
 			opacity: .85;
 		}
-		
-	</style>
+
+    .minicolors-mycustom-theme input{
+      padding: 4px 6px;
+      padding-left: 30px;
+      background-color: #FFFFF5;
+      border: 1px solid #CCC;
+      border-radius: 3px;
+      color: #555;
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 14px;
+      height: 19px;
+      margin: 0px;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+    .minicolors-mycustom-theme .minicolors-swatch{
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      z-index: 2;
+    }
+    .minicolors-mycustom-theme .minicolors-panel{
+      z-index: 3;
+      top: 28px;
+    }
+
+  </style>
 	
 	<script>
 		
@@ -257,7 +281,10 @@
       <div class="example">
         no theme (no styling will be applied to input): <input type="text" class="minicolors" data-classes="some-none-existent-theme" value="#3b98bd" />
         <br/>
-        minicolors-default-theme: <input type="text" class="minicolors" data-theme="minicolors-default-theme" value="#3b98bd" />
+        minicolors-default-theme: <input type="text" class="minicolors" value="#3b98bd" />
+        <br/>
+        <br/>
+        minicolors-mycustom-theme: <input type="text" class="minicolors" data-classes="minicolors-mycustom-theme" value="#3b98bd" />
       </div>
 		</p>
 		
