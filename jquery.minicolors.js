@@ -14,7 +14,7 @@ if(jQuery) (function($) {
 		defaultSettings: {
 			animationSpeed: 100,
 			animationEasing: 'swing',
-			classes: '',
+			classes: 'minicolors-default-theme',
 			control: 'hue',
 			defaultValue: '',
 			hideSpeed: 100,
