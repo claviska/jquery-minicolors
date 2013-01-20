@@ -8,7 +8,7 @@
 	z-index: 2;
 }
 
-.minicolors.minicolors-default-theme INPUT {
+.minicolors.minicolors-theme-default INPUT {
     margin: 0px;
 	margin-right: 3px;
 	border: solid 1px #CCC;
@@ -21,18 +21,18 @@
 	margin-right: -1px;
 }
 
-.minicolors INPUT {
+.minicolors-theme-default.minicolors INPUT {
 	vertical-align: middle;
 	outline: none;
 }
 
-.minicolors-default-theme.minicolors-swatch-left INPUT {
+.minicolors-theme-default.minicolors-swatch-left INPUT {
     margin-left: -1px;
     margin-right: auto;
 }
 
-.minicolors-focus INPUT,
-.minicolors-focus .minicolors-swatch {
+.minicolors-theme-default.minicolors-focus INPUT,
+.minicolors-theme-default.minicolors-focus .minicolors-swatch {
 	border-color: #999;
 }
 
@@ -207,4 +207,71 @@
 	top: auto;
 	left: auto;
 	display: inline-block;
+}
+
+
+/*
+ * Bootstrap Theme (theme: 'bootstrap')
+ *
+ */
+ 
+/* Input styles */
+.minicolors-theme-bootstrap INPUT {
+	padding: 4px 6px;
+	padding-left: 30px;
+	background-color: white;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+	color: #555;
+	font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+	font-size: 14px;
+	height: 19px;
+	margin: 0px;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+/* When the input has focus */
+.minicolors-theme-bootstrap.minicolors-focus INPUT {
+	border-color: #6fb8f1;
+	box-shadow: 0 0 10px #6fb8f1;
+	outline: none;
+}
+
+/* Swatch styles */
+.minicolors-theme-bootstrap .minicolors-swatch {
+	position: absolute;
+	left: 4px;
+	top: 4px;
+	z-index: 2;
+}
+
+/* Handle swatch position (left = default / right) */
+.minicolors-theme-bootstrap.minicolors-swatch-position-right INPUT {
+	padding-left: 6px;
+	padding-right: 30px;
+}
+
+.minicolors-theme-bootstrap.minicolors-swatch-position-right .minicolors-swatch {
+	left: auto;
+	right: 4px;
+}
+
+/* Panel styles */
+.minicolors-theme-bootstrap .minicolors-panel {
+	top: 28px;
+	z-index: 3;
+}
+
+/* Handle panel positions (top / left) */
+.minicolors-theme-bootstrap.minicolors-position-top .minicolors-panel {
+	top: -154px;
+}
+
+.minicolors-theme-bootstrap.minicolors-position-left .minicolors-panel {
+	left: -63px;
+}
+
+/* Don't forget to adjust the left position in case the opacity slider is visible! */
+.minicolors-theme-bootstrap.minicolors-position-left.minicolors-with-opacity .minicolors-panel {
+	left: -84px;
 }
