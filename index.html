@@ -1,474 +1,499 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-	<title>jQuery MiniColors</title>
-	<meta name="description" content="A tiny color picker built on jQuery" />
-	<meta charset="utf-8" />
-	<meta name="viewport" content="initial-scale=1.0" />
-	<link rel="stylesheet" href="jquery.minicolors.css" />
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script src="jquery.minicolors.js"></script>
+    <title>jQuery MiniColors</title>
+    <meta content="A tiny color picker built on jQuery" name="description">
+    <meta charset="utf-8">
+    <meta content="initial-scale=1.0" name="viewport">
+    <link href="jquery.minicolors.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="jquery.minicolors.js"></script>
+    <style>
 
-  <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.0/bootstrap.min.js"></script>-->
-  <!--<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" />-->
+        HTML,
+        BODY {
+            padding: 0;
+            margin: 0;
+        }
+        
+        BODY {
+            font: 14px sans-serif;
+            color: #666;
+            line-height: 1.7;
+            background: #F8F8F8;
+            padding: 0 20px;
+            padding-bottom: 32px;
+        }
+        
+        H1, H2, H3 {
+            font-family: Georgia, serif;
+            font-weight: normal;
+            color: black;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        H1, H2, H3, P {
+            margin: 20px 0;
+        }
+        
+        H3 {
+            color: gray;
+        }
+        
+        A {
+            color: #08C;
+        }
+        
+        A:hover {
+            color: #0BE;
+        }
+        
+        PRE,
+        CODE {
+            background: #F8F8F8;
+            padding: 2px;
+        }
+        
+        PRE {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 10px;
+            margin: 30px 0;
+        }
+        
+        DL {
+            border: solid 1px #EEE;
+            padding: 20px;
+        }
+        
+        .alert {
+            background: #FFFCCC;
+            color: black;
+            padding: 1px 10px;
+            margin: 30px 0;
+        }
+        
+        #main {
+            max-width: 800px;
+            background: white;
+            border: solid 1px #DDD;
+            box-shadow: 0 0 30px rgba(0, 0, 0, .05);
+            padding: 30px;
+            margin: 20px auto;
+        }
+        
+        .example {
+            background: #F8F8F8;
+            padding: 10px;
+            margin: 30px 0;
+        }
+        
+        #console {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 32px;
+            font-family: monospace;
+            line-height: 32px;
+            text-align: center;
+            background: black;
+            color: white;
+            z-index: 100;
+            -moz-transition: all .5s;
+            -ms-transition: all .5s;
+            -webkit-transition: all .5s;
+            transition: all .5s;
+            opacity: 0;
+        }
+        
+        #console.busy {
+            opacity: .85;
+        }
+        
+    </style>
+    <script>
 
-
-  <style>
-		
-		HTML,
-		BODY {
-			padding: 0;
-			margin: 0;
-		}
-		
-		BODY {
-			font: 14px sans-serif;
-			color: #666;
-			line-height: 1.7;
-			background: #F8F8F8;
-			padding: 0 20px;
-			padding-bottom: 32px;
-		}
-		
-		H1, H2, H3 {
-			font-family: Georgia, serif;
-			font-weight: normal;
-			color: black;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		
-		H1, H2, H3, P {
-			margin: 20px 0;
-		}
-		
-		H2 {
-			border-bottom: solid 1px #EEE;
-		}
-		
-		H3 {
-			color: gray;
-		}
-		
-		A {
-			color: #08C;
-		}
-		
-		A:hover {
-			color: #0BE;
-		}
-		
-		PRE,
-		CODE {
-			background: #F8F8F8;
-			padding: 2px;
-		}
-		
-		PRE {
-			overflow: hidden;
-			text-overflow: ellipsis;
-			padding: 10px;
-			margin: 30px 0;
-		}
-		
-		.alert {
-			background: #FFFCCC;
-			color: black;
-			padding: 1px 10px;
-			margin: 30px 0;
-		}
-		
-		#main {
-			max-width: 800px;
-			background: white;
-			border: solid 1px #DDD;
-			box-shadow: 0 0 30px rgba(0, 0, 0, .05);
-			padding: 30px;
-			margin: 20px auto;
-		}
-		
-		.example {
-			background: #F8F8F8;
-			padding: 10px;
-			margin: 20px 0;
-		}
-		
-		#console {
-			position: fixed;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			height: 32px;
-			font-family: monospace;
-			line-height: 32px;
-			text-align: center;
-			background: black;
-			color: white;
-			z-index: 100;
-			-moz-transition: all .5s;
-			-ms-transition: all .5s;
-			-webkit-transition: all .5s;
-			transition: all .5s;
-			opacity: 0;
-		}
-		
-		#console.busy {
-			opacity: .85;
-		}
-
-    .minicolors-mycustom-theme input{
-      padding: 4px 6px;
-      padding-left: 30px;
-      background-color: #FFFFF5;
-      border: 1px solid #CCC;
-      border-radius: 3px;
-      color: #555;
-      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-      font-size: 14px;
-      height: 19px;
-      margin: 0px;
-      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    }
-    .minicolors-mycustom-theme .minicolors-swatch{
-      position: absolute;
-      left: 4px;
-      top: 4px;
-      z-index: 2;
-    }
-    .minicolors-mycustom-theme .minicolors-panel{
-      z-index: 3;
-      top: 28px;
-    }
-
-  </style>
-	
-	<script>
-		
-		$(document).ready( function() {
-			
-			var consoleTimeout;
-			
-			$('.minicolors').each( function() {
-				//
-				// Dear reader, it's actually much easier than this to initialize 
-				// miniColors. For example:
-				//
-				//  $(selector).minicolors();
-				//
-				// The way I've done it below is just to make it easier for me 
-				// when developing the plugin. It keeps me sane, but it may not 
-				// have the same effect on you!
-				//
-				$(this).minicolors({
-          classes: $(this).attr('data-classes') || 'minicolors-default-theme',
-					control: $(this).attr('data-control') || 'hue',
-					defaultValue: $(this).attr('data-default-value') || '',
-					inline: $(this).hasClass('inline'),
-					letterCase: $(this).hasClass('uppercase') ? 'uppercase' : 'lowercase',
-					opacity: $(this).hasClass('opacity'),
-					position: $(this).attr('data-position') || 'default',
-					styles: $(this).attr('data-style') || '',
-					swatchPosition: $(this).attr('data-swatch-position') || 'left',
-					textfield: !$(this).hasClass('no-textfield'),
-					change: function(hex, opacity) {
-						
-						// Generate text to show in console
-						text = hex ? hex : 'transparent';
-						if( opacity ) text += ', ' + opacity;
-						text += ' / ' + $(this).minicolors('rgbaString');
-						
-						// Show text in console; disappear after a few seconds
-						$('#console').text(text).addClass('busy');
-						clearTimeout(consoleTimeout);
-						consoleTimeout = setTimeout( function() {
-							$('#console').removeClass('busy');
-						}, 3000);
-						
-					}
-				});
-				
-			});
-			
-		});
-		
-	</script>
-	
+        $(document).ready( function() {
+            
+            var consoleTimeout;
+            
+            $('.minicolors').each( function() {
+                //
+                // Dear reader, it's actually much easier than this to initialize 
+                // miniColors. For example:
+                //
+                //  $(selector).minicolors();
+                //
+                // The way I've done it below is just to make it easier for me 
+                // when developing the plugin. It keeps me sane, but it may not 
+                // have the same effect on you!
+                //
+                $(this).minicolors({
+                    control: $(this).attr('data-control') || 'hue',
+                    defaultValue: $(this).attr('data-default-value') || '',
+                    inline: $(this).hasClass('inline'),
+                    letterCase: $(this).hasClass('uppercase') ? 'uppercase' : 'lowercase',
+                    opacity: $(this).hasClass('opacity'),
+                    position: $(this).attr('data-position') || 'default',
+                    styles: $(this).attr('data-style') || '',
+                    swatchPosition: $(this).attr('data-swatch-position') || 'left',
+                    textfield: !$(this).hasClass('no-textfield'),
+                    theme: $(this).attr('data-theme') || 'default',
+                    change: function(hex, opacity) {
+                        
+                        // Generate text to show in console
+                        text = hex ? hex : 'transparent';
+                        if( opacity ) text += ', ' + opacity;
+                        text += ' / ' + $(this).minicolors('rgbaString');
+                        
+                        // Show text in console; disappear after a few seconds
+                        $('#console').text(text).addClass('busy');
+                        clearTimeout(consoleTimeout);
+                        consoleTimeout = setTimeout( function() {
+                            $('#console').removeClass('busy');
+                        }, 3000);
+                        
+                    }
+                });
+                
+            });
+            
+        });
+        
+    </script>
 </head>
+
 <body>
-	
-	<div id="main">
-		<h1>jQuery MiniColors 2.0 beta</h1>
-		<p>
-			A project by Cory LaViska of <a href="http://www.abeautifulsite.net/">A Beautiful Site</a>. 
-		</p>
-		<p>
-			MiniColors is a tiny color picker built on jQuery. It's easy to use and works 
-			well on touch-enabled devices. Completely re-written for 2.0.
-		</p>
-		<div class="alert">
-			<p>
-				The MiniColors API was completely overhauled in 2.0. You will need to change your 
-				code if you are upgrading from a previous version!
-			</p>
-		</div>
-		
-		<!-- Demo -->
-		<h2 id="demo">Demo</h2>
-		<h3>Standard Controls</h3>
-		<p>
-			Hue <input type="text" class="minicolors"  value="#3b98bd" data-default-value="#fc0" />
-			Saturation <input type="text" class="minicolors" data-control="saturation" value="#50c900" />
-			Brightness <input type="text" class="minicolors" data-control="brightness"  value="#7745ff" />
-			Wheel <input type="text" class="minicolors" data-control="wheel"  value="#ffb987" />
-		</p>
-		<h3>Inline Controls</h3>
-		<p>
-			<input type="text" class="minicolors inline" value="#3b98bd" />
-			<input type="text" class="minicolors inline" data-control="saturation" value="#50c900" />
-			<input type="text" class="minicolors inline" data-control="brightness" value="#7745ff" />
-			<input type="text" class="minicolors inline" data-control="wheel" value="#ffb987" />
-		</p>
-		
-		<!-- Download -->
-		<h2 id="download">Download</h2>
-		<p>
-			You can <a href="https://github.com/claviska/jquery-miniColors">download the source</a> 
-			on GitHub. Help contribute to this project by posting bug reports, feature requests, and 
-			code improvements!
-		</p>
-		
-		<!-- Usage -->
-		<h2 id="Usage">Usage</h2>
-		<pre>$('INPUT.minicolors').minicolors(<em>settings</em>);</pre>
-		
-		<!-- Settings -->
-		<h2 id="settings">Settings</h2>
-		<p>
-			All available settings are shown below with default values:
-		</p>
-		<pre>defaultSettings: {
+    <div id="main">
+        <h1>jQuery MiniColors 2.0 beta</h1>
+
+        <p>A project by Cory LaViska of <a href="http://www.abeautifulsite.net/">A Beautiful Site</a>.</p>
+
+        <p>MiniColors is a tiny color picker built on jQuery. It's easy to use and works well on touch-enabled devices.
+        Completely re-written for 2.0.</p>
+
+        <div class="alert">
+            <p>The MiniColors API was completely overhauled in 2.0. You will need to change your code if you are
+            upgrading from a previous version!</p>
+        </div>
+
+        <h2>Demo</h2>
+
+        <h3>Standard Controls</h3>
+
+        <p>Hue <input class="minicolors" data-default-value="#fc0" type="text" value="#3b98bd"> Saturation
+        <input class="minicolors" data-control="saturation" type="text" value="#50c900"> Brightness <input class=
+        "minicolors" data-control="brightness" type="text" value="#7745ff"> Wheel <input class="minicolors"
+        data-control="wheel" type="text" value="#ffb987"></p>
+
+        <h3>Inline Controls</h3>
+
+        <p><input class="minicolors inline" type="text" value="#3b98bd"> <input class="minicolors inline" data-control=
+        "saturation" type="text" value="#50c900"> <input class="minicolors inline" data-control="brightness" type=
+        "text" value="#7745ff"> <input class="minicolors inline" data-control="wheel" type="text" value="#ffb987"></p>
+
+        <h2 id="download">Download</h2>
+
+        <p>You can <a href="https://github.com/claviska/jquery-miniColors">download the source</a> on GitHub. Help
+        contribute to this project by posting bug reports, feature requests, and code improvements!</p>
+
+        <h2 id="usage">Usage</h2>
+        <pre>
+$('INPUT.minicolors').minicolors(<em>settings</em>);
+</pre>
+
+        <h2 id="settings">Settings</h2>
+
+        <p>All available settings are shown below with default values:</p>
+        <pre>
+{
     animationSpeed: 100,
     animationEasing: 'swing',
-    classes: 'minicolors-default-theme',
+    change: null,
     control: 'hue',
     defaultValue: '',
+    hide: null,
     hideSpeed: 100,
     inline: false,
     letterCase: 'lowercase',
     opacity: false,
     position: 'default',
+    show: null,
     showSpeed: 100,
-    styles: '',
     swatchPosition: 'left',
-    textfield: true
-}</pre>
-		
-		<h3><code>animationSpeed</code></h3>
-		<p>
-			The animation speed of the sliders when the user taps or clicks a new color. Set to 
-			<code>0</code> for no animation.
-		</p>
-		
-		<h3><code>animationEasing</code></h3>
-		<p>
-			The easing to use when animating the sliders.
-		</p>
-		
-		<h3><code>classes</code></h3>
-		<p>
-			A string containing a space-delimited list of classes to apply to the control’s wrapper 
-			element. Useful for referencing controls in your stylesheet.
-      <div class="example">
-        no theme (no styling will be applied to input): <input type="text" class="minicolors" data-classes="some-none-existent-theme" value="#3b98bd" />
-        <br/>
-        minicolors-default-theme: <input type="text" class="minicolors" value="#3b98bd" />
-        <br/>
-        <br/>
-        minicolors-mycustom-theme: <input type="text" class="minicolors" data-classes="minicolors-mycustom-theme" value="#3b98bd" />
-      </div>
-		</p>
-		
-		<h3><code>control</code></h3>
-		<p>
-			Determines the type of control. Valid options are <code>hue</code>, <code>brightness</code>, 
-			<code>saturation</code>, and <code>wheel</code>.
-		</p>
-		
-		<h3><code>defaultValue</code></h3>
-		<p>
-			To force a default color, set this to a valid hex string. When the user clears the control, 
-			it will revert to this color.
-      <div class="example">
-        Default value: #ffcc00 <input type="text" class="minicolors" data-default-value="#ffcc00"  value="#ffb987" />
-      </div>
-		</p>
+    textfield: true,
+    theme: 'default'
+}
+</pre>
 
-		<h3><code>hideSpeed</code> &amp; <code>showSpeed</code></h3>
-		<p>
-			The speed at which to hide and show the color picker.
-		</p>
+        <dl>
+            <dt><code>animationSpeed</code></dt>
 
-		<h3><code>inline</code></h3>
-		<p>
-			Set to <code>true</code> to force the color picker to appear inline.
-		</p>
+            <dd>
+                <p>The animation speed of the sliders when the user taps or clicks a new color. Set to <code>0</code>
+                for no animation.</p>
+            </dd>
 
-		<h3><code>letterCase</code></h3>
-		<p>
-			Determines the letter case of the hex code value. Valid options are <code>uppercase</code>
-			or <code>lowercase</code>.
-      <div class="example">
-        uppercase <input type="text" class="minicolors uppercase" value="#ffb987" />
-        lowercase <input type="text" class="minicolors lowercase" value="#ffb987" />
-      </div>
-		</p>
+            <dt><code>animationEasing</code></dt>
 
-		<h3><code>opacity</code></h3>
-		<p>
-			Set to <code>true</code> to enable the opacity slider. (Use the input element’s
-			<code>data-opacity</code> attribute to set a preset value.)
-      <div class="example">
-        <input type="text" class="minicolors opacity" value="#ffb987" />
-      </div>
-		</p>
+            <dd>
+                <p>The easing to use when animating the sliders.</p>
+            </dd>
 
-		<h3><code>position</code></h3>
-		<p>
-			Sets the position of the dropdown. Valid options are <code>default</code>, <code>top</code>,
-			<code>left</code>, and <code>top left</code>.
-      <div class="example">
-        default <input type="text" class="minicolors" data-position="default"  value="#3b98bd" />
-        top <input type="text" class="minicolors" data-position="top" value="#50c900" />
-        left <input type="text" class="minicolors" data-position="left"  value="#7745ff" />
-        top left <input type="text" class="minicolors" data-control="top left"  value="#ffb987" />
-      </div>
-		</p>
+            <dt><code>control</code></dt>
 
-		<h3><code>styles</code></h3>
-		<p>
-			A string containing one or more style properties to apply to the control’s wrapper element.
-		</p>
+            <dd>
+                <p>Determines the type of control. Valid options are <code>hue</code>, <code>brightness</code>,
+                <code>saturation</code>, and <code>wheel</code>.</p>
+            </dd>
 
-		<h3><code>swatchPosition</code></h3>
-		<p>
-			Determines which side of the textfield the color swatch will appear. Valid options are
-			<code>left</code> and <code>right</code>.
-      <div class="example">
-        left <input type="text" class="minicolors" data-swatch-position="left"  value="#3b98bd" />
-        right <input type="text" class="minicolors" data-swatch-position="right" value="#50c900" />
-      </div>
-		</p>
+            <dt><code>defaultValue</code></dt>
 
-		<h3><code>textfield</code></h3>
-		<p>
-			Whether or not to show the textfield. Set to <code>false</code> for a swatch-only control.
-      <div class="example">
-      No textfield: <input type="text" class="minicolors no-textfield" value="#3b98bd" />
-      </div>
-		</p>
+            <dd>
+                <p>To force a default color, set this to a valid hex string. When the user clears the control, it will
+                revert to this color.</p>
 
-		<!-- Methods -->
-		<h2 id="methods">Methods</h2>
-		<p>
-			Use this syntax for calling methods:
-		</p>
-		<pre>$(<em>selector</em>).minicolors('method', <em>[data]</em>);</pre>
-		
-		<h3><code>create</code></h3>
-		<p>
-			Initializes the control for all items matching your selector. This is the default method, 
-			so <code>data</code> may be passed in as the only argument.
-		</p>
-		<p>
-			To set a preset color value, populate the <code>value</code> attribute of the original 
-			input element.
-		</p>
-		
-		<h3><code>destroy</code></h3>
-		<p>
-			Returns the <em>input</em> element to its original, uninitialized state.
-		</p>
-		
-		<h3><code>opacity</code></h3>
-		<p>
-			Gets or sets a control’s opacity level. To use this method as a setter, pass data in as 
-			a value between 0 and 1. (You can also obtain this value by checking the input element’s 
-			<code>data-opacity</code> attribute.)
-		</p>
-		<p>
-			To set a preset opacity value, populate the <code>data-opacity</code> attribute of the original 
-			input element.
-		</p>
-		
-		<h3><code>rgbObject</code></h3>
-		<p>
-			Returns an object containing red, green, blue, and alpha properties that correspond to 
-			the control’s current value.  Example:
-		</p>
-		<pre>{ r: 0, g: 82, b: 148, a: 0.75 }</pre>
-		
-		<h3><code>rgbString</code> &amp; <code>rgbaString</code></h3>
-		<p>
-			Returns an RGB or RGBA string suitable for use in your CSS. If opacity is enabled on the 
-			specified control, an RGBA string will be returned. Otherwise an RGB string will be 
-			returned. Examples:
-		</p>
-		<pre>rgb(0, 82, 148)
-rgba(0, 82, 148, .75)</pre>
-		
-		<h3><code>settings</code></h3>
-		<p>
-			Gets or sets a control’s settings. If new settings are passed in, the control will 
-			destroy and re-initialize itself with any new settings overriding the old ones.
-		</p>
-		
-		<h3><code>value</code></h3>
-		<p>
-			Gets or sets a control’s color value. To use this method as a setter, pass <code>data</code> 
-			in as a hex value. (You can also obtain this value by checking the input element’s 
-			<code>value</code> attribute.)
-		</p>
-		
-		
-		<!-- Events -->
-		<h2 id="events">Events</h2>
-		<h3><code>change</code></h3>
-		<p>
-			Fires when the value of the color picker changes. The <code>this</code> keyword will 
-			reference the original input element. <strong>Warning:</strong> This event will fire 
-			a lot if the user drags the color picker around.
-		</p>
-		<pre>$(<em>selector</em>).minicolors({
+                <div class="example">
+                    Default value: #ffcc00 <input class="minicolors" data-default-value="#ffcc00" type="text" value=
+                    "#ffb987">
+                </div>
+            </dd>
+
+            <dt><code>hideSpeed</code> &amp; <code>showSpeed</code></dt>
+
+            <dd>
+                <p>The speed at which to hide and show the color picker.</p>
+            </dd>
+
+            <dt><code>inline</code></dt>
+
+            <dd>
+                <p>Set to <code>true</code> to force the color picker to appear inline.</p>
+            </dd>
+
+            <dt><code>letterCase</code></dt>
+
+            <dd>
+                <p>Determines the letter case of the hex code value. Valid options are <code>uppercase</code> or
+                <code>lowercase</code>.</p>
+
+                <div class="example">
+                    Uppercase <input class="minicolors uppercase" type="text" value="#abc"> Lowercase <input class=
+                    "minicolors lowercase" type="text" value="#abc">
+                </div>
+            </dd>
+
+            <dt><code>opacity</code></dt>
+
+            <dd>
+                <p>Set to <code>true</code> to enable the opacity slider. (Use the input element's
+                <code>data-opacity</code> attribute to set a preset value.)</p>
+
+                <div class="example">
+                    <input class="minicolors opacity" type="text" value="#ffb987">
+                </div>
+            </dd>
+
+            <dt><code>position</code></dt>
+
+            <dd>
+                <p>Sets the position of the dropdown. Valid options are <code>default</code>, <code>top</code>,
+                <code>left</code>, and <code>top left</code>.</p>
+
+                <div class="example">
+                    <code>default</code> <input class="minicolors" data-position="default" type="text" value="#3b98bd">
+                    <code>top</code> <input class="minicolors" data-position="top" type="text" value="#50c900">
+                    <code>left</code> <input class="minicolors" data-position="left" type="text" value="#7745ff">
+                    <code>top left</code> <input class="minicolors" data-control="top left" type="text" value=
+                    "#ffb987">
+                </div>
+            </dd>
+
+            <dt><code>swatchPosition</code></dt>
+
+            <dd>
+                <p>Determines which side of the textfield the color swatch will appear. Valid options are
+                <code>left</code> and <code>right</code>.</p>
+
+                <div class="example">
+                    <code>left</code> <input class="minicolors" data-swatch-position="left" type="text" value=
+                    "#3b98bd"> <code>right</code> <input class="minicolors" data-swatch-position="right" type="text"
+                    value="#50c900">
+                </div>
+            </dd>
+
+            <dt><code>textfield</code></dt>
+
+            <dd>
+                <p>Whether or not to show the textfield. Set to <code>false</code> for a swatch-only control:</p>
+
+                <div class="example">
+                    <input class="minicolors no-textfield" type="text" value="#3b98bd">
+                </div>
+            </dd>
+
+            <dt><code>theme</code></dt>
+
+            <dd>
+                <p>A string containing the name of the custom theme to be applied. In your CSS, prefix your selectors
+                like this:</p>
+                <pre>
+.minicolors-theme-yourThemeName { ... }
+</pre>
+
+                <p>Then set your theme like this:</p>
+                <pre>
+$(<em>selector</em>).minicolors({
+    theme: 'yourThemeName'
+});
+</pre>
+
+                <p>Here are a few examples:</p>
+
+                <div class="example">
+                    Default theme (<code>default</code>)<br>
+                    <input class="minicolors" type="text" value="#7ad674"><br>
+                    <br>
+                    Bootstrap theme (<code>bootstrap</code>)<br>
+                    <input class="minicolors opacity" data-theme="bootstrap" type="text" value=
+                    "#2eb2e6"><br>
+                    <br>
+                    No theme (<code>none</code>)<br>
+                    <input class="minicolors" data-theme="none" type="text" value="#d96464">
+                </div>
+
+                <h3>A note about writing themes</h3>
+
+                <p>When writing a theme, please make sure it supports both swatch positions
+                (<code>swatchPosition</code>) and all panel positions (<code>position</code>). If you've written a
+                theme and would like to have it included with MiniColors, feel free to <a href=
+                "https://github.com/claviska/jquery-miniColors/">submit it to the project</a> on GitHub.</p>
+            </dd>
+        </dl>
+
+        <h2 id="methods">Methods</h2>
+
+        <p>Use this syntax for calling methods:</p>
+        <pre>
+$(<em>selector</em>).minicolors('method', <em>[data]</em>);
+</pre>
+
+        <dl>
+            <dt><code>create</code></dt>
+
+            <dd>
+                <p>Initializes the control for all items matching your selector. This is the default method, so
+                <code>data</code> may be passed in as the only argument.</p>
+
+                <p>To set a preset color value, populate the <code>value</code> attribute of the original input
+                element.</p>
+            </dd>
+
+            <dt><code>destroy</code></dt>
+
+            <dd>
+                <p>Returns the <em>input</em> element to its original, uninitialized state.</p>
+            </dd>
+
+            <dt><code>opacity</code></dt>
+
+            <dd>
+                <p>Gets or sets a control's opacity level. To use this method as a setter, pass data in as a value
+                between 0 and 1. (You can also obtain this value by checking the input element's
+                <code>data-opacity</code> attribute.)</p>
+
+                <p>To set a preset opacity value, populate the <code>data-opacity</code> attribute of the original
+                input element.</p>
+            </dd>
+
+            <dt><code>rgbObject</code></dt>
+
+            <dd>
+                <p>Returns an object containing red, green, blue, and alpha properties that correspond to the control's
+                current value. Example:</p>
+                <pre>
+{ r: 0, g: 82, b: 148, a: 0.75 }
+</pre>
+            </dd>
+
+            <dt><code>rgbString</code> &amp; <code>rgbaString</code></dt>
+
+            <dd>
+                <p>Returns an RGB or RGBA string suitable for use in your CSS. If opacity is enabled on the specified
+                control, an RGBA string will be returned. Otherwise an RGB string will be returned. Examples:</p>
+                <pre>
+rgb(0, 82, 148)
+rgba(0, 82, 148, .75)
+</pre>
+            </dd>
+
+            <dt><code>settings</code></dt>
+
+            <dd>
+                <p>Gets or sets a control's settings. If new settings are passed in, the control will destroy and
+                re-initialize itself with any new settings overriding the old ones.</p>
+            </dd>
+
+            <dt><code>value</code></dt>
+
+            <dd>
+                <p>Gets or sets a control's color value. To use this method as a setter, pass <code>data</code> in as a
+                hex value. (You can also obtain this value by checking the input element's <code>value</code>
+                attribute.)</p>
+            </dd>
+        </dl>
+
+        <h2 id="events">Events</h2>
+
+        <dl>
+            <dt><code>change</code></dt>
+
+            <dd>
+                <p>Fires when the value of the color picker changes. The <code>this</code> keyword will reference the
+                original input element. <strong>Warning:</strong> This event will fire a lot if the user drags the
+                color picker around.</p>
+                <pre>
+$(<em>selector</em>).minicolors({
     change: function(hex, opacity) {
         console.log(hex + ' - ' + opacity);
     }
-});</pre>
-		
-		<h3><code>hide</code></h3>
-		<p>
-			Fires when the color picker is hidden. The <code>this</code> keyword will 
-			reference the original input element.
-		</p>
-		<pre>$(<em>selector</em>).minicolors({
+});
+</pre>
+            </dd>
+
+            <dt><code>hide</code></dt>
+
+            <dd>
+                <p>Fires when the color picker is hidden. The <code>this</code> keyword will reference the original
+                input element.</p>
+                <pre>
+$(<em>selector</em>).minicolors({
     hide: function() {
         console.log('Hide event triggered!');
     }
-});</pre>
-		
-		<h3><code>show</code></h3>
-		<p>
-			Fires when the color picker is shown. The <code>this</code> keyword will 
-			reference the original input element.
-		</p>
-		<pre>$(<em>selector</em>).minicolors({
+});
+</pre>
+            </dd>
+
+            <dt><code>show</code></dt>
+
+            <dd>
+                <p>Fires when the color picker is shown. The <code>this</code> keyword will reference the original
+                input element.</p>
+                <pre>
+$(<em>selector</em>).minicolors({
     show: function() {
         console.log('Show event triggered!');
     }
-});</pre>
-		
-	</div>
-	
-	<div id="console"></div>
+});
+</pre>
+            </dd>
+        </dl>
+    </div>
 
+    <div id="console"></div>
 </body>
 </html>
