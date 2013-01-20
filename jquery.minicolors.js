@@ -14,21 +14,20 @@ if(jQuery) (function($) {
 		defaultSettings: {
 			animationSpeed: 100,
 			animationEasing: 'swing',
-			classes: 'minicolors-default-theme',
+			change: null,
 			control: 'hue',
 			defaultValue: '',
+			hide: null,
 			hideSpeed: 100,
 			inline: false,
 			letterCase: 'lowercase',
 			opacity: false,
 			position: 'default',
+			show: null,
 			showSpeed: 100,
-			styles: '',
 			swatchPosition: 'left',
 			textfield: true,
-			change: null,
-			hide: null,
-			show: null
+			theme: 'default'
 		}
 	};
 	
@@ -122,8 +121,8 @@ if(jQuery) (function($) {
 		
 		// The wrapper
 		minicolors
-			.attr('class', minicolors.attr('class') + ' ' + settings.classes)
-			.attr('style', settings.styles)
+			.addClass('minicolors-theme-' + settings.theme)
+			.addClass('minicolors-swatch-position-' + settings.swatchPosition)
 			.toggleClass('minicolors-swatch-left', settings.swatchPosition === 'left')
 			.toggleClass('minicolors-with-opacity', settings.opacity);
 		
@@ -476,7 +475,7 @@ if(jQuery) (function($) {
 			opacityPicker = opacitySlider.find('[class$=-picker]');
 		
 		// Determine hex/HSB values
-		hex = convertCase(parseHex(input.val(), true));
+		hex = convertCase(parseHex(input.val(), true), settings.letterCase);
 		if( !hex ) hex = convertCase(parseHex(settings.defaultValue, true));
 		hsb = hex2hsb(hex);
 		
