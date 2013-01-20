@@ -8,7 +8,12 @@
 	<link rel="stylesheet" href="jquery.minicolors.css" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script src="jquery.minicolors.js"></script>
-	<style>
+
+  <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.0/bootstrap.min.js"></script>-->
+  <!--<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" />-->
+
+
+  <style>
 		
 		HTML,
 		BODY {
@@ -110,8 +115,32 @@
 		#console.busy {
 			opacity: .85;
 		}
-		
-	</style>
+
+    .minicolors-mycustom-theme input{
+      padding: 4px 6px;
+      padding-left: 30px;
+      background-color: #FFFFF5;
+      border: 1px solid #CCC;
+      border-radius: 3px;
+      color: #555;
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 14px;
+      height: 19px;
+      margin: 0px;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+    .minicolors-mycustom-theme .minicolors-swatch{
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      z-index: 2;
+    }
+    .minicolors-mycustom-theme .minicolors-panel{
+      z-index: 3;
+      top: 28px;
+    }
+
+  </style>
 	
 	<script>
 		
@@ -131,6 +160,7 @@
 				// have the same effect on you!
 				//
 				$(this).minicolors({
+          classes: $(this).attr('data-classes') || 'minicolors-default-theme',
 					control: $(this).attr('data-control') || 'hue',
 					defaultValue: $(this).attr('data-default-value') || '',
 					inline: $(this).hasClass('inline'),
@@ -219,7 +249,7 @@
 		<pre>defaultSettings: {
     animationSpeed: 100,
     animationEasing: 'swing',
-    classes: '',
+    classes: 'minicolors-default-theme',
     control: 'hue',
     defaultValue: '',
     hideSpeed: 100,
@@ -248,6 +278,14 @@
 		<p>
 			A string containing a space-delimited list of classes to apply to the control’s wrapper 
 			element. Useful for referencing controls in your stylesheet.
+      <div class="example">
+        no theme (no styling will be applied to input): <input type="text" class="minicolors" data-classes="some-none-existent-theme" value="#3b98bd" />
+        <br/>
+        minicolors-default-theme: <input type="text" class="minicolors" value="#3b98bd" />
+        <br/>
+        <br/>
+        minicolors-mycustom-theme: <input type="text" class="minicolors" data-classes="minicolors-mycustom-theme" value="#3b98bd" />
+      </div>
 		</p>
 		
 		<h3><code>control</code></h3>
@@ -260,53 +298,75 @@
 		<p>
 			To force a default color, set this to a valid hex string. When the user clears the control, 
 			it will revert to this color.
+      <div class="example">
+        Default value: #ffcc00 <input type="text" class="minicolors" data-default-value="#ffcc00"  value="#ffb987" />
+      </div>
 		</p>
-		
+
 		<h3><code>hideSpeed</code> &amp; <code>showSpeed</code></h3>
 		<p>
 			The speed at which to hide and show the color picker.
 		</p>
-		
+
 		<h3><code>inline</code></h3>
 		<p>
 			Set to <code>true</code> to force the color picker to appear inline.
 		</p>
-		
+
 		<h3><code>letterCase</code></h3>
 		<p>
-			Determines the letter case of the hex code value. Valid options are <code>uppercase</code> 
+			Determines the letter case of the hex code value. Valid options are <code>uppercase</code>
 			or <code>lowercase</code>.
+      <div class="example">
+        uppercase <input type="text" class="minicolors uppercase" value="#ffb987" />
+        lowercase <input type="text" class="minicolors lowercase" value="#ffb987" />
+      </div>
 		</p>
-		
+
 		<h3><code>opacity</code></h3>
 		<p>
-			Set to <code>true</code> to enable the opacity slider. (Use the input element’s 
+			Set to <code>true</code> to enable the opacity slider. (Use the input element’s
 			<code>data-opacity</code> attribute to set a preset value.)
+      <div class="example">
+        <input type="text" class="minicolors opacity" value="#ffb987" />
+      </div>
 		</p>
-		
+
 		<h3><code>position</code></h3>
 		<p>
-			Sets the position of the dropdown. Valid options are <code>default</code>, <code>top</code>, 
+			Sets the position of the dropdown. Valid options are <code>default</code>, <code>top</code>,
 			<code>left</code>, and <code>top left</code>.
+      <div class="example">
+        default <input type="text" class="minicolors" data-position="default"  value="#3b98bd" />
+        top <input type="text" class="minicolors" data-position="top" value="#50c900" />
+        left <input type="text" class="minicolors" data-position="left"  value="#7745ff" />
+        top left <input type="text" class="minicolors" data-control="top left"  value="#ffb987" />
+      </div>
 		</p>
-		
+
 		<h3><code>styles</code></h3>
 		<p>
 			A string containing one or more style properties to apply to the control’s wrapper element.
 		</p>
-		
+
 		<h3><code>swatchPosition</code></h3>
 		<p>
-			Determines which side of the textfield the color swatch will appear. Valid options are 
+			Determines which side of the textfield the color swatch will appear. Valid options are
 			<code>left</code> and <code>right</code>.
+      <div class="example">
+        left <input type="text" class="minicolors" data-swatch-position="left"  value="#3b98bd" />
+        right <input type="text" class="minicolors" data-swatch-position="right" value="#50c900" />
+      </div>
 		</p>
-		
+
 		<h3><code>textfield</code></h3>
 		<p>
 			Whether or not to show the textfield. Set to <code>false</code> for a swatch-only control.
+      <div class="example">
+      No textfield: <input type="text" class="minicolors no-textfield" value="#3b98bd" />
+      </div>
 		</p>
-		
-		
+
 		<!-- Methods -->
 		<h2 id="methods">Methods</h2>
 		<p>

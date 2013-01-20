@@ -14,7 +14,7 @@ if(jQuery) (function($) {
 		defaultSettings: {
 			animationSpeed: 100,
 			animationEasing: 'swing',
-			classes: '',
+			classes: 'minicolors-default-theme',
 			control: 'hue',
 			defaultValue: '',
 			hideSpeed: 100,
@@ -432,9 +432,9 @@ if(jQuery) (function($) {
 		} else {
 			opacity = 1;
 		}
-		
-		// Update input control
-		input.val(hex);
+
+    // Adjust case
+    input.val( convertCase(hex, settings.letterCase) );
 		if( settings.opacity ) input.attr('data-opacity', opacity);
 		
 		// Set swatch color
