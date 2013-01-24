@@ -247,7 +247,7 @@ if(jQuery) (function($) {
 	// Moves the selected picker
 	function move(target, event, animate) {
 		
-		var input = target.parents('.minicolors').find('INPUT'),
+		var input = target.parents('.minicolors').find('.minicolors-input'),
 			settings = input.data('minicolors-settings'),
 			picker = target.find('[class$=-picker]'),
 			offsetX = target.offset().left,
@@ -740,7 +740,7 @@ if(jQuery) (function($) {
 		})
 		// Toggle panel when swatch is clicked
 		.on('mousedown.minicolors touchstart.minicolors', '.minicolors-swatch', function(event) {
-			var input = $(this).parent().find('INPUT'),
+			var input = $(this).parent().find('.minicolors-input'),
 				minicolors = input.parent();
 			if( minicolors.hasClass('minicolors-focus') ) {
 				hide(input);

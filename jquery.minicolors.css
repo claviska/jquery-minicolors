@@ -8,7 +8,7 @@
 	z-index: 2;
 }
 
-.minicolors.minicolors-theme-default INPUT {
+.minicolors.minicolors-theme-default .minicolors-input {
     margin: 0px;
 	margin-right: 3px;
 	border: solid 1px #CCC;
@@ -21,17 +21,17 @@
 	margin-right: -1px;
 }
 
-.minicolors-theme-default.minicolors INPUT {
+.minicolors-theme-default.minicolors .minicolors-input {
 	vertical-align: middle;
 	outline: none;
 }
 
-.minicolors-theme-default.minicolors-swatch-left INPUT {
+.minicolors-theme-default.minicolors-swatch-left .minicolors-input {
     margin-left: -1px;
     margin-right: auto;
 }
 
-.minicolors-theme-default.minicolors-focus INPUT,
+.minicolors-theme-default.minicolors-focus .minicolors-input,
 .minicolors-theme-default.minicolors-focus .minicolors-swatch {
 	border-color: #999;
 }
@@ -197,7 +197,7 @@
 }
 
 /* Inline controls */
-.minicolors-inline INPUT,
+.minicolors-inline .minicolors-input,
 .minicolors-inline .minicolors-swatch {
 	display: none;
 }
@@ -216,7 +216,7 @@
  */
  
 /* Input styles */
-.minicolors-theme-bootstrap INPUT {
+.minicolors-theme-bootstrap .minicolors-input {
 	padding: 4px 6px;
 	padding-left: 30px;
 	background-color: white;
@@ -231,7 +231,7 @@
 }
 
 /* When the input has focus */
-.minicolors-theme-bootstrap.minicolors-focus INPUT {
+.minicolors-theme-bootstrap.minicolors-focus .minicolors-input {
 	border-color: #6fb8f1;
 	box-shadow: 0 0 10px #6fb8f1;
 	outline: none;
@@ -246,7 +246,7 @@
 }
 
 /* Handle swatch position (left = default / right) */
-.minicolors-theme-bootstrap.minicolors-swatch-position-right INPUT {
+.minicolors-theme-bootstrap.minicolors-swatch-position-right .minicolors-input {
 	padding-left: 6px;
 	padding-right: 30px;
 }
