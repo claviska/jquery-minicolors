@@ -4,8 +4,6 @@ _Copyright Cory LaViska for A Beautiful Site, LLC. (http://www.abeautifulsite.ne
 
 _Dual-licensed under the MIT and GPL Version 2 licenses_
 
-Version: 2.0.0-beta3
-
 ## Demo & Documentation
 
 http://labs.abeautifulsite.net/jquery-miniColors/
