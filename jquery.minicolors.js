@@ -15,6 +15,7 @@ if(jQuery) (function($) {
 			animationSpeed: 100,
 			animationEasing: 'swing',
 			change: null,
+			changeDelay: 0,
 			control: 'hue',
 			defaultValue: '',
 			hide: null,
@@ -442,10 +443,26 @@ if(jQuery) (function($) {
 			opacity: opacity
 		});
 		
-		// Fire change event
+		// Handle change event
 		if( hex + opacity !== input.data('minicolors-lastChange') ) {
+			
+			// Remember last-changed value
 			input.data('minicolors-lastChange', hex + opacity);
-			if( settings.change ) settings.change.call(input, hex, opacity);
+			
+			// Fire change event
+			if( settings.change ) {
+				if( settings.changeDelay ) {
+					// Call after a delay
+					clearTimeout(input.data('minicolors-changeTimeout'));
+					input.data('minicolors-changeTimeout', setTimeout( function() {
+						settings.change.call(input, hex, opacity);
+					}, settings.changeDelay));
+				} else {
+					// Call immediately
+					settings.change.call(input, hex, opacity);
+				}
+			}
+			
 		}
 		
 	}

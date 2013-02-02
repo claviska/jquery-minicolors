@@ -213,6 +213,7 @@ $('INPUT.minicolors').minicolors(<em>settings</em>);
     animationSpeed: 100,
     animationEasing: 'swing',
     change: null,
+    changeDelay: 0,
     control: 'hue',
     defaultValue: '',
     hide: null,
@@ -241,6 +242,16 @@ $('INPUT.minicolors').minicolors(<em>settings</em>);
 
             <dd>
                 <p>The easing to use when animating the sliders.</p>
+            </dd>
+
+            <dt><code>changeDelay</code></dt>
+
+            <dd>
+                <p>The time, in milliseconds, to defer the <code>change</code> event from firing while the user makes 
+                a selection. This is useful for preventing the <code>change</code> event from firing frequently as the 
+                user drags the color picker around.</p>
+                <p>The default value is <code>0</code> (no delay). If your <code>change</code> callback features an 
+                AJAX request, you’ll probably want to set this to at least <code>200</code>.</p>
             </dd>
 
             <dt><code>control</code></dt>
