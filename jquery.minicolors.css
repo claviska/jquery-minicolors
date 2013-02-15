@@ -45,10 +45,11 @@
 	position: relative;
 	width: 20px;
 	height: 20px;
+	text-align: left;
 	background: url(jquery.minicolors.png) -80px 0;
 	border: solid 1px #CCC;
-	display: inline-block;
 	vertical-align: middle;
+	display: inline-block;
 }
 
 .minicolors-swatch SPAN {
