@@ -94,6 +94,11 @@ if(jQuery) (function($) {
 						return $(this);
 					}
 				
+				// shows the color wheel
+        			case 'show':
+          				show($(this).find('.minicolors-input'));
+          				return $(this);
+				
 				// Initializes the control
 				case 'create':
 				default:
