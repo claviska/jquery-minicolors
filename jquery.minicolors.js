@@ -771,7 +771,7 @@ if(jQuery) (function($) {
 			if( !input.data('minicolors-initialized') ) return;
 			show(input);
 		})
-		// Fix hex and hide on blur
+		// Fix hex on blur
 		.on('blur.minicolors', '.minicolors-input', function(event) {
 			var input = $(this),
 				settings = input.data('minicolors-settings');
@@ -786,7 +786,6 @@ if(jQuery) (function($) {
 			// Adjust case
 			input.val( convertCase(input.val(), settings.letterCase) );
 			
-			hide(input);
 		})
 		// Handle keypresses
 		.on('keydown.minicolors', '.minicolors-input', function(event) {
