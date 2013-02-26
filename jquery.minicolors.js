@@ -45,6 +45,11 @@ if(jQuery) (function($) {
 					});
 					return $(this);
 				
+				// Hide the color picker
+				case 'hide':
+					hide();
+					return $(this);
+				
 				// Get/set opacity
 				case 'opacity':
 					if( data === undefined ) {
@@ -80,6 +85,11 @@ if(jQuery) (function($) {
 						});
 						return $(this);
 					}
+				
+				// Show the color picker
+				case 'show':
+					show( $(this).eq(0) );
+					return $(this);
 				
 				// Get/set the hex color value
 				case 'value':
@@ -209,8 +219,12 @@ if(jQuery) (function($) {
 			panel = minicolors.find('.minicolors-panel'),
 			settings = input.data('minicolors-settings');
 		
-		// Do nothing if uninitialized, disabled, or already open
-		if( !input.data('minicolors-initialized') || input.prop('disabled') || minicolors.hasClass('minicolors-focus') ) return;
+		// Do nothing if uninitialized, disabled, inline, or already open
+		if( !input.data('minicolors-initialized') || 
+			input.prop('disabled') || 
+			minicolors.hasClass('minicolors-inline') || 
+			minicolors.hasClass('minicolors-focus')
+		) return;
 		
 		hide();
 		
