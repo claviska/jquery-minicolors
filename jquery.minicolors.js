@@ -524,7 +524,9 @@ if(jQuery) (function($) {
 		
 		// Determine opacity value
 		if( settings.opacity ) {
+			// Get from data-opacity attribute and keep within 0-1 range
 			opacity = input.attr('data-opacity') === '' ? 1 : keepWithin(parseFloat(input.attr('data-opacity')).toFixed(2), 0, 1);
+			if( isNaN(opacity) ) opacity = 1;
 			input.attr('data-opacity', opacity);
 			swatch.find('SPAN').css('opacity', opacity);
 			
