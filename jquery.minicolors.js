@@ -185,7 +185,7 @@ if(jQuery) (function($) {
 		// Inline controls
 		if( settings.inline ) input.parent().addClass('minicolors-inline');
 		
-		updateFromInput(input);
+		updateFromInput(input, false, true);
 		
 	}
 	
@@ -468,31 +468,12 @@ if(jQuery) (function($) {
 		});
 		
 		// Handle change event
-		if( hex + opacity !== input.data('minicolors-lastChange') ) {
-			
-			// Remember last-changed value
-			input.data('minicolors-lastChange', hex + opacity);
-			
-			// Fire change event
-			if( settings.change ) {
-				if( settings.changeDelay ) {
-					// Call after a delay
-					clearTimeout(input.data('minicolors-changeTimeout'));
-					input.data('minicolors-changeTimeout', setTimeout( function() {
-						settings.change.call(input, hex, opacity);
-					}, settings.changeDelay));
-				} else {
-					// Call immediately
-					settings.change.call(input, hex, opacity);
-				}
-			}
-			
-		}
+		doChange(input, hex, opacity);
 		
 	}
 	
 	// Sets the color picker values from the input
-	function updateFromInput(input, preserveInputValue) {
+	function updateFromInput(input, preserveInputValue, firstRun) {
 		
 		var hex,
 			hsb,
@@ -617,6 +598,38 @@ if(jQuery) (function($) {
 				
 		}
 		
+		// Handle change event
+		if( !firstRun ) doChange(input, hex, opacity);
+		
+	}
+	
+	// Runs the change and changeDelay callbacks
+	function doChange(input, hex, opacity) {
+		
+		var settings = input.data('minicolors-settings');
+		
+		// Only run if it actually changed
+		if( hex + opacity !== input.data('minicolors-lastChange') ) {
+			
+			// Remember last-changed value
+			input.data('minicolors-lastChange', hex + opacity);
+			
+			// Fire change event
+			if( settings.change ) {
+				if( settings.changeDelay ) {
+					// Call after a delay
+					clearTimeout(input.data('minicolors-changeTimeout'));
+					input.data('minicolors-changeTimeout', setTimeout( function() {
+						settings.change.call(input, hex, opacity);
+					}, settings.changeDelay));
+				} else {
+					// Call immediately
+					settings.change.call(input, hex, opacity);
+				}
+			}
+			
+		}
+	
 	}
 	
 	// Generates an RGB(A) object based on the input's value
