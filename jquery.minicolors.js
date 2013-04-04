@@ -71,6 +71,10 @@ if(jQuery) (function($) {
 				case 'rgbString':
 				case 'rgbaString':
 					return rgbString($(this), method === 'rgbaString')
+
+                // Get a hex string based on the current color
+                case 'hexString':
+                    return hexString($(this))
 				
 				// Get/set settings on the fly
 				case 'settings':
@@ -655,6 +659,14 @@ if(jQuery) (function($) {
 			return 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
 		}
 	}
+
+    // Generates a hex string based on the input's value
+    function hexString(input) {
+        var hex = parseHex($(input).val(), true),
+            rgb = hex2rgb(hex);
+
+        return rgb2hex(rgb);
+    }
 	
 	// Converts to the letter case specified in settings
 	function convertCase(string, letterCase) {
