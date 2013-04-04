@@ -620,11 +620,11 @@ if(jQuery) (function($) {
 					// Call after a delay
 					clearTimeout(input.data('minicolors-changeTimeout'));
 					input.data('minicolors-changeTimeout', setTimeout( function() {
-						settings.change.call(input, hex, opacity);
+						settings.change.call(input.get(0), hex, opacity);
 					}, settings.changeDelay));
 				} else {
 					// Call immediately
-					settings.change.call(input, hex, opacity);
+					settings.change.call(input.get(0), hex, opacity);
 				}
 			}
 			
