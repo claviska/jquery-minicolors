@@ -795,13 +795,19 @@ if(jQuery) (function($) {
 		})
 		// Toggle panel when swatch is clicked
 		.on('mousedown.minicolors touchstart.minicolors', '.minicolors-swatch', function(event) {
-			var input = $(this).parent().find('.minicolors-input'),
-				minicolors = input.parent();
-			if( minicolors.hasClass('minicolors-focus') ) {
-				hide(input);
-			} else {
-				show(input);
-			}
+		  var toggling = false;
+		  if (!toggling) {
+  		  toggling = true;
+  		  setTimeout(function() { toggling = false; }, 100);
+  			var input = $(this).parent().find('.minicolors-input'),
+  				minicolors = input.parent();
+  			if( minicolors.hasClass('minicolors-focus') ) {
+  				hide(input);
+  			} else {
+  				show(input);
+  			}
+		  }
+		  return false;
 		})
 		// Show on focus
 		.on('focus.minicolors', '.minicolors-input', function(event) {
