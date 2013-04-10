@@ -232,7 +232,7 @@ if(jQuery) (function($) {
 		panel
 			.stop(true, true)
 			.fadeIn(settings.showSpeed, function() {
-				if( settings.show ) settings.show.call(input);
+				if( settings.show ) settings.show.call(input.get(0));
 			});
 		
 	}
@@ -251,7 +251,7 @@ if(jQuery) (function($) {
 			
 			minicolors.find('.minicolors-panel').fadeOut(settings.hideSpeed, function() {
 				if(minicolors.hasClass('minicolors-focus')) {
-					if( settings.hide ) settings.hide.call(input);
+					if( settings.hide ) settings.hide.call(input.get(0));
 				}
 				minicolors.removeClass('minicolors-focus');
 			});			
