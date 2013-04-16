@@ -830,10 +830,11 @@ if(jQuery) (function($) {
 			var input = $(this);
 			if( !input.data('minicolors-initialized') ) return;
 			switch(event.keyCode) {
-				case 9: // tab
+				case $.ui.keyCode.TAB: 
 					hide();
 					break;
-				case 27: // esc
+				case $.ui.keyCode.ENTER:
+				case $.ui.keyCode.ESCAPE:
 					hide();
 					input.blur();
 					break;
