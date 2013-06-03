@@ -276,3 +276,22 @@
 .minicolors-theme-bootstrap.minicolors-position-left.minicolors-with-opacity .minicolors-panel {
 	left: -84px;
 }
+
+ul.minicolors-defined-colors {
+	position: absolute;
+	top: 140px;
+	padding: 0;
+	list-style: none;
+	background: white;
+}
+
+ul.minicolors-defined-colors li {
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+ul.minicolors-defined-colors li span {
+	border-bottom: 2px solid #ccc;
+	cursor: pointer;
+}

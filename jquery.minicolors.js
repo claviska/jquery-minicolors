@@ -28,7 +28,8 @@ if(jQuery) (function($) {
 			showSpeed: 100,
 			swatchPosition: 'left',
 			textfield: true,
-			theme: 'default'
+			theme: 'default',
+			colors: []
 		}
 	};
 	
@@ -144,6 +145,39 @@ if(jQuery) (function($) {
 			});
 		}
 		
+		var pickerSpan = 
+			'<span class="minicolors-panel minicolors-slider-' + settings.control + '">' + 
+				'<span class="minicolors-slider">' + 
+					'<span class="minicolors-picker"></span>' +
+				'</span>' + 
+				'<span class="minicolors-opacity-slider">' + 
+					'<span class="minicolors-picker"></span>' +
+				'</span>' +
+				'<span class="minicolors-grid">' +
+					'<span class="minicolors-grid-inner"></span>' +
+					'<span class="minicolors-picker"><span></span></span>' +
+				'</span>';
+		if($.isArray(settings.colors) && settings.colors.length > 0) {
+			pickerSpan += '<ul class="minicolors-defined-colors">';
+			var color, label;
+			for(var i = 0; i < settings.colors.length; i++) {
+				color = settings.colors[i].color;
+				if('label' in settings.colors[i]) {
+					label = settings.colors[i].label;
+				} else {
+					label = color;
+				}
+				
+				pickerSpan += 
+					'<li data-color="'+color+'">'+
+						'<span style="border-bottom-color:'+color+';">'+label+'</span>' +
+					'</li>';
+			}
+			pickerSpan += '</ul>';
+		}
+		pickerSpan + '</span>';
+		
+		
 		// The input
 		input
 			.addClass('minicolors-input')
@@ -152,23 +186,17 @@ if(jQuery) (function($) {
 			.prop('size', 7)
 			.prop('maxlength', 7)
 			.wrap(minicolors)
-			.after(
-				'<span class="minicolors-panel minicolors-slider-' + settings.control + '">' + 
-					'<span class="minicolors-slider">' + 
-						'<span class="minicolors-picker"></span>' +
-					'</span>' + 
-					'<span class="minicolors-opacity-slider">' + 
-						'<span class="minicolors-picker"></span>' +
-					'</span>' +
-					'<span class="minicolors-grid">' +
-						'<span class="minicolors-grid-inner"></span>' +
-						'<span class="minicolors-picker"><span></span></span>' +
-					'</span>' +
-				'</span>'
-			);
+			.after(pickerSpan);
 		
 		// Prevent text selection in IE
 		input.parent().find('.minicolors-panel').on('selectstart', function() { return false; }).end();
+		
+		// Attach click listener for predefined colors
+		input.parent().find('ul.minicolors-defined-colors li span').on('click', function() {
+			var color = $(this).parent().data("color");
+			input.val(color);
+			updateFromInput(input, true, false);
+		});
 		
 		// Detect swatch position
 		if( settings.swatchPosition === 'left' ) {
@@ -825,16 +853,18 @@ if(jQuery) (function($) {
 			// Adjust case
 			input.val( convertCase(input.val(), settings.letterCase) );
 			
+			hide();
 		})
 		// Handle keypresses
 		.on('keydown.minicolors', '.minicolors-input', function(event) {
 			var input = $(this);
 			if( !input.data('minicolors-initialized') ) return;
 			switch(event.keyCode) {
-				case 9: // tab
+				case $.ui.keyCode.TAB: 
 					hide();
 					break;
-				case 27: // esc
+				case $.ui.keyCode.ENTER:
+				case $.ui.keyCode.ESCAPE:
 					hide();
 					input.blur();
 					break;
