@@ -199,7 +199,7 @@ if(jQuery) (function($) {
 			.removeData('minicolors-initialized')
 			.removeData('minicolors-settings')
 			.removeProp('size')
-			.removeProp('maxlength')
+			.prop('maxlength', null)
 			.removeClass('minicolors-input');
 		
 		// Remove the wrap and destroy whatever remains
