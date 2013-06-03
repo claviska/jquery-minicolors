@@ -795,7 +795,7 @@ if(jQuery) (function($) {
 		})
 		// Toggle panel when swatch is clicked
 		.on('mousedown.minicolors touchstart.minicolors', '.minicolors-swatch', function(event) {
-		  event.preventDefault();
+			event.preventDefault();
 			var input = $(this).parent().find('.minicolors-input'),
 				minicolors = input.parent();
 			if( minicolors.hasClass('minicolors-focus') ) {
@@ -834,6 +834,7 @@ if(jQuery) (function($) {
 				case 9: // tab
 					hide();
 					break;
+				case 13: // enter
 				case 27: // esc
 					hide();
 					input.blur();
