@@ -780,9 +780,13 @@ if(jQuery) (function($) {
 		// Start moving
 		.on('mousedown.minicolors touchstart.minicolors', '.minicolors-grid, .minicolors-slider, .minicolors-opacity-slider', function(event) {
 			var target = $(this);
-			event.preventDefault();
-			$(document).data('minicolors-target', target);
-			move(target, event, true);
+            event.preventDefault();
+            move(target, event, true);
+            if ($(document).data('minicolors-target')) {
+                $(this).removeData('minicolors-target');
+            } else {
+                $(document).data('minicolors-target', target);
+            }
 		})
 		// Move pickers
 		.on('mousemove.minicolors touchmove.minicolors', function(event) {
