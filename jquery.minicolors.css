@@ -9,7 +9,7 @@
 }
 
 .minicolors.minicolors-theme-default .minicolors-input {
-    margin: 0px;
+    margin: 0;
 	border: solid 1px #CCC;
 	font: 14px sans-serif;
 	width: 65px;
@@ -226,7 +226,7 @@
 	font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
 	font-size: 14px;
 	height: 19px;
-	margin: 0px;
+	margin: 0;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
