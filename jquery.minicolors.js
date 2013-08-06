@@ -627,7 +627,7 @@ if(jQuery) (function($) {
 					settings.change.call(input.get(0), hex, opacity);
 				}
 			}
-			
+			input.trigger('change').trigger('input');
 		}
 	
 	}
