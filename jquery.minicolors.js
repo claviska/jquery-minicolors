@@ -8,11 +8,10 @@
 */
 if(jQuery) (function($) {
 	
-	// Yay, MiniColors!
+	// Defaults
 	$.minicolors = {
-		// Default settings
-		defaultSettings: {
-			animationSpeed: 100,
+		defaults: {
+			animationSpeed: 50,
 			animationEasing: 'swing',
 			change: null,
 			changeDelay: 0,
@@ -23,11 +22,9 @@ if(jQuery) (function($) {
 			inline: false,
 			letterCase: 'lowercase',
 			opacity: false,
-			position: 'default',
+			position: 'bottom left',
 			show: null,
 			showSpeed: 100,
-			swatchPosition: 'left',
-			textfield: true,
 			theme: 'default'
 		}
 	};
@@ -121,20 +118,18 @@ if(jQuery) (function($) {
 	// Initialize input elements
 	function init(input, settings) {
 		
-		var minicolors = $('<span class="minicolors" />'),
-			defaultSettings = $.minicolors.defaultSettings;
+		var minicolors = $('<div class="minicolors" />'),
+			defaults = $.minicolors.defaults;
 		
 		// Do nothing if already initialized
 		if( input.data('minicolors-initialized') ) return;
 		
 		// Handle settings
-		settings = $.extend(true, {}, defaultSettings, settings);
+		settings = $.extend(true, {}, defaults, settings);
 		
 		// The wrapper
 		minicolors
 			.addClass('minicolors-theme-' + settings.theme)
-			.addClass('minicolors-swatch-position-' + settings.swatchPosition)
-			.toggleClass('minicolors-swatch-left', settings.swatchPosition === 'left')
 			.toggleClass('minicolors-with-opacity', settings.opacity);
 		
 		// Custom positioning
@@ -150,37 +145,33 @@ if(jQuery) (function($) {
 			.data('minicolors-initialized', true)
 			.data('minicolors-settings', settings)
 			.prop('size', 7)
-			.prop('maxlength', 7)
 			.wrap(minicolors)
 			.after(
-				'<span class="minicolors-panel minicolors-slider-' + settings.control + '">' + 
-					'<span class="minicolors-slider">' + 
-						'<span class="minicolors-picker"></span>' +
-					'</span>' + 
-					'<span class="minicolors-opacity-slider">' + 
-						'<span class="minicolors-picker"></span>' +
-					'</span>' +
-					'<span class="minicolors-grid">' +
-						'<span class="minicolors-grid-inner"></span>' +
-						'<span class="minicolors-picker"><span></span></span>' +
-					'</span>' +
-				'</span>'
+				'<div class="minicolors-panel minicolors-slider-' + settings.control + '">' + 
+					'<div class="minicolors-slider">' + 
+						'<div class="minicolors-picker"></div>' +
+					'</div>' + 
+					'<div class="minicolors-opacity-slider">' + 
+						'<div class="minicolors-picker"></div>' +
+					'</div>' +
+					'<div class="minicolors-grid">' +
+						'<div class="minicolors-grid-inner"></div>' +
+						'<div class="minicolors-picker"><div></div></div>' +
+					'</div>' +
+				'</div>'
 			);
+		
+		// The swatch
+		if( !settings.inline ) {
+			input.after('<a href="#" class="minicolors-swatch"><span class="minicolors-swatch-color"></span></a>');
+			input.next('.minicolors-swatch').on('click', function(event) {
+				event.preventDefault();
+				input.focus();
+			});
+		}
 		
 		// Prevent text selection in IE
 		input.parent().find('.minicolors-panel').on('selectstart', function() { return false; }).end();
-		
-		// Detect swatch position
-		if( settings.swatchPosition === 'left' ) {
-			// Left
-			input.before('<span class="minicolors-swatch"><span></span></span>');
-		} else {
-			// Right
-			input.after('<span class="minicolors-swatch"><span></span></span>');
-		}
-		
-		// Disable textfield
-		if( !settings.textfield ) input.addClass('minicolors-hidden');
 		
 		// Inline controls
 		if( settings.inline ) input.parent().addClass('minicolors-inline');
@@ -199,7 +190,6 @@ if(jQuery) (function($) {
 			.removeData('minicolors-initialized')
 			.removeData('minicolors-settings')
 			.removeProp('size')
-			.prop('maxlength', null)
 			.removeClass('minicolors-input');
 		
 		// Remove the wrap and destroy whatever remains
