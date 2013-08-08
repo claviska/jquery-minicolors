@@ -1,88 +1,65 @@
 .minicolors {
 	position: relative;
-	display: inline-block;
-	z-index: 1;
-}
-
-.minicolors-focus {
-	z-index: 2;
-}
-
-.minicolors.minicolors-theme-default .minicolors-input {
-    margin: 0;
-	border: solid 1px #CCC;
-	font: 14px sans-serif;
-	width: 65px;
-	height: 16px;
-	border-radius: 0;
-	box-shadow: inset 0 2px 4px rgba(0, 0, 0, .04);
-	padding: 2px;
-	margin-right: -1px;
-}
-
-.minicolors-theme-default.minicolors .minicolors-input {
-	vertical-align: middle;
-	outline: none;
-}
-
-.minicolors-theme-default.minicolors-swatch-left .minicolors-input {
-    margin-left: -1px;
-    margin-right: auto;
-}
-
-.minicolors-theme-default.minicolors-focus .minicolors-input,
-.minicolors-theme-default.minicolors-focus .minicolors-swatch {
-	border-color: #999;
-}
-
-.minicolors-hidden {
-	position: absolute;
-	left: -9999em;
 }
 
 .minicolors-swatch {
-	position: relative;
-	width: 20px;
-	height: 20px;
-	text-align: left;
-	background: url(jquery.minicolors.png) -80px 0;
-	border: solid 1px #CCC;
+	position: absolute;
 	vertical-align: middle;
+	background: url(jquery.minicolors.png) -80px 0;
+	border: solid 1px #ccc;
+	cursor: text;
+	padding: 0;
+	margin: 0;
 	display: inline-block;
 }
 
-.minicolors-swatch SPAN {
+.minicolors-swatch-color {
 	position: absolute;
-	width: 100%;
-	height: 100%;
-	background: none;
-	box-shadow: inset 0 9px 0 rgba(255, 255, 255, .1);
-	display: inline-block;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.minicolors input[type=hidden] + .minicolors-swatch {
+	position: static;
+	cursor: pointer;
 }
 
 /* Panel */
 .minicolors-panel {
 	position: absolute;
-	top: 26px;
-	left: 0;
 	width: 173px;
 	height: 152px;
 	background: white;
 	border: solid 1px #CCC;
 	box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+	z-index: 99999;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
 	display: none;
 }
 
+.minicolors-panel.minicolors-visible {
+	display: block;
+}
+
+/* Panel positioning */
 .minicolors-position-top .minicolors-panel {
-	top: -156px;
+	top: -154px;
+}
+
+.minicolors-position-right .minicolors-panel {
+	right: 0;
+}
+
+.minicolors-position-bottom .minicolors-panel {
+	top: auto;
 }
 
 .minicolors-position-left .minicolors-panel {
-	left: -83px;
-}
-
-.minicolors-position-left.minicolors-with-opacity .minicolors-panel {
-	left: -104px;
+	left: 0;
 }
 
 .minicolors-with-opacity .minicolors-panel {
@@ -166,8 +143,8 @@
 	position: absolute;
 	top: 70px;
 	left: 70px;
-	width: 10px;
-	height: 10px;
+	width: 12px;
+	height: 12px;
 	border: solid 1px black;
 	border-radius: 10px;
 	margin-top: -6px;
@@ -175,14 +152,17 @@
 	background: none;
 }
 
-.minicolors-grid .minicolors-picker SPAN {
+.minicolors-grid .minicolors-picker > div {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 6px;
-	height: 6px;
-	border-radius: 6px;
+	width: 8px;
+	height: 8px;
+	border-radius: 8px;
 	border: solid 2px white;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
 }
 
 .minicolors-picker {
@@ -194,84 +174,71 @@
 	background: white;
 	border: solid 1px black;
 	margin-top: -2px;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
 }
 
 /* Inline controls */
-.minicolors-inline .minicolors-input,
-.minicolors-inline .minicolors-swatch {
-	display: none;
+.minicolors-inline {
+	display: inline-block;
+}
+
+.minicolors-inline .minicolors-input {
+	display: none !important;
 }
 
 .minicolors-inline .minicolors-panel {
 	position: relative;
 	top: auto;
 	left: auto;
+	box-shadow: none;
+	z-index: auto;
 	display: inline-block;
 }
 
-
-/*
- * Bootstrap Theme (theme: 'bootstrap')
- *
- */
- 
-/* Input styles */
-.minicolors-theme-bootstrap .minicolors-input {
-	padding: 4px 6px;
-	padding-left: 30px;
-	background-color: white;
-	border: 1px solid #CCC;
-	border-radius: 3px;
-	color: #555;
-	font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-	font-size: 14px;
-	height: 19px;
-	margin: 0;
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+/* Default theme */
+.minicolors-theme-default .minicolors-swatch {
+	top: 3px;
+	left: 5px;
+	width: 18px;
+	height: 18px;	
 }
-
-/* When the input has focus */
-.minicolors-theme-bootstrap.minicolors-focus .minicolors-input {
-	border-color: #6fb8f1;
-	box-shadow: 0 0 10px #6fb8f1;
-	outline: none;
-}
-
-/* Swatch styles */
-.minicolors-theme-bootstrap .minicolors-swatch {
-	position: absolute;
-	left: 4px;
-	top: 4px;
-	z-index: 2;
-}
-
-/* Handle swatch position (left = default / right) */
-.minicolors-theme-bootstrap.minicolors-swatch-position-right .minicolors-input {
-	padding-left: 6px;
-	padding-right: 30px;
-}
-
-.minicolors-theme-bootstrap.minicolors-swatch-position-right .minicolors-swatch {
+.minicolors-theme-default.minicolors-position-right .minicolors-swatch {
 	left: auto;
-	right: 4px;
+	right: 5px;
+}
+.minicolors-theme-default.minicolors {
+	width: auto;
+	display: inline-block;
+}
+.minicolors-theme-default .minicolors-input {
+	height: 20px;
+	width: auto;
+	display: inline-block;
+	padding-left: 26px;
+}
+.minicolors-theme-default.minicolors-position-right .minicolors-input {
+	padding-right: 26px;
+	padding-left: inherit;
 }
 
-/* Panel styles */
-.minicolors-theme-bootstrap .minicolors-panel {
-	top: 28px;
-	z-index: 3;
+/* Bootstrap theme */
+.minicolors-theme-bootstrap .minicolors-swatch {
+	top: 3px;
+	left: 3px;
+	width: 32px;
+	height: 32px;
+	border-radius: 3px;
 }
-
-/* Handle panel positions (top / left) */
-.minicolors-theme-bootstrap.minicolors-position-top .minicolors-panel {
-	top: -154px;
+.minicolors-theme-bootstrap.minicolors-position-right .minicolors-swatch {
+	left: auto;
+	right: 3px;
 }
-
-.minicolors-theme-bootstrap.minicolors-position-left .minicolors-panel {
-	left: -63px;
+.minicolors-theme-bootstrap .minicolors-input {
+	padding-left: 44px;
 }
-
-/* Don't forget to adjust the left position in case the opacity slider is visible! */
-.minicolors-theme-bootstrap.minicolors-position-left.minicolors-with-opacity .minicolors-panel {
-	left: -84px;
+.minicolors-theme-bootstrap.minicolors-position-right .minicolors-input {
+	padding-right: 44px;
+	padding-left: 12px;
 }
