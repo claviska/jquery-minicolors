@@ -2,8 +2,8 @@
 
 _Copyright Cory LaViska for A Beautiful Site, LLC. (http://www.abeautifulsite.net/)_
 
-_Dual-licensed under the MIT and GPL Version 2 licenses_
+_Licensed under the MIT license_
 
 ## Demo & Documentation
 
-http://labs.abeautifulsite.net/jquery-miniColors/
+http://labs.abeautifulsite.net/jquery-minicolors/
