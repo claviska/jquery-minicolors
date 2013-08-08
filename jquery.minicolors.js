@@ -163,7 +163,7 @@ if(jQuery) (function($) {
 		
 		// The swatch
 		if( !settings.inline ) {
-			input.after('<a href="#" class="minicolors-swatch"><span class="minicolors-swatch-color"></span></a>');
+			input.after('<span class="minicolors-swatch"><span class="minicolors-swatch-color"></span></span>');
 			input.next('.minicolors-swatch').on('click', function(event) {
 				event.preventDefault();
 				input.focus();
