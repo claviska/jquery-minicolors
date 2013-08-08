@@ -22,6 +22,7 @@
 }
 
 .minicolors input[type=hidden] + .minicolors-swatch {
+	width: 28px;
 	position: static;
 	cursor: pointer;
 }
@@ -199,7 +200,7 @@
 
 /* Default theme */
 .minicolors-theme-default .minicolors-swatch {
-	top: 3px;
+	top: 5px;
 	left: 5px;
 	width: 18px;
 	height: 18px;	
