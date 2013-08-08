@@ -123,6 +123,15 @@
 			
 			<!-- Demos -->
 			<h2 id="demos">Demos</h2>
+			<p>
+				This is the main demo page, which uses <a href="http://getbootstrap.com/">Bootstrap 3</a>,
+				but this plugin works without Bootstrap as well.
+			</p>
+			<p>
+				<a href="without-bootstrap.html" class="btn btn-primary">View Demo Without Bootstrap</a>
+			</p>
+			
+			<!-- Control types -->
 			<h3>Control Types</h3>
 			<div class="well">
 				<div class="row">
@@ -400,8 +409,33 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 				<dd>
 					<p>
 						A string containing the name of the custom theme to be applied. In your CSS, prefix 
-						your selectors like this: <code>.minicolors-theme-yourThemeName { ... }</code>
+						your selectors like this:
 					</p>
+<pre>
+.minicolors-theme-yourThemeName { ... }
+</pre>
+					<p>
+						If you are using the default theme, you will probably need to adjust the swatch 
+						styles depending on your existing stylesheet rules. Version 2.1 removes as much 
+						styling on the <code>input</code> element as possible, which means it’s up to 
+						you to adjust your CSS to make sure the swatch aligns properly.
+					</p>
+					<p>
+						To adjust the swatch, override these styles:
+					</p>
+<pre>
+.minicolors-theme-default .minicolors-swatch {
+	top: 5px;
+	left: 5px;
+	width: 18px;
+	height: 18px;	
+}
+.minicolors-theme-default.minicolors-position-right .minicolors-swatch {
+	left: auto;
+	right: 5px;
+}
+</pre>
+					</div>
 				</dd>
 			</dl>
 			
