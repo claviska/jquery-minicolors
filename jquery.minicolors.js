@@ -55,7 +55,7 @@ if(jQuery) (function($) {
 					} else {
 						// Setter
 						$(this).each( function() {
-							refresh($(this).attr('data-opacity', data));
+							updateFromInput($(this).attr('data-opacity', data));
 						});
 						return $(this);
 					}
@@ -96,7 +96,7 @@ if(jQuery) (function($) {
 					} else {
 						// Setter
 						$(this).each( function() {
-							refresh($(this).val(data));
+							updateFromInput($(this).val(data));
 						});
 						return $(this);
 					}
@@ -176,7 +176,7 @@ if(jQuery) (function($) {
 		// Inline controls
 		if( settings.inline ) input.parent().addClass('minicolors-inline');
 		
-		updateFromInput(input, false, true);
+		updateFromInput(input, false);
 		
 		// Populate lastChange to prevent change event from firing initially
 		input.data('minicolors-lastChange', {
@@ -201,11 +201,6 @@ if(jQuery) (function($) {
 		// Remove the wrap and destroy whatever remains
 		minicolors.before(input).remove();
 		
-	}
-	
-	// Refresh the specified control
-	function refresh(input) {
-		updateFromInput(input);
 	}
 	
 	// Shows the specified dropdown panel
@@ -469,7 +464,7 @@ if(jQuery) (function($) {
 	}
 	
 	// Sets the color picker values from the input
-	function updateFromInput(input, preserveInputValue, firstRun) {
+	function updateFromInput(input, preserveInputValue) {
 		
 		var hex,
 			hsb,
@@ -595,9 +590,6 @@ if(jQuery) (function($) {
 				break;
 				
 		}
-		
-		// Handle change event
-		if( !firstRun ) doChange(input, hex, opacity);
 		
 	}
 	
