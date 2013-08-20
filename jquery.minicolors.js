@@ -178,6 +178,12 @@ if(jQuery) (function($) {
 		
 		updateFromInput(input, false, true);
 		
+		// Populate lastChange to prevent change event from firing initially
+		input.data('minicolors-lastChange', {
+			hex: input.val(),
+			opacity: input.attr('data-opacity')
+		})
+		
 	}
 	
 	// Returns the input back to its original state
@@ -598,13 +604,17 @@ if(jQuery) (function($) {
 	// Runs the change and changeDelay callbacks
 	function doChange(input, hex, opacity) {
 		
-		var settings = input.data('minicolors-settings');
+		var settings = input.data('minicolors-settings'),
+			lastChange = input.data('minicolors-lastChange');
 		
 		// Only run if it actually changed
-		if( hex + opacity !== input.data('minicolors-lastChange') ) {
+		if( lastChange.hex !== hex || lastChange.opacity !== opacity ) {
 			
 			// Remember last-changed value
-			input.data('minicolors-lastChange', hex + opacity);
+			input.data('minicolors-lastChange', {
+				hex: hex,
+				opacity: opacity
+			});
 			
 			// Fire change event
 			if( settings.change ) {
@@ -785,16 +795,11 @@ if(jQuery) (function($) {
 		.on('mouseup.minicolors touchend.minicolors', function() {
 			$(this).removeData('minicolors-target');
 		})
-		// Toggle panel when swatch is clicked
+		// Show panel when swatch is clicked
 		.on('mousedown.minicolors touchstart.minicolors', '.minicolors-swatch', function(event) {
+			var input = $(this).parent().find('.minicolors-input');
 			event.preventDefault();
-			var input = $(this).parent().find('.minicolors-input'),
-				minicolors = input.parent();
-			if( minicolors.hasClass('minicolors-focus') ) {
-				hide(input);
-			} else {
-				show(input);
-			}
+			show(input);
 		})
 		// Show on focus
 		.on('focus.minicolors', '.minicolors-input', function(event) {
