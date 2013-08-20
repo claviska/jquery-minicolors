@@ -49,6 +49,7 @@ if(jQuery) (function($) {
 				
 				// Get/set opacity
 				case 'opacity':
+					// Getter
 					if( data === undefined ) {
 						// Getter
 						return $(this).attr('data-opacity');
@@ -57,8 +58,8 @@ if(jQuery) (function($) {
 						$(this).each( function() {
 							updateFromInput($(this).attr('data-opacity', data));
 						});
-						return $(this);
 					}
+					return $(this);
 				
 				// Get an RGB(A) object based on the current color/opacity
 				case 'rgbObject':
@@ -67,7 +68,7 @@ if(jQuery) (function($) {
 				// Get an RGB(A) string based on the current color/opacity
 				case 'rgbString':
 				case 'rgbaString':
-					return rgbString($(this), method === 'rgbaString')
+					return rgbString($(this), method === 'rgbaString');
 				
 				// Get/set settings on the fly
 				case 'settings':
@@ -80,8 +81,8 @@ if(jQuery) (function($) {
 							destroy($(this));
 							$(this).minicolors($.extend(true, settings, data));
 						});
-						return $(this);
 					}
+					return $(this);
 				
 				// Show the color picker
 				case 'show':
@@ -98,11 +99,10 @@ if(jQuery) (function($) {
 						$(this).each( function() {
 							updateFromInput($(this).val(data));
 						});
-						return $(this);
 					}
+					return $(this);
 				
 				// Initializes the control
-				case 'create':
 				default:
 					if( method !== 'create' ) data = method;
 					$(this).each( function() {
@@ -182,7 +182,7 @@ if(jQuery) (function($) {
 		input.data('minicolors-lastChange', {
 			hex: input.val(),
 			opacity: input.attr('data-opacity')
-		})
+		});
 		
 	}
 	
@@ -331,7 +331,7 @@ if(jQuery) (function($) {
 			
 		}
 		
-		var hue, saturation, brightness, rgb, x, y, r, phi,
+		var hue, saturation, brightness, x, y, r, phi,
 			
 			hex = input.val(),
 			opacity = input.attr('data-opacity'),
@@ -339,7 +339,6 @@ if(jQuery) (function($) {
 			// Helpful references
 			minicolors = input.parent(),
 			settings = input.data('minicolors-settings'),
-			panel = minicolors.find('.minicolors-panel'),
 			swatch = minicolors.find('.minicolors-swatch'),
 			
 			// Panel objects
@@ -390,7 +389,7 @@ if(jQuery) (function($) {
 				
 				case 'saturation':
 					// Calculate hue, saturation, and brightness
-					hue = keepWithin(parseInt(gridPos.x * (360 / grid.width())), 0, 360);
+					hue = keepWithin(parseInt(gridPos.x * (360 / grid.width()), 10), 0, 360);
 					saturation = keepWithin(100 - Math.floor(sliderPos.y * (100 / slider.height())), 0, 100);
 					brightness = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
 					hex = hsb2hex({
@@ -406,7 +405,7 @@ if(jQuery) (function($) {
 				
 				case 'brightness':
 					// Calculate hue, saturation, and brightness
-					hue = keepWithin(parseInt(gridPos.x * (360 / grid.width())), 0, 360);
+					hue = keepWithin(parseInt(gridPos.x * (360 / grid.width()), 10), 0, 360);
 					saturation = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
 					brightness = keepWithin(100 - Math.floor(sliderPos.y * (100 / slider.height())), 0, 100);
 					hex = hsb2hex({
@@ -422,7 +421,7 @@ if(jQuery) (function($) {
 				
 				default:
 					// Calculate hue, saturation, and brightness
-					hue = keepWithin(360 - parseInt(sliderPos.y * (360 / slider.height())), 0, 360);
+					hue = keepWithin(360 - parseInt(sliderPos.y * (360 / slider.height()), 10), 0, 360);
 					saturation = keepWithin(Math.floor(gridPos.x * (100 / grid.width())), 0, 100);
 					brightness = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
 					hex = hsb2hex({
@@ -438,8 +437,8 @@ if(jQuery) (function($) {
 			}
 		
 			// Adjust case
-	    	input.val( convertCase(hex, settings.letterCase) );
-	    	
+			input.val( convertCase(hex, settings.letterCase) );
+			
 		}
 		
 		// Handle opacity
@@ -794,13 +793,13 @@ if(jQuery) (function($) {
 			show(input);
 		})
 		// Show on focus
-		.on('focus.minicolors', '.minicolors-input', function(event) {
+		.on('focus.minicolors', '.minicolors-input', function() {
 			var input = $(this);
 			if( !input.data('minicolors-initialized') ) return;
 			show(input);
 		})
 		// Fix hex on blur
-		.on('blur.minicolors', '.minicolors-input', function(event) {
+		.on('blur.minicolors', '.minicolors-input', function() {
 			var input = $(this),
 				settings = input.data('minicolors-settings');
 			if( !input.data('minicolors-initialized') ) return;
@@ -831,13 +830,13 @@ if(jQuery) (function($) {
 			}
 		})
 		// Update on keyup
-		.on('keyup.minicolors', '.minicolors-input', function(event) {
+		.on('keyup.minicolors', '.minicolors-input', function() {
 			var input = $(this);
 			if( !input.data('minicolors-initialized') ) return;
 			updateFromInput(input, true);
 		})
 		// Update on paste
-		.on('paste.minicolors', '.minicolors-input', function(event) {
+		.on('paste.minicolors', '.minicolors-input', function() {
 			var input = $(this);
 			if( !input.data('minicolors-initialized') ) return;
 			setTimeout( function() {
