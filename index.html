@@ -90,8 +90,13 @@
 			<!-- Intro -->
 			<div id="intro" class="jumbotron">
 				<h1>jQuery MiniColors 2.1</h1>
-				<p class="text-muted">Now with Bootstrap 3 support!</p>
-				<p>A project by Cory LaViska of <a href="http://www.abeautifulsite.net/">A Beautiful Site</a></p>
+				<p class="text-muted">
+					Now with Bootstrap 3 support!
+				</p>
+				<p>
+					A project by <a href="http://www.abeautifulsite.net/">A Beautiful Site</a>,
+					originally developed for <a href="http://www.surrealcms.com/">Surreal CMS</a>.
+				</p>
 			</div>
 			
 			<!-- Contents -->
@@ -112,7 +117,8 @@
 			<!-- Download -->
 			<h2 id="download">Download</h2>
 			<p>
-				Contribute to this project by posting bug reports, feature requests, and code improvements on GitHub.
+				This project is on GitHub. Feel free to post bug reports, feature requests, and code 
+				improvements on the official project page.
 			</p>
 			<p>
 				<a href="https://github.com/claviska/jquery-minicolors" class="btn btn-success">Download on GitHub</a>
@@ -307,7 +313,7 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 	theme: 'bootstrap'
 });
 </pre>
-			<p class="alert">
+			<p class="alert alert-warning">
 				<strong>Note:</strong> Changing default settings will <em>not</em> affect controls that 
 				are already initialized.
 			</p>			
@@ -396,7 +402,7 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 						Sets the position of the dropdown. Valid options are <code>bottom left</code>, 
 						<code>bottom right</code>, <code>top left</code>, and <code>top right</code>.
 					</p>
-					<p class="alert">
+					<p class="alert alert-warning">
 						The <code>swatchPosition</code> setting has been removed in version 2.1. The position 
 						of the swatch is now determined by <code>position</code>.
 					</p>
@@ -524,7 +530,7 @@ $(<em>selector</em>).minicolors({
 	}
 });
 </pre>
-					<p class="alert">
+					<p class="alert alert-warning">
 						<strong>Warning!</strong> This event will fire a lot when the user drags the 
 						color picker around. Using the <code>changeDelay</code> setting to reduce its 
 						frequency.
