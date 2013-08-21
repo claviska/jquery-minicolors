@@ -114,7 +114,7 @@
 	width: 20px;
 	height: 150px;
 	background: white url(jquery.minicolors.png) 0 0;
-	cursor: crosshair;
+	cursor: row-resize;
 }
 
 .minicolors-slider-saturation .minicolors-slider {
