@@ -142,7 +142,7 @@ if(jQuery) (function($) {
 		// The input
 		input
 			.addClass('minicolors-input')
-			.data('minicolors-initialized', true)
+			.data('minicolors-initialized', false)
 			.data('minicolors-settings', settings)
 			.prop('size', 7)
 			.wrap(minicolors)
@@ -178,11 +178,7 @@ if(jQuery) (function($) {
 		
 		updateFromInput(input, false);
 		
-		// Populate lastChange to prevent change event from firing initially
-		input.data('minicolors-lastChange', {
-			hex: input.val(),
-			opacity: input.attr('data-opacity')
-		});
+		input.data('minicolors-initialized', true);
 		
 	}
 	
@@ -550,7 +546,6 @@ if(jQuery) (function($) {
 				// Update UI
 				slider.css('backgroundColor', hsb2hex({ h: hsb.h, s: 100, b: hsb.b }));
 				minicolors.find('.minicolors-grid-inner').css('opacity', hsb.s / 100);
-				
 				break;
 			
 			case 'brightness':
@@ -590,6 +585,11 @@ if(jQuery) (function($) {
 				
 		}
 		
+		// Fire change event, but only if minicolors is fully initialized
+		if( input.data('minicolors-initialized') ) {
+			doChange(input, hex, opacity);
+		}
+		
 	}
 	
 	// Runs the change and changeDelay callbacks
@@ -599,7 +599,7 @@ if(jQuery) (function($) {
 			lastChange = input.data('minicolors-lastChange');
 		
 		// Only run if it actually changed
-		if( lastChange.hex !== hex || lastChange.opacity !== opacity ) {
+		if( !lastChange || lastChange.hex !== hex || lastChange.opacity !== opacity ) {
 			
 			// Remember last-changed value
 			input.data('minicolors-lastChange', {
