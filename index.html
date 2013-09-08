@@ -68,11 +68,10 @@
 					opacity: $(this).attr('data-opacity'),
 					position: $(this).attr('data-position') || 'bottom left',
 					change: function(hex, opacity) {
-						var log;
+						if( !hex ) return;
+						if( opacity ) hex += ', ' + opacity;
 						try {
-							log = hex ? hex : 'transparent';
-							if( opacity ) log += ', ' + opacity;
-							console.log(log);
+							console.log(hex);
 						} catch(e) {}
 					},
 					theme: 'bootstrap'
