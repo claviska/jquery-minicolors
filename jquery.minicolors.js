@@ -16,6 +16,7 @@ if(jQuery) (function($) {
 			change: null,
 			changeDelay: 0,
 			control: 'hue',
+			defaultValueAttribute: '',
 			defaultValue: '',
 			hide: null,
 			hideSpeed: 100,
@@ -482,10 +483,8 @@ if(jQuery) (function($) {
 			opacityPicker = opacitySlider.find('[class$=-picker]');
 		
 		// Determine hex/HSB values
-		hex = convertCase(parseHex(input.val(), true), settings.letterCase);
-		if( !hex ){
-			hex = convertCase(parseHex(settings.defaultValue, true), settings.letterCase);
-		}
+		value = input.val() || input.attr(settings.defaultValueAttribute) || settings.defaultValue;
+		hex = convertCase(parseHex(value, true), settings.letterCase);
 		hsb = hex2hsb(hex);
 		
 		// Update input value
