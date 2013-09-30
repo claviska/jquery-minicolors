@@ -483,7 +483,9 @@ if(jQuery) (function($) {
 		
 		// Determine hex/HSB values
 		hex = convertCase(parseHex(input.val(), true), settings.letterCase);
-		if( !hex ){
+		if (!hex)
+			hex = convertCase(parseHex(input.attr('placeholder'), true), settings.letterCase);
+		else if( !hex ){
 			hex = convertCase(parseHex(settings.defaultValue, true), settings.letterCase);
 		}
 		hsb = hex2hsb(hex);
