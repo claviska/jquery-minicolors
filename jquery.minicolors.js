@@ -25,7 +25,9 @@ if(jQuery) (function($) {
 			position: 'bottom left',
 			show: null,
 			showSpeed: 100,
-			theme: 'default'
+			theme: 'default',
+			transparencyButton: false,
+			allowTextExceptions: false //false = off or regexp = on. if one is selected, the swatch gets the tiled transparent symbol. Recommended non-false value is /^transparent$/
 		}
 	};
 	
@@ -147,7 +149,7 @@ if(jQuery) (function($) {
 			.prop('size', 7)
 			.wrap(minicolors)
 			.after(
-				'<div class="minicolors-panel minicolors-slider-' + settings.control + '">' + 
+				'<div class="minicolors-panel minicolors-slider-' + settings.control + (settings.transparencyButton ? ' minicolors-panel-transparency-button' : '') + '">' + 
 					'<div class="minicolors-slider">' + 
 						'<div class="minicolors-picker"></div>' +
 					'</div>' + 
@@ -158,6 +160,9 @@ if(jQuery) (function($) {
 						'<div class="minicolors-grid-inner"></div>' +
 						'<div class="minicolors-picker"><div></div></div>' +
 					'</div>' +
+					'<button class="transparencyButton" type="button">' +
+						'make transparent' +
+					'</button>' +
 				'</div>'
 			);
 		
@@ -312,7 +317,7 @@ if(jQuery) (function($) {
 	
 	// Sets the input based on the color picker values
 	function updateFromControl(input, target) {
-		
+
 		function getCoords(picker, container) {
 			
 			var left, top;
@@ -328,7 +333,7 @@ if(jQuery) (function($) {
 		}
 		
 		var hue, saturation, brightness, x, y, r, phi,
-			
+
 			hex = input.val(),
 			opacity = input.attr('data-opacity'),
 			
@@ -351,7 +356,15 @@ if(jQuery) (function($) {
 			gridPos = getCoords(gridPicker, grid),
 			sliderPos = getCoords(sliderPicker, slider),
 			opacityPos = getCoords(opacityPicker, opacitySlider);
-		
+
+		gridPicker.css('opacity', 1);
+		sliderPicker.css('opacity', 1);
+		opacityPicker.css('opacity', 1);
+
+		grid.css('opacity', 1);
+		slider.css('opacity', 1);
+		opacitySlider.css('opacity', 1);
+
 		// Handle colors
 		if( target.is('.minicolors-grid, .minicolors-slider') ) {
 			
@@ -457,10 +470,9 @@ if(jQuery) (function($) {
 		doChange(input, hex, opacity);
 		
 	}
-	
+
 	// Sets the color picker values from the input
 	function updateFromInput(input, preserveInputValue) {
-		
 		var hex,
 			hsb,
 			opacity,
@@ -481,6 +493,23 @@ if(jQuery) (function($) {
 			sliderPicker = slider.find('[class$=-picker]'),
 			opacityPicker = opacitySlider.find('[class$=-picker]');
 		
+		if (settings.allowTextExceptions && settings.allowTextExceptions.exec(input.val()) ) {
+			gridPicker.css('opacity', 0);
+			sliderPicker.css('opacity', 0);
+			opacityPicker.css('opacity', 0);
+
+			grid.css('opacity', 0.5);
+			slider.css('opacity', 0.5);
+			opacitySlider.css('opacity', 0.5);
+		} else {
+			gridPicker.css('opacity', 1);
+			sliderPicker.css('opacity', 1);
+			opacityPicker.css('opacity', 1);
+
+			grid.css('opacity', 1);
+			slider.css('opacity', 1);
+			opacitySlider.css('opacity', 1);
+		}
 		// Determine hex/HSB values
 		hex = convertCase(parseHex(input.val(), true), settings.letterCase);
 		if( !hex ){
@@ -503,9 +532,13 @@ if(jQuery) (function($) {
 			y = keepWithin(opacitySlider.height() - (opacitySlider.height() * opacity), 0, opacitySlider.height());
 			opacityPicker.css('top', y + 'px');
 		}
-		
+
 		// Update swatch
-		swatch.find('SPAN').css('backgroundColor', hex);
+		if (settings.allowTextExceptions && settings.allowTextExceptions.exec(input.val()) ) {
+			swatch.find('SPAN').css('backgroundColor', 'transparent');
+		} else {
+			swatch.find('SPAN').css('backgroundColor', hex);
+		}
 		
 		// Determine picker locations
 		switch(settings.control) {
@@ -802,16 +835,21 @@ if(jQuery) (function($) {
 		.on('blur.minicolors', '.minicolors-input', function() {
 			var input = $(this),
 				settings = input.data('minicolors-settings');
-			if( !input.data('minicolors-initialized') ) return;
-			
-			// Parse Hex
-			input.val(parseHex(input.val(), true));
-			
-			// Is it blank?
-			if( input.val() === '' ) input.val(parseHex(settings.defaultValue, true));
-			
-			// Adjust case
-			input.val( convertCase(input.val(), settings.letterCase) );
+
+			if (settings.allowTextExceptions && settings.allowTextExceptions.exec(input.val()) && !overrideRegexCheck ) {
+				alert('Skipping fix');
+			} else {
+				if( !input.data('minicolors-initialized') ) return;
+				
+				// Parse Hex
+				input.val(parseHex(input.val(), true));
+				
+				// Is it blank?
+				if( input.val() === '' ) input.val(parseHex(settings.defaultValue, true));
+				
+				// Adjust case
+				input.val( convertCase(input.val(), settings.letterCase) );
+			}
 			
 		})
 		// Handle keypresses
@@ -842,6 +880,12 @@ if(jQuery) (function($) {
 			setTimeout( function() {
 				updateFromInput(input, true);
 			}, 1);
+		})
+		// Update on keyup
+		.on('click.minicolors', '.transparencyButton', function() {
+			var input = $(this).parent().parent().find('.minicolors-input');
+			input.val('transparent');
+			updateFromInput(input, true);
 		});
 	
 })(jQuery);

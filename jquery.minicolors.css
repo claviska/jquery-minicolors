@@ -42,6 +42,10 @@
 	display: none;
 }
 
+.minicolors-panel.minicolors-panel-transparency-button {
+	height: 180px;
+}
+
 .minicolors-panel.minicolors-visible {
 	display: block;
 }
@@ -49,6 +53,10 @@
 /* Panel positioning */
 .minicolors-position-top .minicolors-panel {
 	top: -154px;
+}
+
+.minicolors-position-top .minicolors-panel.minicolors-panel-transparency-button {
+	top: -182px;
 }
 
 .minicolors-position-right .minicolors-panel {
@@ -196,6 +204,11 @@
 	box-shadow: none;
 	z-index: auto;
 	display: inline-block;
+}
+
+.transparencyButton {
+	margin: 154px 2px 2px;
+	width: calc(100% - 4px);
 }
 
 /* Default theme */
