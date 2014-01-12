@@ -159,10 +159,10 @@ if(jQuery) (function($) {
 					'<div class="minicolors-grid">' +
 						'<div class="minicolors-grid-inner"></div>' +
 						'<div class="minicolors-picker"><div></div></div>' +
-					'</div>' +
+					'</div>' +  + settings.control + (settings.transparencyButton ? ''+
 					'<button class="transparencyButton" type="button">' +
 						'make transparent' +
-					'</button>' +
+					'</button>' : '') + 
 				'</div>'
 			);
 		
