@@ -27,7 +27,7 @@ if(jQuery) (function($) {
 			showSpeed: 100,
 			theme: 'default',
 			allowTextExceptions: /^transparent$/, //false = off or regexp = on. if one is selected, the swatch gets the tiled transparent symbol. Recommended non-false value is /^transparent$/
-			swatches: ['#FF0099', '#FF0000', '#FF9900', '#FFFF00', '#99FF00', '#00FF00', '#00FFFF', '#0099FF', '#0000FF', '#9900FF', '#000000', '#222222', '#444', '#666', '#888', '#AAA', '#CCC', '#DDD', '#FFF', 'transparent']
+			swatches: ['#FF0079', '#FF0000', '#FF7900', '#FFFF00', '#79FF00', '#00FF00', '#00FFFF', '#0079FF', '#0000FF', '#7900FF', '#000000', '#222222', '#444', '#666', '#888', '#AAA', '#CCC', '#DDD', '#FFF', 'transparent']
 		}
 	};
 	
