@@ -227,19 +227,14 @@ if(jQuery) (function($) {
 	// Hides all dropdown panels
 	function hide() {
 		
-		$('.minicolors-input').each( function() {
-			
-			var input = $(this),
-				settings = input.data('minicolors-settings'),
-				minicolors = input.parent();
-			
-			// Don't hide inline controls
-			if( settings.inline ) return;
-			
+		$('.minicolors-focus').each( function() {
+
+			var minicolors = $(this),
+				input = minicolors.find('.minicolors-input'),
+				settings = input.data('minicolors-settings');
+
 			minicolors.find('.minicolors-panel').fadeOut(settings.hideSpeed, function() {
-				if(minicolors.hasClass('minicolors-focus')) {
-					if( settings.hide ) settings.hide.call(input.get(0));
-				}
+				if( settings.hide ) settings.hide.call(input.get(0));
 				minicolors.removeClass('minicolors-focus');
 			});			
 						
