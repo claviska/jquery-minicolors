@@ -228,12 +228,13 @@ if(jQuery) (function($) {
 	function hide() {
 		
 		$('.minicolors-focus').each( function() {
-
+			
 			var minicolors = $(this),
 				input = minicolors.find('.minicolors-input'),
+				panel = minicolors.find('.minicolors-panel'),
 				settings = input.data('minicolors-settings');
-
-			minicolors.find('.minicolors-panel').fadeOut(settings.hideSpeed, function() {
+			
+			panel.fadeOut(settings.hideSpeed, function() {
 				if( settings.hide ) settings.hide.call(input.get(0));
 				minicolors.removeClass('minicolors-focus');
 			});			
@@ -254,7 +255,6 @@ if(jQuery) (function($) {
 			duration = animate ? settings.animationSpeed : 0,
 			wx, wy, r, phi;
 			
-		
 		// Touch support
 		if( event.originalEvent.changedTouches ) {
 			x = event.originalEvent.changedTouches[0].pageX - offsetX;
