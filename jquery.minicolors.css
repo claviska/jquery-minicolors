@@ -67,6 +67,7 @@
 	position: absolute;
 	width: 173px;
 	/*height: 152px;*/
+	padding-bottom: 1px;
 	background: white;
 	border: solid 1px #CCC;
 	box-shadow: 0 0 20px rgba(0, 0, 0, .2);

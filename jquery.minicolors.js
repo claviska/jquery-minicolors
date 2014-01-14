@@ -26,8 +26,8 @@ if(jQuery) (function($) {
 			show: null,
 			showSpeed: 100,
 			theme: 'default',
-			allowTextExceptions: /^transparent$/, //false = off or regexp = on. if one is selected, the swatch gets the tiled transparent symbol. Recommended non-false value is /^transparent$/
-			swatches: ['#FF0079', '#FF0000', '#FF7900', '#FFFF00', '#79FF00', '#00FF00', '#00FFFF', '#0079FF', '#0000FF', '#7900FF', '#000000', '#222222', '#444', '#666', '#888', '#AAA', '#CCC', '#DDD', '#FFF', 'transparent']
+			allowTextExceptions: false, //false = off or regexp = on. if one is selected, the swatch gets the tiled transparent symbol. Recommended non-false value is /^transparent$/
+			swatches: false // false or array of hex colors or "transparent". example is ['#FF0079', '#FF0000', '#FF7900', '#FFFF00', '#79FF00', '#00FF00', '#00FFFF', '#0079FF', '#0000FF', '#7900FF', '#000000', '#222222', '#444', '#666', '#888', '#AAA', '#CCC', '#DDD', '#FFF', 'transparent']
 		}
 	};
 	
@@ -169,9 +169,10 @@ if(jQuery) (function($) {
 					'</div>' +
 					'<div class="minicolors-spacer">' +
 					'</div>' +
+					(settings.swatches ? 
 					'<div class="minicolors-swatch-list' + (settings.swatches.length < 7 ? ' minicolors-swatch-list-wide' : '') + '">' +
 						swatchesString +
-					'</div>' +
+					'</div>' : '') +
 				'</div>'
 			);
 		
