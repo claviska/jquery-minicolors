@@ -27,7 +27,7 @@ if(jQuery) (function($) {
 			showSpeed: 100,
 			theme: 'default',
 			allowTransparentValue: false, //false = off or true = allows transparent as value
-			palette: true,
+			palette: false,
 			paletteColors: ['#FF0079', '#FF0000', '#FF7900', '#FFFF00', '#79FF00', '#00FF00', '#00FFFF', '#0079FF', '#0000FF', '#7900FF', '#000000', '#222222', '#444', '#666', '#888', '#AAA', '#CCC', '#DDD', '#FFF', 'transparent'] // false or array of hex colors or "transparent". using "transparent" requires allowing it with the regexp, see above.
 		}
 	};
