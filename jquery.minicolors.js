@@ -11,7 +11,7 @@ if(jQuery) (function($) {
 	// Defaults
 	$.minicolors = {
 		defaults: {
-			animationSpeed: 50,
+			animationSpeed: 100,
 			animationEasing: 'swing',
 			change: null,
 			changeDelay: 0,
@@ -26,9 +26,9 @@ if(jQuery) (function($) {
 			show: null,
 			showSpeed: 100,
 			theme: 'default',
-			allowTextExceptions: false, //false = off or regexp = on. if one is selected, the swatch gets the tiled transparent symbol. Recommended non-false value is /^transparent$/
-			swatches: false // false or array of hex colors or "transparent". using "transparent" requires allowing it with the regexp, see above.
-							//example is ['#FF0079', '#FF0000', '#FF7900', '#FFFF00', '#79FF00', '#00FF00', '#00FFFF', '#0079FF', '#0000FF', '#7900FF', '#000000', '#222222', '#444', '#666', '#888', '#AAA', '#CCC', '#DDD', '#FFF', 'transparent']
+			allowTransparentValue: true, //false = off or true = allows /^transparent$/
+			palette: true,
+			paletteColors: ['#FF0079', '#FF0000', '#FF7900', '#FFFF00', '#79FF00', '#00FF00', '#00FFFF', '#0079FF', '#0000FF', '#7900FF', '#000000', '#222222', '#444', '#666', '#888', '#AAA', '#CCC', '#DDD', '#FFF', 'transparent'] // false or array of hex colors or "transparent". using "transparent" requires allowing it with the regexp, see above.
 		}
 	};
 	
@@ -144,10 +144,11 @@ if(jQuery) (function($) {
 		
 		// The input
 
-		var swatchesString = '';
-
-		for (var i in settings.swatches) {
-			swatchesString += '<div class="minicolors-swatch-icon" minicolors-color="' + settings.swatches[i] + '"><div style="background-color: ' + settings.swatches[i] + '"></div></div>';
+		if (settings.palette) {
+			var paletteString = '';
+			for (var i in settings.paletteColors) {
+				paletteString += '<li class="minicolors-palette-icon" data-minicolors-color="' + settings.paletteColors[i] + '"><div class="minicolors-palette-icon-fill" style="background-color: ' + settings.paletteColors[i] + '"></div></li>';
+			}
 		}
 
 		input
@@ -168,12 +169,10 @@ if(jQuery) (function($) {
 						'<div class="minicolors-grid-inner"></div>' +
 						'<div class="minicolors-picker"><div></div></div>' +
 					'</div>' +
-					'<div class="minicolors-spacer">' +
-					'</div>' +
-					(settings.swatches ? 
-					'<div class="minicolors-swatch-list' + (settings.swatches.length < 7 ? ' minicolors-swatch-list-wide' : '') + '">' +
-						swatchesString +
-					'</div>' : '') +
+					(settings.palette ? 
+					'<ul class="minicolors-palette-list">' +
+						paletteString +
+					'</ul>' : '') +
 				'</div>'
 			);
 		
@@ -502,9 +501,10 @@ if(jQuery) (function($) {
 			// Picker objects
 			gridPicker = grid.find('[class$=-picker]'),
 			sliderPicker = slider.find('[class$=-picker]'),
-			opacityPicker = opacitySlider.find('[class$=-picker]');
+			opacityPicker = opacitySlider.find('[class$=-picker]'),
+			regex = /^transparent$/;
 		
-		if (settings.allowTextExceptions && settings.allowTextExceptions.exec(input.val()) ) {
+		if (settings.allowTransparentValue && regex.exec(input.val()) ) {
 			gridPicker.css('opacity', 0);
 			sliderPicker.css('opacity', 0);
 			opacityPicker.css('opacity', 0);
@@ -545,7 +545,7 @@ if(jQuery) (function($) {
 		}
 
 		// Update swatch
-		if (settings.allowTextExceptions && settings.allowTextExceptions.exec(input.val()) ) {
+		if (settings.allowTransparentValue && regex.exec(input.val()) ) {
 			swatch.find('SPAN').css('backgroundColor', 'transparent');
 		} else {
 			swatch.find('SPAN').css('backgroundColor', hex);
@@ -845,9 +845,9 @@ if(jQuery) (function($) {
 		// Fix hex on blur
 		.on('blur.minicolors', '.minicolors-input', function() {
 			var input = $(this),
-				settings = input.data('minicolors-settings');
-
-			if ( !settings.allowTextExceptions && !settings.allowTextExceptions.exec(input.val()) ) {
+				settings = input.data('minicolors-settings'),
+				regex = /^transparent$/;
+			if ( (settings.allowTransparentValue && !regex.exec(input.val())) || !settings.allowTransparentValue ) {
 				if( !input.data('minicolors-initialized') ) return;
 				
 				// Parse Hex
@@ -890,9 +890,9 @@ if(jQuery) (function($) {
 				updateFromInput(input, true);
 			}, 1);
 		})
-		.on('click.minicolors', '.minicolors-swatch-icon', function() {
+		.on('click.minicolors', '.minicolors-palette-icon', function() {
 			var input = $(this).parent().parent().parent().find('.minicolors-input');
-			input.val($(this).attr('minicolors-color'));
+			input.val($(this).data('minicolors-color'));
 			updateFromInput(input, true);
 		});
 	
