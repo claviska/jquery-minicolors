@@ -165,6 +165,8 @@ if(jQuery) (function($) {
 					'<div class="minicolors-opacity-slider">' + 
 						'<div class="minicolors-picker"></div>' +
 					'</div>' +
+					'<div class="minicolors-spacer">' +
+					'</div>' +
 					'<div class="minicolors-grid">' +
 						'<div class="minicolors-grid-inner"></div>' +
 						'<div class="minicolors-picker"><div></div></div>' +

@@ -13,6 +13,12 @@
 	display: inline-block;
 }
 
+.minicolors-spacer {
+	height: 151px;
+	width: 10px;
+	display: block;
+}
+
 .minicolors-palette-list {
 	cursor: text;
 	padding: 0 0 0 1px;
