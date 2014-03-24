@@ -25,7 +25,11 @@ if(jQuery) (function($) {
 			position: 'bottom left',
 			show: null,
 			showSpeed: 100,
-			theme: 'default'
+			theme: 'default',
+			allowTransparentValue: false, //false = off or true = allows transparent as value
+			palette: false,
+			paletteColors: ['#FF0079', '#FF0000', '#FF7900', '#FFFF00', '#79FF00', '#00FF00', '#00FFFF', '#0079FF', '#0000FF', '#7900FF', '#000000', '#222222', '#444', '#666', '#888', '#AAA', '#CCC', '#DDD', '#FFF', 'transparent'] 
+			//Alternate clrs.cc colors: ['#001F3F', '#0074D9', '#7FDBFF', '#39CCCC', '#3D9970', '#2ECC40', '#01FF70', '#FFDC00', '#FF851B', '#FF4136', '#85144B', '#F012BE', '#B10DC9', '#FFFFFF', '#DDDDDD', '#AAAAAA', '#888888', '#444444', '#111111', 'transparent']
 		}
 	};
 	
@@ -140,6 +144,14 @@ if(jQuery) (function($) {
 		}
 		
 		// The input
+
+		if (settings.palette) {
+			var paletteString = '';
+			for (var i in settings.paletteColors) {
+				paletteString += '<li class="minicolors-palette-icon" data-minicolors-color="' + settings.paletteColors[i] + '"><div class="minicolors-palette-icon-fill" style="background-color: ' + settings.paletteColors[i] + '"></div></li>';
+			}
+		}
+
 		input
 			.addClass('minicolors-input')
 			.data('minicolors-initialized', false)
@@ -154,10 +166,16 @@ if(jQuery) (function($) {
 					'<div class="minicolors-opacity-slider">' + 
 						'<div class="minicolors-picker"></div>' +
 					'</div>' +
+					'<div class="minicolors-spacer">' +
+					'</div>' +
 					'<div class="minicolors-grid">' +
 						'<div class="minicolors-grid-inner"></div>' +
 						'<div class="minicolors-picker"><div></div></div>' +
 					'</div>' +
+					(settings.palette ? 
+					'<ul class="minicolors-palette-list">' +
+						paletteString +
+					'</ul>' : '') +
 				'</div>'
 			);
 		
@@ -307,7 +325,7 @@ if(jQuery) (function($) {
 	
 	// Sets the input based on the color picker values
 	function updateFromControl(input, target) {
-		
+
 		function getCoords(picker, container) {
 			
 			var left, top;
@@ -323,7 +341,7 @@ if(jQuery) (function($) {
 		}
 		
 		var hue, saturation, brightness, x, y, r, phi,
-			
+
 			hex = input.val(),
 			opacity = input.attr('data-opacity'),
 			
@@ -346,7 +364,15 @@ if(jQuery) (function($) {
 			gridPos = getCoords(gridPicker, grid),
 			sliderPos = getCoords(sliderPicker, slider),
 			opacityPos = getCoords(opacityPicker, opacitySlider);
-		
+
+		gridPicker.css('opacity', 1);
+		sliderPicker.css('opacity', 1);
+		opacityPicker.css('opacity', 1);
+
+		grid.css('opacity', 1);
+		slider.css('opacity', 1);
+		opacitySlider.css('opacity', 1);
+
 		// Handle colors
 		if( target.is('.minicolors-grid, .minicolors-slider') ) {
 			
@@ -452,10 +478,9 @@ if(jQuery) (function($) {
 		doChange(input, hex, opacity);
 		
 	}
-	
+
 	// Sets the color picker values from the input
 	function updateFromInput(input, preserveInputValue) {
-		
 		var hex,
 			hsb,
 			opacity,
@@ -474,8 +499,26 @@ if(jQuery) (function($) {
 			// Picker objects
 			gridPicker = grid.find('[class$=-picker]'),
 			sliderPicker = slider.find('[class$=-picker]'),
-			opacityPicker = opacitySlider.find('[class$=-picker]');
+			opacityPicker = opacitySlider.find('[class$=-picker]'),
+			regex = /^transparent$/;
 		
+		if (settings.allowTransparentValue && regex.exec(input.val()) ) {
+			gridPicker.css('opacity', 0);
+			sliderPicker.css('opacity', 0);
+			opacityPicker.css('opacity', 0);
+
+			grid.css('opacity', 0.5);
+			slider.css('opacity', 0.5);
+			opacitySlider.css('opacity', 0.5);
+		} else {
+			gridPicker.css('opacity', 1);
+			sliderPicker.css('opacity', 1);
+			opacityPicker.css('opacity', 1);
+
+			grid.css('opacity', 1);
+			slider.css('opacity', 1);
+			opacitySlider.css('opacity', 1);
+		}
 		// Determine hex/HSB values
 		hex = convertCase(parseHex(input.val(), true), settings.letterCase);
 		if( !hex ){
@@ -498,9 +541,13 @@ if(jQuery) (function($) {
 			y = keepWithin(opacitySlider.height() - (opacitySlider.height() * opacity), 0, opacitySlider.height());
 			opacityPicker.css('top', y + 'px');
 		}
-		
+
 		// Update swatch
-		swatch.find('SPAN').css('backgroundColor', hex);
+		if (settings.allowTransparentValue && regex.exec(input.val()) ) {
+			swatch.find('SPAN').css('backgroundColor', 'transparent');
+		} else {
+			swatch.find('SPAN').css('backgroundColor', hex);
+		}
 		
 		// Determine picker locations
 		switch(settings.control) {
@@ -796,17 +843,20 @@ if(jQuery) (function($) {
 		// Fix hex on blur
 		.on('blur.minicolors', '.minicolors-input', function() {
 			var input = $(this),
-				settings = input.data('minicolors-settings');
-			if( !input.data('minicolors-initialized') ) return;
-			
-			// Parse Hex
-			input.val(parseHex(input.val(), true));
-			
-			// Is it blank?
-			if( input.val() === '' ) input.val(parseHex(settings.defaultValue, true));
-			
-			// Adjust case
-			input.val( convertCase(input.val(), settings.letterCase) );
+				settings = input.data('minicolors-settings'),
+				regex = /^transparent$/;
+			if ( (settings.allowTransparentValue && !regex.exec(input.val())) || !settings.allowTransparentValue ) {
+				if( !input.data('minicolors-initialized') ) return;
+				
+				// Parse Hex
+				input.val(parseHex(input.val(), true));
+				
+				// Is it blank?
+				if( input.val() === '' ) input.val(parseHex(settings.defaultValue, true));
+				
+				// Adjust case
+				input.val( convertCase(input.val(), settings.letterCase) );
+			}
 			
 		})
 		// Handle keypresses
@@ -837,6 +887,11 @@ if(jQuery) (function($) {
 			setTimeout( function() {
 				updateFromInput(input, true);
 			}, 1);
+		})
+		.on('click.minicolors', '.minicolors-palette-icon', function() {
+			var input = $(this).parent().parent().parent().find('.minicolors-input');
+			input.val($(this).data('minicolors-color'));
+			updateFromInput(input, true);
 		});
 	
 })(jQuery);

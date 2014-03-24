@@ -13,6 +13,42 @@
 	display: inline-block;
 }
 
+.minicolors-spacer {
+	height: 151px;
+	width: 10px;
+	display: block;
+}
+
+.minicolors-palette-list {
+	cursor: text;
+	padding: 0 0 0 1px;
+	margin: 0;
+	display: block;
+	line-height: 0px;
+	margin: 0;
+}
+
+.minicolors-palette-icon {
+	width: 16px;
+	height: 16px;
+	margin: 1px 0 0 1px;
+	border-radius: 2px;
+	display: inline-block;
+	background: url(jquery.minicolors.png) -82px -2px;
+	cursor: pointer;
+}
+
+.minicolors-palette-icon-fill {
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	border-radius: 2px;
+	display: inline-block;
+	background-color: red;
+	cursor: pointer;
+	box-shadow: inset 0 0 1px #000;
+}
+
 .minicolors-swatch-color {
 	position: absolute;
 	top: 0;
@@ -31,7 +67,8 @@
 .minicolors-panel {
 	position: absolute;
 	width: 173px;
-	height: 152px;
+	/*height: 152px;*/
+	padding-bottom: 1px;
 	background: white;
 	border: solid 1px #CCC;
 	box-shadow: 0 0 20px rgba(0, 0, 0, .2);
