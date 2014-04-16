@@ -246,3 +246,14 @@
 	padding-right: 44px;
 	padding-left: 12px;
 }
+.minicolors-theme-bootstrap .minicolors-input.input-lg + .minicolors-swatch {
+	top: 4px;
+	left: 4px;
+	width: 37px;
+	height: 37px;
+	border-radius: 5px;
+}
+.minicolors-theme-bootstrap .minicolors-input.input-sm + .minicolors-swatch {
+	width: 24px;
+	height: 24px;
+}
