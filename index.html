@@ -3,18 +3,18 @@
 <head>
 	<title>jQuery MiniColors</title>
 	<meta charset="utf-8">
-	
+
 	<!-- jQuery -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	
+
 	<!-- Bootstrap 3 -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-	
+
 	<!-- MiniColors -->
 	<script src="jquery.minicolors.js"></script>
 	<link rel="stylesheet" href="jquery.minicolors.css">
-	
+
 	<style>
 		dl {
 			margin: 20px 0;
@@ -46,18 +46,18 @@
 			color: #aaa;
 		}
 	</style>
-	
+
 	<script>
 		$(document).ready( function() {
-			
+
             $('.demo').each( function() {
                 //
                 // Dear reader, it's actually very easy to initialize MiniColors. For example:
                 //
                 //  $(selector).minicolors();
                 //
-                // The way I've done it below is just for the demo, so don't get confused 
-                // by it. Also, data- attributes aren't supported at this time...they're 
+                // The way I've done it below is just for the demo, so don't get confused
+                // by it. Also, data- attributes aren't supported at this time...they're
                 // only used for this demo.
                 //
 				$(this).minicolors({
@@ -76,16 +76,16 @@
 					},
 					theme: 'bootstrap'
 				});
-                
+
             });
-			
+
 		});
 	</script>
 </head>
 <body>
 	<div class="row" style="margin: 40px 40px;">
 		<div class="col-12">
-			
+
 			<!-- Intro -->
 			<div id="intro" class="jumbotron">
 				<h1>jQuery MiniColors 2.1</h1>
@@ -97,7 +97,7 @@
 					originally developed for <a href="http://www.surrealcms.com/">Surreal CMS</a>.
 				</p>
 			</div>
-			
+
 			<!-- Contents -->
 			<h2 id="contents">Contents</h2>
 			<ul>
@@ -113,17 +113,17 @@
 				</li>
 				<li><a href="#license">License</a></li>
 			</ul>
-			
+
 			<!-- Download -->
 			<h2 id="download">Download</h2>
 			<p>
-				This project is on GitHub. Feel free to post bug reports, feature requests, and code 
+				This project is on GitHub. Feel free to post bug reports, feature requests, and code
 				improvements on the official project page.
 			</p>
 			<p>
 				<a href="https://github.com/claviska/jquery-minicolors" class="btn btn-success">Download on GitHub</a>
 			</p>
-			
+
 			<!-- Demos -->
 			<h2 id="demos">Demos</h2>
 			<p>
@@ -133,13 +133,13 @@
 			<p>
 				<a href="without-bootstrap.html" class="btn btn-primary">View Demo Without Bootstrap</a>
 			</p>
-			
+
 			<!-- Control types -->
 			<h3>Control Types</h3>
 			<div class="well">
 				<div class="row">
 					<div class="col-lg-4 col-sm-4 col-12">
-						
+
 						<div class="form-group">
 							<label for="hue-demo">Hue (default)</label>
 							<input type="text" id="hue-demo" class="form-control demo" data-control="hue" value="#ff6161">
@@ -149,7 +149,7 @@
 							<input type="text" id="saturation-demo" class="form-control demo" data-control="saturation" value="#0088cc">
 						</div>
 					</div>
-					
+
 					<div class="col-lg-4 col-sm-4 col-12">
 						<div class="form-group">
 							<label for="brightness-demo">Brightness</label>
@@ -162,7 +162,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- Input modes -->
 			<h3>Input Modes</h3>
 			<div class="well">
@@ -188,12 +188,12 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- Positions -->
 			<h3>Positions</h3>
 			<div class="well">
 				<p>
-					Valid positions include <code>bottom left</code>, <code>bottom right</code>, <code>top 
+					Valid positions include <code>bottom left</code>, <code>bottom right</code>, <code>top
 					left</code>, and <code>top right</code>.
 				</p>
 				<div class="row">
@@ -221,7 +221,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- and more -->
 			<h3>&hellip;and more!</h3>
 			<div class="well">
@@ -232,7 +232,7 @@
 							<br>
 							<input type="text" id="opacity" class="form-control demo" data-opacity=".5" value="#766fa8">
 							<span class="help-block">
-								Opacity can be assigned by including the <code>data-opacity</code> attribute 
+								Opacity can be assigned by including the <code>data-opacity</code> attribute
 								or by setting the <code>opacity</code> option to <code>true</code>.
 							</span>
 						</div>
@@ -259,20 +259,20 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- API -->
 			<h2 id="api">API</h2>
-			
+
 			<!-- Instantiation -->
 			<h3 id="instantiation">Instantiation</h3>
 			<p>
 				Instantiate like any other jQuery plugin:
 			</p>
 			<pre>$('INPUT.minicolors').minicolors(settings);</pre>
-			
+
 			<!-- Settings -->
 			<h3 id="settings">Settings</h3>
-			
+
 			<p>
 				Default settings are as follows:
 			</p>
@@ -314,113 +314,113 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 });
 </pre>
 			<p class="alert alert-warning">
-				<strong>Note:</strong> Changing default settings will <em>not</em> affect controls that 
+				<strong>Note:</strong> Changing default settings will <em>not</em> affect controls that
 				are already initialized.
-			</p>			
-			
-			
-			
+			</p>
+
+
+
 			<dl>
 				<dt>animationSpeed</dt>
 				<dd>
 					<p>
-						The animation speed of the sliders when the user taps or clicks a new color. Set to 
+						The animation speed of the sliders when the user taps or clicks a new color. Set to
 						<code>0</code> for no animation.
 					</p>
 				</dd>
-			
+
 				<dt>animationEasing</dt>
 				<dd>
 					<p>
 						The easing to use when animating the sliders.
 					</p>
 				</dd>
-			
+
 				<dt>changeDelay</dt>
 				<dd>
 					<p>
-						The time, in milliseconds, to defer the <code>change</code> event from firing while 
-						the user makes a selection. This is useful for preventing the <code>change</code> event 
+						The time, in milliseconds, to defer the <code>change</code> event from firing while
+						the user makes a selection. This is useful for preventing the <code>change</code> event
 						from firing frequently as the user drags the color picker around.
 					</p>
 					<p>
-						The default value is <code>0</code> (no delay). If your <code>change</code> callback 
-						features something resource-intensive (such as an AJAX request), you’ll probably want 
+						The default value is <code>0</code> (no delay). If your <code>change</code> callback
+						features something resource-intensive (such as an AJAX request), you’ll probably want
 						to set this to at least <code>200</code>.
 					</p>
 				</dd>
-			
+
 				<dt>control</dt>
 				<dd>
 					<p>
-						Determines the type of control. Valid options are <code>hue</code>, <code>brightness</code>, 
+						Determines the type of control. Valid options are <code>hue</code>, <code>brightness</code>,
 						<code>saturation</code>, and <code>wheel</code>.
 					</p>
 				</dd>
-			
+
 				<dt>defaultValue</dt>
 				<dd>
 					<p>
-						To force a default color, set this to a valid hex string. When the user clears the 
+						To force a default color, set this to a valid hex string. When the user clears the
 						control, it will revert to this color.
 					</p>
 				</dd>
-			
+
 				<dt>hideSpeed &amp; showSpeed</dt>
 				<dd>
 					<p>
 						The speed at which to hide and show the color picker.
 					</p>
 				</dd>
-			
+
 				<dt>inline</dt>
 				<dd>
 					<p>
 						Set to <code>true</code> to force the color picker to appear inline.
 					</p>
 				</dd>
-			
+
 				<dt>letterCase</dt>
 				<dd>
 					<p>
-						Determines the letter case of the hex code value. Valid options are <code>uppercase</code> 
+						Determines the letter case of the hex code value. Valid options are <code>uppercase</code>
 						or <code>lowercase</code>.
 					</p>
 				</dd>
-			
+
 				<dt>opacity</dt>
 				<dd>
 					<p>
-						Set to <code>true</code> to enable the opacity slider. (Use the input element's 
+						Set to <code>true</code> to enable the opacity slider. (Use the input element's
 						<code>data-opacity</code> attribute to set a preset value.)
 					</p>
 				</dd>
-			
+
 				<dt>position</dt>
 				<dd>
 					<p>
-						Sets the position of the dropdown. Valid options are <code>bottom left</code>, 
+						Sets the position of the dropdown. Valid options are <code>bottom left</code>,
 						<code>bottom right</code>, <code>top left</code>, and <code>top right</code>.
 					</p>
 					<p class="alert alert-warning">
-						The <code>swatchPosition</code> setting has been removed in version 2.1. The position 
+						The <code>swatchPosition</code> setting has been removed in version 2.1. The position
 						of the swatch is now determined by <code>position</code>.
 					</p>
 				</dd>
-			
+
 				<dt>theme</dt>
 				<dd>
 					<p>
-						A string containing the name of the custom theme to be applied. In your CSS, prefix 
+						A string containing the name of the custom theme to be applied. In your CSS, prefix
 						your selectors like this:
 					</p>
 <pre>
 .minicolors-theme-yourThemeName { ... }
 </pre>
 					<p>
-						If you are using the default theme, you will probably need to adjust the swatch 
-						styles depending on your existing stylesheet rules. Version 2.1 removes as much 
-						styling on the <code>input</code> element as possible, which means it’s up to 
+						If you are using the default theme, you will probably need to adjust the swatch
+						styles depending on your existing stylesheet rules. Version 2.1 removes as much
+						styling on the <code>input</code> element as possible, which means it’s up to
 						you to adjust your CSS to make sure the swatch aligns properly.
 					</p>
 					<p>
@@ -431,7 +431,7 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 	top: 5px;
 	left: 5px;
 	width: 18px;
-	height: 18px;	
+	height: 18px;
 }
 .minicolors-theme-default.minicolors-position-right .minicolors-swatch {
 	left: auto;
@@ -441,7 +441,7 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 					</div>
 				</dd>
 			</dl>
-			
+
 			<!-- Methods -->
 			<h3 id="methods">Methods</h3>
 			<p>Use this syntax for calling methods:</p>
@@ -450,44 +450,44 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 				<dt>create</dt>
 				<dd>
 					<p>
-						Initializes the control for all items matching your selector. This is the default 
+						Initializes the control for all items matching your selector. This is the default
 						method, so <code>data</code> may be passed in as the only argument.
 					</p>
 					<p>
-						To set a preset color value, populate the <code>value</code> attribute of the original 
+						To set a preset color value, populate the <code>value</code> attribute of the original
 						input element.
 					</p>
 				</dd>
-			
+
 				<dt>destroy</dt>
 				<dd>
 					<p>
 						Returns the <em>input</em> element to its original, uninitialized state.
 					</p>
 				</dd>
-			
+
 				<dt>opacity</dt>
 				<dd>
 					<p>
-						Gets or sets a control's opacity level. To use this method as a setter, pass data in 
-						as a value between 0 and 1. (You can also obtain this value by checking the input 
+						Gets or sets a control's opacity level. To use this method as a setter, pass data in
+						as a value between 0 and 1. (You can also obtain this value by checking the input
 						element's <code>data-opacity</code> attribute.)
 					</p>
 					<p>
-						To set a preset opacity value, populate the <code>data-opacity</code> attribute of the 
+						To set a preset opacity value, populate the <code>data-opacity</code> attribute of the
 						original input element.
 					</p>
 				</dd>
-				
+
 				<dt>rgbObject</dt>
 				<dd>
 					<p>
-						Returns an object containing red, green, blue, and alpha properties that correspond to 
+						Returns an object containing red, green, blue, and alpha properties that correspond to
 						the control's current value. Example:
 					</p>
 					<pre>{ r: 0, g: 82, b: 148, a: 0.75 }</pre>
 				</dd>
-			
+
 				<dt>rgbString &amp; rgbaString</dt>
 				<dd>
 					<p>
@@ -498,25 +498,25 @@ rgb(0, 82, 148)
 rgba(0, 82, 148, .75)
 </pre>
 				</dd>
-			
+
 				<dt>settings</dt>
 				<dd>
 					<p>
-						Gets or sets a control's settings. If new settings are passed in, the control will 
+						Gets or sets a control's settings. If new settings are passed in, the control will
 						destroy and re-initialize itself with any new settings overriding the old ones.
 					</p>
 				</dd>
-			
+
 				<dt>value</dt>
 				<dd>
 					<p>
-						Gets or sets a control's color value. To use this method as a setter, pass 
-						<code>data</code> in as a hex value. (You can also obtain this value by checking the 
+						Gets or sets a control's color value. To use this method as a setter, pass
+						<code>data</code> in as a hex value. (You can also obtain this value by checking the
 						input element's <code>value</code> attribute.)
 					</p>
 				</dd>
 			</dl>
-			
+
 			<!-- Events -->
 			<h3 id="events">Events</h3>
 			<dl>
@@ -531,16 +531,16 @@ $(<em>selector</em>).minicolors({
 });
 </pre>
 					<p class="alert alert-warning">
-						<strong>Warning!</strong> This event will fire a lot when the user drags the 
-						color picker around. Use the <code>changeDelay</code> setting to reduce its 
+						<strong>Warning!</strong> This event will fire a lot when the user drags the
+						color picker around. Use the <code>changeDelay</code> setting to reduce its
 						frequency.
 					</p>
 				</dd>
-			
+
 				<dt>hide</dt>
 				<dd>
 					<p>
-						Fires when the color picker is hidden. The <code>this</code> keyword will reference 
+						Fires when the color picker is hidden. The <code>this</code> keyword will reference
 						the original input element.
 					</p>
 <pre>
@@ -551,11 +551,11 @@ $(<em>selector</em>).minicolors({
 });
 </pre>
 				</dd>
-			
+
 				<dt>show</dt>
 				<dd>
 					<p>
-						Fires when the color picker is shown. The <code>this</code> keyword will reference 
+						Fires when the color picker is shown. The <code>this</code> keyword will reference
 						the original input element.
 					</p>
 <pre>
@@ -567,10 +567,10 @@ $(<em>selector</em>).minicolors({
 </pre>
 				</dd>
 			</dl>
-			
+
 			<h2 id="license">License</h2>
 			<p>
-				Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>, 
+				Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>,
 				same as <a href="https://jquery.org/license/">jQuery</a>.
 			</p>
 			<p>
