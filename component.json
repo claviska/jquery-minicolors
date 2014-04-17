@@ -1,6 +1,6 @@
 {
     "name"         : "jquery-minicolors",
-    "version"      : "2.1.1",
+    "version"      : "2.1.4",
     "description"  : "jQuery MiniColors Plugin",
     "homepage"     : "",
     "main"         : [ "./jquery.minicolors.js", "./jquery.minicolors.css" ],
