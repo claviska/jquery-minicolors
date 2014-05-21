@@ -6,7 +6,10 @@
     "Cory LaViska"
   ],
   "description": "jQuery MiniColors Plugin",
-  "main": "./jquery.minicolors.js",
+  "main": [
+    "./jquery.minicolors.js",
+    "./jquery.minicolors.css"
+  ]
   "keywords": [
     "jquery",
     "colorpicker"
