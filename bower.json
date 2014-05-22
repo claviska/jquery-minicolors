@@ -9,7 +9,7 @@
   "main": [
     "./jquery.minicolors.js",
     "./jquery.minicolors.css"
-  ]
+  ],
   "keywords": [
     "jquery",
     "colorpicker"
