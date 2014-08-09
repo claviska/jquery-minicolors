@@ -6,7 +6,18 @@
  * Licensed under the MIT license: http://opensource.org/licenses/MIT
  *
  */
-if(jQuery) (function($) {
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['jquery'], factory);
+  } else if (typeof exports === 'object') {
+    // Node/CommonJS
+    factory(require('jquery'));
+  } else {
+    // Browser globals
+    factory(jQuery);
+  }
+} (function($) {
 
 	// Defaults
 	$.minicolors = {
@@ -839,4 +850,4 @@ if(jQuery) (function($) {
 			}, 1);
 		});
 
-})(jQuery);
+}));
