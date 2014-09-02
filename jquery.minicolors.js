@@ -16,6 +16,7 @@ if(jQuery) (function($) {
 			change: null,
 			changeDelay: 0,
 			control: 'hue',
+			dataUris: true,
 			defaultValue: '',
 			hide: null,
 			hideSpeed: 100,
@@ -130,7 +131,8 @@ if(jQuery) (function($) {
 		// The wrapper
 		minicolors
 			.addClass('minicolors-theme-' + settings.theme)
-			.toggleClass('minicolors-with-opacity', settings.opacity);
+			.toggleClass('minicolors-with-opacity', settings.opacity)
+			.toggleClass('minicolors-no-data-uris', settings.dataUris !== true);
 
 		// Custom positioning
 		if( settings.position !== undefined ) {
@@ -148,14 +150,14 @@ if(jQuery) (function($) {
 			.wrap(minicolors)
 			.after(
 				'<div class="minicolors-panel minicolors-slider-' + settings.control + '">' +
-					'<div class="minicolors-slider minicolors-background">' +
+					'<div class="minicolors-slider minicolors-sprite">' +
 						'<div class="minicolors-picker"></div>' +
 					'</div>' +
-					'<div class="minicolors-opacity-slider minicolors-background">' +
+					'<div class="minicolors-opacity-slider minicolors-sprite">' +
 						'<div class="minicolors-picker"></div>' +
 					'</div>' +
-					'<div class="minicolors-grid minicolors-background">' +
-						'<div class="minicolors-grid-inner minicolors-background"></div>' +
+					'<div class="minicolors-grid minicolors-sprite">' +
+						'<div class="minicolors-grid-inner"></div>' +
 						'<div class="minicolors-picker"><div></div></div>' +
 					'</div>' +
 				'</div>'
@@ -163,7 +165,7 @@ if(jQuery) (function($) {
 
 		// The swatch
 		if( !settings.inline ) {
-			input.after('<span class="minicolors-swatch minicolors-background"><span class="minicolors-swatch-color"></span></span>');
+			input.after('<span class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color"></span></span>');
 			input.next('.minicolors-swatch').on('click', function(event) {
 				event.preventDefault();
 				input.focus();
