@@ -70,9 +70,9 @@
 					change: function(hex, opacity) {
 						if( !hex ) return;
 						if( opacity ) hex += ', ' + opacity;
-						try {
+						if( typeof console === 'object' ) {
 							console.log(hex);
-						} catch(e) {}
+						}
 					},
 					theme: 'bootstrap'
 				});
