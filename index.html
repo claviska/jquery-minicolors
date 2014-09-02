@@ -284,6 +284,7 @@ $.minicolors = {
 		change: null,
 		changeDelay: 0,
 		control: 'hue',
+		dataUris: true,
 		defaultValue: '',
 		hide: null,
 		hideSpeed: 100,
@@ -355,6 +356,14 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 					<p>
 						Determines the type of control. Valid options are <code>hue</code>, <code>brightness</code>,
 						<code>saturation</code>, and <code>wheel</code>.
+					</p>
+				</dd>
+
+				<dt>dataUris</dt>
+				<dd>
+					<p>
+						This setting will force the plugin to load an external image instead of using
+						dataURIs. Set this to <code>false</code> if you require IE7 support.
 					</p>
 				</dd>
 
