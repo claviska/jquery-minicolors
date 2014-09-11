@@ -1,7 +1,9 @@
 /*
  * jQuery MiniColors: A tiny color picker built on jQuery
  *
- * Copyright Cory LaViska for A Beautiful Site, LLC. (http://www.abeautifulsite.net/)
+ * Copyright: Cory LaViska for A Beautiful Site, LLC.
+ *
+ * Contributions and bug reports: https://github.com/claviska/jquery-minicolors
  *
  * Licensed under the MIT license: http://opensource.org/licenses/MIT
  *
