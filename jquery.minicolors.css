@@ -240,6 +240,7 @@
 	width: 28px;
 	height: 28px;
 	border-radius: 3px;
+	z-index: 2;
 }
 .minicolors-theme-bootstrap .minicolors-swatch-color {
 	border-radius: inherit;
@@ -250,6 +251,7 @@
 }
 .minicolors-theme-bootstrap .minicolors-input {
 	padding-left: 44px;
+	float: none !important;
 }
 .minicolors-theme-bootstrap.minicolors-position-right .minicolors-input {
 	padding-right: 44px;
