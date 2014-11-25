@@ -249,6 +249,7 @@
 	right: 3px;
 }
 .minicolors-theme-bootstrap .minicolors-input {
+    float: none;
 	padding-left: 44px;
 }
 .minicolors-theme-bootstrap.minicolors-position-right .minicolors-input {
