@@ -267,3 +267,7 @@
     width: 24px;
     height: 24px;
 }
+.input-group .minicolors-theme-bootstrap:not(:first-child) .minicolors-input {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
