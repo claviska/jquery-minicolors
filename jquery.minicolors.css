@@ -269,6 +269,6 @@
     height: 24px;
 }
 .input-group .minicolors-theme-bootstrap:not(:first-child) .minicolors-input {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
