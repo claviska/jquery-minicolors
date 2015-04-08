@@ -1,14 +1,27 @@
 /*
  * jQuery MiniColors: A tiny color picker built on jQuery
  *
- * Copyright: Cory LaViska for A Beautiful Site, LLC
+ * Copyright: Cory LaViska for A Beautiful Site, LLC: http://www.abeautifulsite.net/
  *
- * Contributions and bug reports: https://github.com/claviska/jquery-minicolors
+ * Contribute: https://github.com/claviska/jquery-minicolors
  *
  * @license: http://opensource.org/licenses/MIT
  *
  */
-if(jQuery) (function($) {
+(function (factory) {
+    /* jshint ignore:start */
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS
+        module.exports = factory(require('jquery'));
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+    /* jshint ignore:end */
+}(function ($) {
 
     // Defaults
     $.minicolors = {
@@ -845,4 +858,4 @@ if(jQuery) (function($) {
             }, 1);
         });
 
-})(jQuery);
+}));
