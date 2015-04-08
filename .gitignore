@@ -1,4 +1,5 @@
 .DS_Store
 .idea/
 .idea/**/*
-config.codekit
+jquery-minicolors.sublime-project
+jquery-minicolors.sublime-workspace
