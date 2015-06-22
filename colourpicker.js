@@ -133,7 +133,7 @@
       .after(
         '<div class="colourpicker-panel">' +
           '<div class="colourpicker-slider colourpicker-sprite">' +
-          '<div class="colourpicker-picker"></div>' +
+          '<div class="colourpicker-slider-picker"></div>' +
           '</div>' +
           '<div class="colourpicker-grid colourpicker-sprite">' +
           '<div class="colourpicker-grid-inner"></div>' +
