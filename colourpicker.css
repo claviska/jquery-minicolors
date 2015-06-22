@@ -1,6 +1,13 @@
 .colourpicker {
   position: relative;
 }
+.colourpicker.input-group .colourpicker-input {
+  float: none;
+}
+.colourpicker.input-group.istransparent .colourpicker-input {
+  color: transparent !important;
+  background-color: #DDDDDD !important;
+}
 .colourpicker-panel {
   position: absolute;
   width: 173px;
