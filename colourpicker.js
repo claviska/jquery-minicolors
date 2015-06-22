@@ -1,5 +1,5 @@
 /*
-  * jQuery MiniColors: A tiny color picker built on jQuery
+  * jQuery Colour picker: A tiny color picker
   *
   * Copyright: Cory LaViska for A Beautiful Site, LLC: http://www.abeautifulsite.net/
   * Modifications by Dean Attali
@@ -25,7 +25,7 @@
   }(function ($) {
 
     // Defaults
-    $.minicolors = {
+    $.colourpicker = {
       defaults: {
         animationSpeed: 50,
         animationEasing: 'swing',
@@ -43,7 +43,7 @@
 
     // Public methods
     $.extend($.fn, {
-      minicolors: function(method, data) {
+      colourpicker: function(method, data) {
 
         switch(method) {
 
@@ -62,13 +62,13 @@
           // Get/set settings on the fly
           case 'settings':
             if( data === undefined ) {
-              return $(this).data('minicolors-settings');
+              return $(this).data('colourpicker-settings');
             } else {
               // Setter
               $(this).each( function() {
-                var settings = $(this).data('minicolors-settings') || {};
+                var settings = $(this).data('colourpicker-settings') || {};
                 destroy($(this));
-                $(this).minicolors($.extend(true, settings, data));
+                $(this).colourpicker($.extend(true, settings, data));
               });
             }
           return $(this);
@@ -107,11 +107,11 @@
     // Initialize input elements
     function init(input, settings) {
 
-      var minicolors = $('<div class="minicolors" />'),
-      defaults = $.minicolors.defaults;
+      var colourpicker = $('<div class="colourpicker" />'),
+      defaults = $.colourpicker.defaults;
 
       // Do nothing if already initialized
-      if( input.data('minicolors-initialized') ) return;
+      if( input.data('colourpicker-initialized') ) return;
 
       // Handle settings
       settings = $.extend(true, {}, defaults, settings);
@@ -119,71 +119,71 @@
       // Custom positioning
       if( settings.position !== undefined ) {
         $.each(settings.position.split(' '), function() {
-          minicolors.addClass('minicolors-position-' + this);
+          colourpicker.addClass('colourpicker-position-' + this);
         });
       }
 
       // The input
       input
-      .addClass('minicolors-input')
-      .data('minicolors-initialized', false)
-      .data('minicolors-settings', settings)
+      .addClass('colourpicker-input')
+      .data('colourpicker-initialized', false)
+      .data('colourpicker-settings', settings)
       .prop('size', 7)
-      .wrap(minicolors)
+      .wrap(colourpicker)
       .after(
-        '<div class="minicolors-panel">' +
-          '<div class="minicolors-slider minicolors-sprite">' +
-          '<div class="minicolors-picker"></div>' +
+        '<div class="colourpicker-panel">' +
+          '<div class="colourpicker-slider colourpicker-sprite">' +
+          '<div class="colourpicker-picker"></div>' +
           '</div>' +
-          '<div class="minicolors-grid minicolors-sprite">' +
-          '<div class="minicolors-grid-inner"></div>' +
-          '<div class="minicolors-picker"><div></div></div>' +
+          '<div class="colourpicker-grid colourpicker-sprite">' +
+          '<div class="colourpicker-grid-inner"></div>' +
+          '<div class="colourpicker-picker"><div></div></div>' +
           '</div>' +
           '</div>'
       );
 
       // Prevent text selection in IE
-      input.parent().find('.minicolors-panel').on('selectstart', function() { return false; }).end();
+      input.parent().find('.colourpicker-panel').on('selectstart', function() { return false; }).end();
 
       updateFromInput(input, false);
 
-      input.data('minicolors-initialized', true);
+      input.data('colourpicker-initialized', true);
 
     }
 
     // Returns the input back to its original state
     function destroy(input) {
 
-      var minicolors = input.parent();
+      var colourpicker = input.parent();
 
       // Revert the input element
       input
-      .removeData('minicolors-initialized')
-      .removeData('minicolors-settings')
+      .removeData('colourpicker-initialized')
+      .removeData('colourpicker-settings')
       .removeProp('size')
-      .removeClass('minicolors-input');
+      .removeClass('colourpicker-input');
 
       // Remove the wrap and destroy whatever remains
-      minicolors.before(input).remove();
+      colourpicker.before(input).remove();
 
     }
 
     // Shows the specified dropdown panel
     function show(input) {
 
-      var minicolors = input.parent(),
-      panel = minicolors.find('.minicolors-panel'),
-      settings = input.data('minicolors-settings');
+      var colourpicker = input.parent(),
+      panel = colourpicker.find('.colourpicker-panel'),
+      settings = input.data('colourpicker-settings');
 
       // Do nothing if uninitialized, disabled, or already open
-      if( !input.data('minicolors-initialized') ||
+      if( !input.data('colourpicker-initialized') ||
           input.prop('disabled') ||
-          minicolors.hasClass('minicolors-focus')
+          colourpicker.hasClass('colourpicker-focus')
       ) return;
 
       hide();
 
-      minicolors.addClass('minicolors-focus');
+      colourpicker.addClass('colourpicker-focus');
       panel
       .stop(true, true)
       .fadeIn(settings.showSpeed, function() {
@@ -195,16 +195,16 @@
     // Hides all dropdown panels
     function hide() {
 
-      $('.minicolors-focus').each( function() {
+      $('.colourpicker-focus').each( function() {
 
-        var minicolors = $(this),
-        input = minicolors.find('.minicolors-input'),
-        panel = minicolors.find('.minicolors-panel'),
-        settings = input.data('minicolors-settings');
+        var colourpicker = $(this),
+        input = colourpicker.find('.colourpicker-input'),
+        panel = colourpicker.find('.colourpicker-panel'),
+        settings = input.data('colourpicker-settings');
 
         panel.fadeOut(settings.hideSpeed, function() {
           if( settings.hide ) settings.hide.call(input.get(0));
-          minicolors.removeClass('minicolors-focus');
+          colourpicker.removeClass('colourpicker-focus');
         });
 
       });
@@ -213,8 +213,8 @@
     // Moves the selected picker
     function move(target, event, animate) {
 
-      var input = target.parents('.minicolors').find('.minicolors-input'),
-      settings = input.data('minicolors-settings'),
+      var input = target.parents('.colourpicker').find('.colourpicker-input'),
+      settings = input.data('colourpicker-settings'),
       picker = target.find('[class$=-picker]'),
       offsetX = target.offset().left,
       offsetY = target.offset().top,
@@ -236,7 +236,7 @@
       if( y > target.height() ) y = target.height();
 
       // Move the picker
-      if( target.is('.minicolors-grid') ) {
+      if( target.is('.colourpicker-grid') ) {
         picker
         .stop(true)
         .animate({
@@ -279,12 +279,12 @@
       hex = input.val(),
 
       // Helpful references
-      minicolors = input.parent(),
-      settings = input.data('minicolors-settings'),
+      colourpicker = input.parent(),
+      settings = input.data('colourpicker-settings'),
 
       // Panel objects
-      grid = minicolors.find('.minicolors-grid'),
-      slider = minicolors.find('.minicolors-slider'),
+      grid = colourpicker.find('.colourpicker-grid'),
+      slider = colourpicker.find('.colourpicker-slider'),
 
       // Picker objects
       gridPicker = grid.find('[class$=-picker]'),
@@ -295,7 +295,7 @@
       sliderPos = getCoords(sliderPicker, slider);
 
       // Handle colors
-      if( target.is('.minicolors-grid, .minicolors-slider') ) {
+      if( target.is('.colourpicker-grid, .colourpicker-slider') ) {
         // Calculate hue, saturation, and brightness
         hue = keepWithin(360 - parseInt(sliderPos.y * (360 / slider.height()), 10), 0, 360);
         saturation = keepWithin(Math.floor(gridPos.x * (100 / grid.width())), 0, 100);
@@ -342,12 +342,12 @@
       x, y, r, phi,
 
       // Helpful references
-      minicolors = input.parent(),
-      settings = input.data('minicolors-settings'),
+      colourpicker = input.parent(),
+      settings = input.data('colourpicker-settings'),
 
       // Panel objects
-      grid = minicolors.find('.minicolors-grid'),
-      slider = minicolors.find('.minicolors-slider'),
+      grid = colourpicker.find('.colourpicker-grid'),
+      slider = colourpicker.find('.colourpicker-slider'),
 
       // Picker objects
       gridPicker = grid.find('[class$=-picker]'),
@@ -393,8 +393,8 @@
       // Update panel color
       grid.css('backgroundColor', hsb2hex({ h: hsb.h, s: 100, b: 100 }));
 
-      // Fire change event, but only if minicolors is fully initialized
-      if( input.data('minicolors-initialized') ) {
+      // Fire change event, but only if colourpicker is fully initialized
+      if( input.data('colourpicker-initialized') ) {
         doChange(input, hex);
       }
 
@@ -403,14 +403,14 @@
     // Runs the change and changeDelay callbacks
     function doChange(input, hex) {
 
-      var settings = input.data('minicolors-settings'),
-      lastChange = input.data('minicolors-lastChange');
+      var settings = input.data('colourpicker-settings'),
+      lastChange = input.data('colourpicker-lastChange');
 
       // Only run if it actually changed
       if( !lastChange || lastChange.hex !== hex ) {
 
         // Remember last-changed value
-        input.data('minicolors-lastChange', {
+        input.data('colourpicker-lastChange', {
           hex: hex
         });
 
@@ -418,8 +418,8 @@
         if( settings.change ) {
           if( settings.changeDelay ) {
             // Call after a delay
-            clearTimeout(input.data('minicolors-changeTimeout'));
-            input.data('minicolors-changeTimeout', setTimeout( function() {
+            clearTimeout(input.data('colourpicker-changeTimeout'));
+            input.data('colourpicker-changeTimeout', setTimeout( function() {
               settings.change.call(input.get(0), hex);
             }, settings.changeDelay));
           } else {
@@ -562,38 +562,38 @@
     // Handle events
     $(document)
     // Hide on clicks outside of the control
-    .on('mousedown.minicolors touchstart.minicolors', function(event) {
-      if( !$(event.target).parents().add(event.target).hasClass('minicolors') ) {
+    .on('mousedown.colourpicker touchstart.colourpicker', function(event) {
+      if( !$(event.target).parents().add(event.target).hasClass('colourpicker') ) {
         hide();
       }
     })
     // Start moving
-    .on('mousedown.minicolors touchstart.minicolors', '.minicolors-grid, .minicolors-slider', function(event) {
+    .on('mousedown.colourpicker touchstart.colourpicker', '.colourpicker-grid, .colourpicker-slider', function(event) {
       var target = $(this);
       event.preventDefault();
-      $(document).data('minicolors-target', target);
+      $(document).data('colourpicker-target', target);
       move(target, event, true);
     })
     // Move pickers
-    .on('mousemove.minicolors touchmove.minicolors', function(event) {
-      var target = $(document).data('minicolors-target');
+    .on('mousemove.colourpicker touchmove.colourpicker', function(event) {
+      var target = $(document).data('colourpicker-target');
       if( target ) move(target, event);
     })
     // Stop moving
-    .on('mouseup.minicolors touchend.minicolors', function() {
-      $(this).removeData('minicolors-target');
+    .on('mouseup.colourpicker touchend.colourpicker', function() {
+      $(this).removeData('colourpicker-target');
     })
     // Show on focus
-    .on('focus.minicolors', '.minicolors-input', function() {
+    .on('focus.colourpicker', '.colourpicker-input', function() {
       var input = $(this);
-      if( !input.data('minicolors-initialized') ) return;
+      if( !input.data('colourpicker-initialized') ) return;
       show(input);
     })
     // Fix hex on blur
-    .on('blur.minicolors', '.minicolors-input', function() {
+    .on('blur.colourpicker', '.colourpicker-input', function() {
       var input = $(this),
-      settings = input.data('minicolors-settings');
-      if( !input.data('minicolors-initialized') ) return;
+      settings = input.data('colourpicker-settings');
+      if( !input.data('colourpicker-initialized') ) return;
 
       // Parse Hex
       input.val(parseHex(input.val(), true));
@@ -606,9 +606,9 @@
 
     })
     // Handle keypresses
-    .on('keydown.minicolors', '.minicolors-input', function(event) {
+    .on('keydown.colourpicker', '.colourpicker-input', function(event) {
       var input = $(this);
-      if( !input.data('minicolors-initialized') ) return;
+      if( !input.data('colourpicker-initialized') ) return;
       switch(event.keyCode) {
         case 9: // tab
         hide();
@@ -621,15 +621,15 @@
       }
     })
     // Update on keyup
-    .on('keyup.minicolors', '.minicolors-input', function() {
+    .on('keyup.colourpicker', '.colourpicker-input', function() {
       var input = $(this);
-      if( !input.data('minicolors-initialized') ) return;
+      if( !input.data('colourpicker-initialized') ) return;
       updateFromInput(input, true);
     })
     // Update on paste
-    .on('paste.minicolors', '.minicolors-input', function() {
+    .on('paste.colourpicker', '.colourpicker-input', function() {
       var input = $(this);
-      if( !input.data('minicolors-initialized') ) return;
+      if( !input.data('colourpicker-initialized') ) return;
       setTimeout( function() {
         updateFromInput(input, true);
       }, 1);
