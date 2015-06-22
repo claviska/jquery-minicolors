@@ -1,8 +1,6 @@
 # jQuery Colour Picker: A tiny colour picker
 
-_Copyright Cory LaViska for A Beautiful Site, LLC: http://www.abeautifulsite.net/_
-
-_Licensed under the MIT license_
+_Original author: Cory LaViska [http://www.abeautifulsite.net/](http://www.abeautifulsite.net/)_
 
 ## Tweaks by Dean Attali:  
 
@@ -15,3 +13,5 @@ Modified plugin is being used in [shinyjs](https://github.com/daattali/shinyjs/)
 ## Demo & Documentation of original plugin
 
 http://labs.abeautifulsite.net/jquery-minicolors/
+
+_Licensed under the MIT license_
