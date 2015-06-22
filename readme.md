@@ -13,7 +13,7 @@ Modified plugin is being used in [shinyjs](https://github.com/daattali/shinyjs/)
 
 ## Live demo
 
-Colour input being used in a shiny application, with the "showColour" and "allowTransparency" features: [here](http://daattali.com/shiny/colour-input/)
+Colour input being used in a shiny application, with the "showColour" and "allowTransparency" features: [here](http://daattali.com/shiny/colourInput/)
 
 Demo of original plugin: [here](http://labs.abeautifulsite.net/jquery-minicolors/)
 
