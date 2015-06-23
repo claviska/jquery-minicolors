@@ -8,6 +8,9 @@
   color: transparent !important;
   background-color: #DDDDDD !important;
 }
+.colourpicker .colourpicker-input[disabled] {
+  background-color: #EEEEEE !important;
+}
 .colourpicker-panel {
   position: absolute;
   width: 173px;
