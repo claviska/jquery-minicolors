@@ -9,7 +9,11 @@
 - Removed many unnecessary features 
 - Removed dependency on images and made the colour picker completely CSS
 
+This plugin works for IE8+, Chrome, Firefox, mobile, and should work for all other major browsers.
+
 Modified plugin is being used in [shinyjs](https://github.com/daattali/shinyjs/) - an R package for easily performing JavaScript operations in shiny applications.
+
+The [`index.html`](./index.html) page contains very basic examples of how to use this plugin.
 
 ## Live demo
 

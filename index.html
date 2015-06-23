@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	
+	<link href="css/colourpicker.css" rel="stylesheet">
+	
+	<style>
+	  body {
+	    padding: 30px;
+	  }
+	  .form-control {
+	    width: 300px;
+	  }
+	  .colourpicker {
+	    margin-top: 10px;
+	  }
+	  .input-group {
+	    width: 300px;
+	  }
+	</style>
+  </head>
+  <body>
+
+  <input type="text" id="col1" class="form-control">
+  <input type="text" id="col2" class="form-control" value = "#ff0000">
+  <input type="text" id="col3" class="form-control" value = "#abc123">
+
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  
+  <script src="js/colourpicker.js"></script>
+  <script>
+    $("#col1").colourpicker();
+	$("#col2").colourpicker({showColour : "background"});
+	$("#col3").colourpicker({allowTransparent : true});
+  </script>
+  </body>
+</html>

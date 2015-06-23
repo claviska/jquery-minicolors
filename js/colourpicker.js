@@ -38,7 +38,8 @@
         show: null,
         showSpeed: 100,
         showColour: 'both',
-        allowTransparent: false
+        allowTransparent: false,
+		transparentText: 'Transparent'
       }
     };
 
@@ -150,6 +151,7 @@
       // The input
       input
       .addClass('colourpicker-input')
+	  .prop('spellcheck', false)
       .data('colourpicker-initialized', false)
       .data('colourpicker-settings', settings)
       .prop('size', 7)
@@ -172,8 +174,8 @@
       if ( settings.allowTransparent ) {
         input.parent().find('.colourpicker-panel').after(
           '<label class="input-group-addon">' +
-            '<input type="checkbox" class="colourpicker-istransparent">' +
-            ' Transparent' +
+            '<input type="checkbox" class="colourpicker-istransparent"> ' +
+			'<span class="colourpicker-transparent-text">' + settings.transparentText + '</span>' +
           '</label>'
         );
         input.data('allow-transparent', true);
