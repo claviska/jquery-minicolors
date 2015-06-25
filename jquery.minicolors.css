@@ -35,6 +35,10 @@
     cursor: pointer;
 }
 
+.minicolors input[type=hidden][disabled] + .minicolors-swatch {
+    cursor: default;
+}
+
 /* Panel */
 .minicolors-panel {
     position: absolute;
