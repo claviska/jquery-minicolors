@@ -100,7 +100,7 @@
                 return $(this).data('colourpicker-lastChange');
               }
 
-              return parseHexAllowed($(this), true);
+              return parseHexAllowed($(this));
             } else {
               // Setter
               $(this).each( function() {
@@ -436,7 +436,7 @@
       sliderPicker = slider.find('[class$=-picker]');
 
       // Determine hex/HSB values
-      hex = parseHexAllowed(input, true);
+      hex = parseHexAllowed(input);
       if( !hex ){
         hex = getLastVal(input);
       }
@@ -531,10 +531,10 @@
     }
 
     // Parses a valid HEX value from an input 
-    function parseHexAllowed(input, expand) {
+    function parseHexAllowed(input) {
       var string = input.val();
       var settings = input.data('colourpicker-settings');
-      var hex = parseHex(string, expand).toUpperCase();
+      var hex = parseHex(string).toUpperCase();
       if ( settings.palette == 'limited' && $.inArray(hex, settings.allowedCols.split(" ")) == -1 ) {
         hex = '';
       }
@@ -542,10 +542,10 @@
     }
     
     // Parses a string and returns a valid hex string when possible
-    function parseHex(string, expand) {
+    function parseHex(string) {
       string = string.replace(/[^A-F0-9]/ig, '');
       if( string.length !== 3 && string.length !== 6 ) return '';
-      if( string.length === 3 && expand ) {
+      if( string.length === 3 ) {
         string = string[0] + string[0] + string[1] + string[1] + string[2] + string[2];
       }
       return '#' + string;
