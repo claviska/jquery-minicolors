@@ -1,6 +1,11 @@
 .colourpicker {
   position: relative;
 }
+.cp-clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 .colourpicker.input-group .colourpicker-input {
   float: none;
 }
@@ -13,8 +18,6 @@
 }
 .colourpicker-panel {
   position: absolute;
-  width: 173px;
-  height: 152px;
   background: white;
   border: solid 1px #CCC;
   box-shadow: 0 0 20px rgba(0, 0, 0, .2);
@@ -23,18 +26,44 @@
   -webkit-box-sizing: content-box;
   box-sizing: content-box;
   display: none;
-}
-.colourpicker-position-top .colourpicker-panel {
-  top: -154px;
-}
-.colourpicker-position-right .colourpicker-panel {
-  right: 0;
-}
-.colourpicker-position-bottom .colourpicker-panel {
+  left: 0;
   top: auto;
 }
-.colourpicker-position-left .colourpicker-panel {
-  left: 0;
+.palette-square .colourpicker-panel {
+  width: 173px;
+  height: 152px;
+}
+.palette-limited .colourpicker-panel {
+  width: 181px;
+  height: auto;
+  padding: 5px;
+  background-color: #F8F8F8;
+}
+.colourpicker .cp-list-row {
+  margin-top: 3px;
+}
+.colourpicker .cp-list-row:first-child {
+  margin-top: 0;
+}
+.colourpicker .cp-list-col {
+  width: 20px;
+  height: 20px;
+  float: left;
+  margin-left: 3px;
+  border: 1px solid #DDDDDD;
+  cursor: pointer;
+}
+.colourpicker .cp-list-col:hover {
+  border-color: #444444;
+}
+.colourpicker .cp-list-col:first-child {
+  margin-left: 0;
+}
+.colourpicker .cp-list-col.selected-col.light {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAIVJREFUeNpiYBhsgJFMffxAXABlN5JruT4Q3wfi/0DsT64h8UD8HmpIPCWG/KemIfOJCUB+Aoacx6EGBZyHBqI+WsDCwuQ9mhxeg2A210Ntfo8klk9sOMijaURm7yc1UP2RNCMbKE9ODK1HM6iegYLkfx8pligC9lCD7KmRof0ZhjQACDAAceovrtpVBRkAAAAASUVORK5CYII=);
+}
+.colourpicker .cp-list-col.selected-col.dark {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAMdJREFUOE+tkgsNwzAMRMugEAahEAahEAZhEAqlEAZhEAohEAYh81X2dIm8fKpEspLGvudPOsUYpxE2BIJCroJmEW9qJ+MKaBFhEMNabSy9oIcIPwrB+afvAUFoK4H0tMaQ3XtlrggDhOVVMuT4E5MMG0FBbCEYzjYT7OxLEvIHQLY2zWwQ3D+9luyOQTfKDiFD3iUIfPk8VqrKjgAiSfGFPecrg6HN6m/iBcwiDAo7WiBeawa+Kwh7tZoSCGLMqwlSAzVDhoK+6vH4G0P5wdkAAAAASUVORK5CYII=);
 }
 .colourpicker .colourpicker-grid {
   position: absolute;

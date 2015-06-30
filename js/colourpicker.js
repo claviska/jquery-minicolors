@@ -1,8 +1,9 @@
 /*
-  * jQuery Colour picker: A tiny color picker
+  * jQuery Colour picker: A tiny colour picker with useful extra features
   *
-  * Copyright: Cory LaViska for A Beautiful Site, LLC: http://www.abeautifulsite.net/
-  * Modifications by Dean Attali
+  * Copyright:
+  * Dean Attali, http://deanattali.com
+  * Cory LaViska for A Beautiful Site, LLC: http://www.abeautifulsite.net/
   *
   * Contribute: https://github.com/daattali/jquery-colourpicker
   *
@@ -31,15 +32,22 @@
         animationEasing: 'swing',
         change: null,
         changeDelay: 0,
-        defaultValue: '',
         hide: null,
         hideSpeed: 100,
-        position: 'bottom left',
         show: null,
         showSpeed: 100,
+		
+		// added by Dean Attali
         showColour: 'both',
         allowTransparent: false,
-		transparentText: 'Transparent'
+        transparentText: 'Transparent',
+        palette: 'square',
+        allowedCols:
+          "#000000 #333333 #4C4C4C #666666 #7F7F7F #999999 #B3B3B3 #E6E6E6 " +
+          "#FFFFFF #004080 #000080 #0000FF #0080FF #66CCFF #66FFFF #00FFFF " +
+          "#008080 #008040 #408000 #008000 #00FF00 #80FF00 #66FF66 #00FF80 " +
+          "#66FFCC #804000 #800000 #FF0000 #FF6666 #FF8000 #FFFF00 #FFFF66 " +
+          "#FFCC66 #400080 #800080 #800040 #8000FF #FF00FF #FF0080 #CC66FF"
       }
     };
 
@@ -54,12 +62,12 @@
             $(this).each( function() {
               destroy($(this));
             });
-          return $(this);
+            return $(this);
 
           // Hide the color picker
           case 'hide':
             hide();
-          return $(this);
+            return $(this);
 
           // Get/set settings on the fly
           case 'settings':
@@ -73,12 +81,12 @@
                 $(this).colourpicker($.extend(true, settings, data));
               });
             }
-          return $(this);
+            return $(this);
 
           // Show the color picker
           case 'show':
             show( $(this).eq(0) );
-          return $(this);
+            return $(this);
 
           // Get/set the hex color value
           case 'value':
@@ -88,11 +96,11 @@
                   $(this).data('transparent')) {
                 return "transparent";
               }
-              if (!parseHex($(this).val())) {
+              if (!parseHexAllowed($(this))) {
                 return $(this).data('colourpicker-lastChange');
               }
 
-              return parseHex($(this).val(), true);
+              return parseHexAllowed($(this), true);
             } else {
               // Setter
               $(this).each( function() {
@@ -110,18 +118,16 @@
                 updateFromInput($(this));
               });
             }
-          return $(this);
+            return $(this);
 
           // Initializes the control
           default:
             if( method !== 'create' ) data = method;
-          $(this).each( function() {
-            init($(this), data);
-          });
-          return $(this);
-
+            $(this).each( function() {
+              init($(this), data);
+            });
+            return $(this);
         }
-
       }
     });
 
@@ -137,13 +143,10 @@
       // Handle settings
       settings = $.extend(true, {}, defaults, settings);
 
-      // Custom positioning
-      if( settings.position !== undefined ) {
-        $.each(settings.position.split(' '), function() {
-          colourpicker.addClass('colourpicker-position-' + this);
-        });
-      }
-
+	    // Palette type
+	    colourpicker.addClass('palette-' + settings.palette);
+	  
+	    // If adding a transparent checkbox, make the parent an input group
       if( settings.allowTransparent ) {
         colourpicker.addClass('input-group');
       }
@@ -151,31 +154,57 @@
       // The input
       input
       .addClass('colourpicker-input')
-	  .prop('spellcheck', false)
+	    .prop('spellcheck', false)
       .data('colourpicker-initialized', false)
+      .data('colourpicker-lastChange', false)
       .data('colourpicker-settings', settings)
       .prop('size', 7)
-      .wrap(colourpicker)
-      .after(
-        '<div class="colourpicker-panel">' +
-          '<div class="colourpicker-slider colourpicker-sprite">' +
-            '<div class="colourpicker-slider-picker"></div>' +
-          '</div>' +
-          '<div class="colourpicker-grid colourpicker-sprite">' +
-            '<div class="colourpicker-grid-inner"></div>' +
-            '<div class="colourpicker-picker">' +
-              '<div></div>' +
+      .wrap(colourpicker);
+	  
+	    if( settings.palette == "square" ) {
+	      input
+		    .after(
+          '<div class="colourpicker-panel">' +
+            '<div class="colourpicker-slider colourpicker-sprite">' +
+              '<div class="colourpicker-slider-picker"></div>' +
             '</div>' +
-          '</div>' +
-        '<div>'
-      );
-
+            '<div class="colourpicker-grid colourpicker-sprite">' +
+              '<div class="colourpicker-grid-inner"></div>' +
+              '<div class="colourpicker-picker">' +
+                '<div></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        );
+	    } else if( settings.palette == "limited" ) {
+        var coloursHtml = '<div class="colourpicker-list">';
+	    	$.each(settings.allowedCols.split(" "), function(idx, col) {
+		      if (idx == 0) {
+            coloursHtml += '<div class="cp-list-row cp-clearfix">';
+          } else if (idx % 8 == 0) {
+            coloursHtml += '</div><div class="cp-list-row cp-clearfix">';
+          }
+			    coloursHtml += '<span class="cp-list-col" data-cp-col="' + col +'" ' +
+                            'style="background-color:' + col + '"></span>';
+		    });
+			  coloursHtml += '</div>';
+        
+        input
+        .after(
+		    '<div class="colourpicker-panel">' +
+		      coloursHtml +
+		    '</div>'
+		    );
+	    } else {
+		    console.log("colourpicker: invalid palette type (" + settings.palette + ")");
+	    }
+      
       // If we want to add transparent button, make an input group
       if ( settings.allowTransparent ) {
         input.parent().find('.colourpicker-panel').after(
           '<label class="input-group-addon">' +
             '<input type="checkbox" class="colourpicker-istransparent"> ' +
-			'<span class="colourpicker-transparent-text">' + settings.transparentText + '</span>' +
+			      '<span class="colourpicker-transparent-text">' + settings.transparentText + '</span>' +
           '</label>'
         );
         input.data('allow-transparent', true);
@@ -334,7 +363,7 @@
       gridPos = getCoords(gridPicker, grid),
       sliderPos = getCoords(sliderPicker, slider);
 
-      // Handle colors
+      // Handle colors when there's a palette
       if( target.is('.colourpicker-grid, .colourpicker-slider') ) {
         // Calculate hue, saturation, and brightness
         hue = keepWithin(360 - parseInt(sliderPos.y * (360 / slider.height()), 10), 0, 360);
@@ -351,7 +380,12 @@
 
         // Adjust case
         input.val(hex.toUpperCase());
+      }
 
+      // Handle colours when there is a limited selection of colours
+      if( target.is('.cp-list-col') ) {
+        hex = target.data('cp-col'); 
+        input.val(hex);
       }
 
       // Update text colour and background colour
@@ -365,10 +399,18 @@
           input.css('background-color', hex);
           break;
         default:
-          input.css('color', getTextCol(hex));
+          input.css('color', isColDark(hex) ? '#ddd' : '#000');
           input.css('background-color', hex);
       }
 
+      // Update select colour
+      if( settings.palette == 'limited') {
+        colourpicker.find('.cp-list-col').removeClass('selected-col');
+        colourpicker.find('.cp-list-col[data-cp-col=' + hex + ']')
+          .addClass('selected-col')
+          .addClass(isColDark(hex) ? 'dark' : 'light');
+      }      
+      
       // Handle change event
       doChange(input, hex, input.data('transparent'));
 
@@ -394,12 +436,12 @@
       sliderPicker = slider.find('[class$=-picker]');
 
       // Determine hex/HSB values
-      hex = parseHex(input.val(), true).toUpperCase();
+      hex = parseHexAllowed(input, true);
       if( !hex ){
         hex = getLastVal(input);
       }
       hsb = hex2hsb(hex);
-
+      
       // Update input value
       if( !preserveInputValue ) input.val(hex);
 
@@ -414,10 +456,18 @@
           input.css('background-color', hex);
           break;
         default:
-          input.css('color', getTextCol(hex));
+          input.css('color', isColDark(hex) ? '#ddd' : '#000');
           input.css('background-color', hex);
       }
 
+      // Update select colour
+      if( settings.palette == 'limited') {
+        colourpicker.find('.cp-list-col').removeClass('selected-col');
+        colourpicker.find('.cp-list-col[data-cp-col=' + hex + ']')
+          .addClass('selected-col')
+          .addClass(isColDark(hex) ? 'dark' : 'light');
+      }
+      
       // Set grid position
       x = keepWithin(Math.ceil(hsb.s / (100 / grid.width())), 0, grid.width());
       y = keepWithin(grid.height() - Math.ceil(hsb.b / (100 / grid.height())), 0, grid.height());
@@ -480,6 +530,17 @@
 
     }
 
+    // Parses a valid HEX value from an input 
+    function parseHexAllowed(input, expand) {
+      var string = input.val();
+      var settings = input.data('colourpicker-settings');
+      var hex = parseHex(string, expand).toUpperCase();
+      if ( settings.palette == 'limited' && $.inArray(hex, settings.allowedCols.split(" ")) == -1 ) {
+        hex = '';
+      }
+      return hex;
+    }
+    
     // Parses a string and returns a valid hex string when possible
     function parseHex(string, expand) {
       string = string.replace(/[^A-F0-9]/ig, '');
@@ -590,9 +651,9 @@
       };
     }
 
-    // Get the text colour to use inside the box if the background interferes with it
-    function getTextCol(hex) {
-      return getLuminance(hex) > 0.22 ? '#000' : '#ddd';
+    // Determine if the selected colour is dark or not
+    function isColDark(hex) {
+      return getLuminance(hex) > 0.22 ? false : true;
     }
 
     // Calculate the luminance of the chosen colour to determine if too dark for text
@@ -611,6 +672,9 @@
     function getLastVal(input) {
       if (input.data('colourpicker-lastChange')) {
         return input.data('colourpicker-lastChange');
+      } else if (input.parent().is('.palette-limited')) {
+        var firstCol = input.parent().find('.cp-list-col').first();
+        return firstCol.data('cp-col');
       } else {
         return "#FFFFFF";
       }
@@ -624,7 +688,14 @@
         hide();
       }
     })
-    // Start moving
+    // Click on a colour from a limited-selection palette
+    .on('mousedown.colourpicker touchstart.colourpicker', '.cp-list-col', function(event) {
+      var target = $(this);
+      event.preventDefault();
+      var input = target.parents('.colourpicker').find('.colourpicker-input');
+      updateFromControl(input, target);
+    })
+    // Start moving in a palette
     .on('mousedown.colourpicker touchstart.colourpicker', '.colourpicker-grid, .colourpicker-slider', function(event) {
       var target = $(this);
       event.preventDefault();
@@ -655,7 +726,7 @@
       if( !input.data('colourpicker-initialized') ) return;
 
       // Parse Hex
-      input.val(parseHex(input.val(), true));
+      input.val(parseHexAllowed(input));
 
       // Is it blank?
       if( input.val() === '' ) {

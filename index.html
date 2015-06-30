@@ -30,6 +30,7 @@
   <input type="text" id="col1" class="form-control">
   <input type="text" id="col2" class="form-control" value = "#ff0000">
   <input type="text" id="col3" class="form-control" value = "#abc123">
+  <input type="text" id="col4" class="form-control">
 
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -40,8 +41,9 @@
   <script src="js/colourpicker.js"></script>
   <script>
     $("#col1").colourpicker();
-	$("#col2").colourpicker({showColour : "background"});
-	$("#col3").colourpicker({allowTransparent : true});
+	  $("#col2").colourpicker({showColour : "background"});
+	  $("#col3").colourpicker({allowTransparent : true});
+	  $("#col4").colourpicker({palette : "limited"});
   </script>
   </body>
 </html>

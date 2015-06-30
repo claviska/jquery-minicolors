@@ -1,9 +1,10 @@
-# jQuery Colour Picker: A tiny colour picker
+# jQuery Colour Picker: A tiny colour picker with useful extra features
 
-**Original author:** Cory LaViska [http://www.abeautifulsite.net/](http://www.abeautifulsite.net/)
+**Original author:**  
 
 ## Modifications by Dean Attali:  
 
+- Added "limited" palette that allows the user to specify their only a set of allowed colour rather than any colour
 - Added "allowTransparency" setting which allows users to check a checkbox to select the colour "transparent"
 - Added "showColour" setting which determines if to show the selected colour as the text, as the background colour of the input field, or both
 - Removed many unnecessary features 
@@ -19,6 +20,5 @@ The [`index.html`](./index.html) page contains very basic examples of how to use
 
 Colour input being used in a shiny application, with the "showColour" and "allowTransparency" features: [here](http://daattali.com/shiny/colourInput/)
 
-Demo of original plugin: [here](http://labs.abeautifulsite.net/jquery-minicolors/)
-
+_Copyright [Dean Attali](http://deanattali.com) and [Cory LaViska](http://www.abeautifulsite.net/)_
 _Licensed under the MIT license_
