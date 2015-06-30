@@ -1,5 +1,7 @@
 # jQuery Colour Picker: A tiny colour picker with useful extra features
 
+This is a jQuery plugin that creates a colour picker from an input field. It is a fork of [another plugin](https://github.com/claviska/jquery-minicolors) with many modifications made to make it more suited to integrate with [Shiny](http://shiny.rstudio.com/) and to add some useful features.
+
 ## Modifications by Dean Attali:  
 
 - Added "limited" palette that allows the user to specify their only a set of allowed colour rather than any colour
