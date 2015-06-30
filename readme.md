@@ -1,7 +1,5 @@
 # jQuery Colour Picker: A tiny colour picker with useful extra features
 
-**Original author:**  
-
 ## Modifications by Dean Attali:  
 
 - Added "limited" palette that allows the user to specify their only a set of allowed colour rather than any colour
