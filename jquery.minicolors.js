@@ -26,6 +26,7 @@
     // Defaults
     $.minicolors = {
         defaults: {
+            format: 'hex',
             animationSpeed: 50,
             animationEasing: 'swing',
             change: null,
@@ -444,9 +445,7 @@
 
             }
 
-            // Adjust case
-            input.val( convertCase(hex, settings.letterCase) );
-
+            input.val(formatOutput(settings, hex));
         }
 
         // Handle opacity
@@ -494,14 +493,16 @@
             opacityPicker = opacitySlider.find('[class$=-picker]');
 
         // Determine hex/HSB values
-        hex = convertCase(parseHex(input.val(), true), settings.letterCase);
+        hex = parseInput(input.val(), true);
         if( !hex ){
             hex = convertCase(parseHex(settings.defaultValue, true), settings.letterCase);
         }
         hsb = hex2hsb(hex);
 
         // Update input value
-        if( !preserveInputValue ) input.val(hex);
+        if( !preserveInputValue ) {
+          input.val(formatOutput(settings, hex));
+        }
 
         // Determine opacity value
         if( settings.opacity ) {
@@ -649,7 +650,7 @@
 
     // Genearates an RGB(A) string based on the input's value
     function rgbString(input, alpha) {
-        var hex = parseHex($(input).val(), true),
+        var hex = parseInput($(input).val(), true),
             rgb = hex2rgb(hex),
             opacity = $(input).attr('data-opacity');
         if( !rgb ) return null;
@@ -666,6 +667,14 @@
         return letterCase === 'uppercase' ? string.toUpperCase() : string.toLowerCase();
     }
 
+    function parseInput(string, expand) {
+        var hex = parseHex(string, expand);
+        if (!hex) {
+            hex = parseRgbToHex(string);
+        }
+        return hex;
+    }
+
     // Parses a string and returns a valid hex string when possible
     function parseHex(string, expand) {
         string = string.replace(/[^A-F0-9]/ig, '');
@@ -674,6 +683,32 @@
             string = string[0] + string[0] + string[1] + string[1] + string[2] + string[2];
         }
         return '#' + string;
+    }
+
+    function parseRgbToHex(string) {
+        var rgb = parseRgb(string);
+        if( !rgb ) { return null; }
+        return rgb2hex(parseRgb(string));
+    }
+
+    function parseRgb(string) {
+        var groups = string.match(/^(\d+)[\s,]+(\d+)[\s,]+(\d+)/);
+        if( !groups ) { return null; }
+        return { r: parseInt(groups[1]), g: parseInt(groups[2]), b: parseInt(groups[3]) };
+    }
+
+    function formatRgb(rgbObj) {
+      return rgbObj.r + ', ' + rgbObj.g + ', ' + rgbObj.b;
+    }
+
+    function formatOutput(settings, string) {
+      if (settings.format === 'hex') {
+        return convertCase(string, settings.letterCase);
+      }
+      if (settings.format === 'rgb') {
+        return formatRgb(hex2rgb(string));
+      }
+      return '';
     }
 
     // Keeps value within min and max
@@ -812,14 +847,13 @@
             if( !input.data('minicolors-initialized') ) return;
             show(input);
         })
-        // Fix hex on blur
+        // Fix format on blur
         .on('blur.minicolors', '.minicolors-input', function() {
             var input = $(this),
                 settings = input.data('minicolors-settings');
             if( !input.data('minicolors-initialized') ) return;
 
-            // Parse Hex
-            input.val(parseHex(input.val(), true));
+            input.val(formatOutput(settings, parseInput(input.val(), true)));
 
             // Is it blank?
             if( input.val() === '' ) input.val(parseHex(settings.defaultValue, true));
