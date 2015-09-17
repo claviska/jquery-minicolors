@@ -530,7 +530,7 @@
 
         // Determine hex/HSB values
         if( isRgb(input.val()) ) {
-            // If rgb(a) string, converts it to hex and update opacity
+            // If input value is a rgb(a) string, convert it to hex color and update opacity
             hex = rgbString2hex(input.val());
             alpha = keepWithin(parseFloat(getAlpha(input.val())).toFixed(2), 0, 1);
             if( alpha ) {
