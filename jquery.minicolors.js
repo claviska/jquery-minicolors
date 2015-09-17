@@ -942,7 +942,9 @@
             var input = $(this),
                 keywords = input.attr('data-keywords'),
                 settings = input.data('minicolors-settings'),
-                rgba;
+                rgba,
+                swatchOpacity;
+
             if( !input.data('minicolors-initialized') ) return;
 
             // Get array of lowercase keywords
@@ -952,7 +954,7 @@
 
             // Set color string
             if( input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1 ) {
-                value = convertCase(input.val());
+                value = input.val();
             } else {
 
                 // Get RGBA values for easy conversion
@@ -972,6 +974,14 @@
                 }
 
             }
+
+            // Update swatch opacity
+            swatchOpacity = settings.opacity ? input.attr('data-opacity') : 1;
+            if( value.toLowerCase() === 'transparent' ) swatchOpacity = 0;
+            input
+                .closest('.minicolors')
+                .find('.minicolors-swatch > span')
+                .css('opacity', swatchOpacity);
 
             // Set input value
             input.val(value);
