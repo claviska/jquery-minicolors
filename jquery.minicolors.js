@@ -467,10 +467,7 @@
             if( settings.opacity ) input.attr('data-opacity', opacity);
 
             // Set color string
-            if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
-                // Returns CSS-wide keyword ('none' will return 'transparent')
-                value = input.val() === 'none' ? 'transparent' : input.val();
-            } else if (format === 'rgb') {
+            if( format === 'rgb' ) {
                 // Returns RGB(A) string
                 var rgb = hex2rgb(hex),
                     opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
