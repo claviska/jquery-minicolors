@@ -737,20 +737,35 @@
 
     // Parses a string and returns a valid RGB(A) string when possible
     function parseRgb(string, obj) {
-        values = string.replace(/[^\d,.]/g, '');
-        rgba = values.split(',');
+
+        var values = string.replace(/[^\d,.]/g, ''),
+            rgba = values.split(','),
+            output;
+
+        rgba[0] = keepWithin(parseInt(rgba[0], 10), 0, 255);
+        rgba[1] = keepWithin(parseInt(rgba[1], 10), 0, 255);
+        rgba[2] = keepWithin(parseInt(rgba[2], 10), 0, 255);
         if( rgba[3] ) {
-            output = 'rgba(' + keepWithin(rgba[0], 0, 255) +
-                ', ' + keepWithin(rgba[1], 0, 255) +
-                ', ' + keepWithin(rgba[2], 0, 255) +
-                ', ' + keepWithin(rgba[3], 0, 1) + ')';
-        } else {
-            output = 'rgb(' + keepWithin(rgba[0], 0, 255) +
-                ', ' + keepWithin(rgba[1], 0, 255) +
-                ', ' + keepWithin(rgba[2], 0, 255) + ')';
+            rgba[3] = keepWithin(parseFloat(rgba[3], 10), 0, 1);
         }
 
-        return (isRgb(string)) ? output : false;
+        // Return RGBA object
+        if( obj ) {
+            return {
+                r: rgba[0],
+                g: rgba[1],
+                b: rgba[2],
+                a: rgba[3] ? rgba[3] : null
+            };
+        }
+
+        // Return RGBA string
+        if( rgba[3] ) {
+            return 'rgba(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ', ' + rgba[3] + ')';
+        } else {
+            return 'rgb(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ')';
+        }
+
     }
 
     // Parses a string and returns a valid color string when possible
@@ -924,7 +939,8 @@
         .on('blur.minicolors', '.minicolors-input', function() {
             var input = $(this),
                 keywords = input.attr('data-keywords'),
-                settings = input.data('minicolors-settings');
+                settings = input.data('minicolors-settings'),
+                rgba;
             if( !input.data('minicolors-initialized') ) return;
 
             // Get array of lowercase keywords
@@ -936,7 +952,23 @@
             if( input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1 ) {
                 value = convertCase(input.val());
             } else {
-                value = isRgb(input.val()) ? parseRgb(input.val()) : parseHex(input.val(), true);
+
+                // Get RGBA values for easy conversion
+                if( isRgb(input.val()) ) {
+                    rgba = parseRgb(input.val(), true);
+                } else {
+                    rgba = hex2rgb(parseHex(input.val(), true));
+                }
+
+                // Convert to format
+                if( settings.format === 'rgb' ) {
+                    value = settings.opacity ?
+                        parseRgb('rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + input.attr('data-opacity') + ')') :
+                        parseRgb('rgb(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ')');
+                } else {
+                    value = rgb2hex(rgba);
+                }
+
             }
 
             // Set input value
