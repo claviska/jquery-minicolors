@@ -542,10 +542,14 @@
         }
         hsb = hex2hsb(hex);
 
+        // Get array of lowercase keywords
+        keywords = !keywords ? [] : $.map(keywords.split(','), function(a) {
+            return $.trim(a.toLowerCase());
+        });
+
         // Set color string
-        if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
-            // Returns CSS-wide keyword ('none' will return 'transparent')
-            value = input.val() === 'none' ? 'transparent' : input.val();
+        if( input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1 ) {
+            value = convertCase(input.val());
         } else if (format === 'rgb') {
             // Returns RGB(A) string
             value = isRgb(input.val()) ? parseRgb(input.val()) : '';
@@ -926,10 +930,14 @@
                 settings = input.data('minicolors-settings');
             if( !input.data('minicolors-initialized') ) return;
 
+            // Get array of lowercase keywords
+            keywords = !keywords ? [] : $.map(keywords.split(','), function(a) {
+                return $.trim(a.toLowerCase());
+            });
+
             // Set color string
-            if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
-                // Returns CSS-wide keyword ('none' will return 'transparent')
-                value = input.val() === 'none' ? 'transparent' : input.val();
+            if( input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1 ) {
+                value = convertCase(input.val());
             } else if( isRgb(input.val()) ) {
                 // Returns RGB(A) string
                 value = parseRgb(input.val());
