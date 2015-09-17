@@ -736,10 +736,10 @@
     }
 
     // Parses a string and returns a valid RGB(A) string when possible
-    function parseRgb(string) {
+    function parseRgb(string, obj) {
         values = string.replace(/[^\d,.]/g, '');
         rgba = values.split(',');
-        if( rgba[3] && rgba[3] < 1 ) {
+        if( rgba[3] ) {
             output = 'rgba(' + keepWithin(rgba[0], 0, 255) +
                 ', ' + keepWithin(rgba[1], 0, 255) +
                 ', ' + keepWithin(rgba[2], 0, 255) +
@@ -749,6 +749,7 @@
                 ', ' + keepWithin(rgba[1], 0, 255) +
                 ', ' + keepWithin(rgba[2], 0, 255) + ')';
         }
+
         return (isRgb(string)) ? output : false;
     }
 
