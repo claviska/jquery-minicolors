@@ -396,8 +396,6 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
                 are already initialized.
             </p>
 
-
-
             <dl>
                 <dt>animationSpeed</dt>
                 <dd>
@@ -452,6 +450,14 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
                     </p>
                 </dd>
 
+                <dt>format</dt>
+                <dd>
+                    <p>
+                        The format miniColors should use. Valid options are <code>hex</code> and
+                        <code>rgb</code>.
+                    </p>
+                </dd>
+
                 <dt>hideSpeed &amp; showSpeed</dt>
                 <dd>
                     <p>
@@ -463,6 +469,14 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
                 <dd>
                     <p>
                         Set to <code>true</code> to force the color picker to appear inline.
+                    </p>
+                </dd>
+
+                <dt>keywords</dt>
+                <dd>
+                    <p>
+                        A comma-separated list of keywords that the control should accept (e.g. inherit,
+                        transparent, initial). By default, no keywords are allowed.
                     </p>
                 </dd>
 
