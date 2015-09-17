@@ -957,7 +957,6 @@
             if( input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1 ) {
                 value = input.val();
             } else {
-
                 // Get RGBA values for easy conversion
                 if( isRgb(input.val()) ) {
                     rgba = parseRgb(input.val(), true);
@@ -976,7 +975,6 @@
                 } else {
                     value = rgb2hex(rgba);
                 }
-
             }
 
             // Update swatch opacity
