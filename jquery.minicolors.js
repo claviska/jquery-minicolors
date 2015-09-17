@@ -571,7 +571,7 @@
         }
 
         // Set opacity to zero if input value is transparent
-        if( input.val() === 'transparent' ) {
+        if( input.val().toLowerCase() === 'transparent' ) {
             swatch.find('span').css('opacity', 0);
         }
 
