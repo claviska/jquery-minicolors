@@ -33,9 +33,11 @@
             control: 'hue',
             dataUris: true,
             defaultValue: '',
+            format: 'hex',
             hide: null,
             hideSpeed: 100,
             inline: false,
+            keywords: '',
             letterCase: 'lowercase',
             opacity: false,
             position: 'bottom left',
@@ -135,7 +137,10 @@
     function init(input, settings) {
 
         var minicolors = $('<div class="minicolors" />'),
-            defaults = $.minicolors.defaults;
+            defaults = $.minicolors.defaults,
+            format = input.attr('data-format'),
+            keywords = input.attr('data-keywords'),
+            opacity = input.attr('data-opacity');
 
         // Do nothing if already initialized
         if( input.data('minicolors-initialized') ) return;
@@ -156,12 +161,19 @@
             });
         }
 
+        // Input size
+        if( format === 'rgb' ) {
+            $input_size = opacity ? '25' : '20';
+        } else {
+            $input_size = keywords ? '11' : '7';
+        }
+
         // The input
         input
             .addClass('minicolors-input')
             .data('minicolors-initialized', false)
             .data('minicolors-settings', settings)
-            .prop('size', 7)
+            .prop('size', $input_size)
             .wrap(minicolors)
             .after(
                 '<div class="minicolors-panel minicolors-slider-' + settings.control + '">' +
@@ -342,6 +354,8 @@
         var hue, saturation, brightness, x, y, r, phi,
 
             hex = input.val(),
+            format = input.attr('data-format'),
+            keywords = input.attr('data-keywords'),
             opacity = input.attr('data-opacity'),
 
             // Helpful references
@@ -365,7 +379,7 @@
             opacityPos = getCoords(opacityPicker, opacitySlider);
 
         // Handle colors
-        if( target.is('.minicolors-grid, .minicolors-slider') ) {
+        if( target.is('.minicolors-grid, .minicolors-slider, .minicolors-opacity-slider') ) {
 
             // Determine HSB values
             switch(settings.control) {
@@ -444,19 +458,38 @@
 
             }
 
-            // Adjust case
-            input.val( convertCase(hex, settings.letterCase) );
-
-        }
-
-        // Handle opacity
-        if( target.is('.minicolors-opacity-slider') ) {
+            // Handle opacity
             if( settings.opacity ) {
                 opacity = parseFloat(1 - (opacityPos.y / opacitySlider.height())).toFixed(2);
             } else {
                 opacity = 1;
             }
             if( settings.opacity ) input.attr('data-opacity', opacity);
+
+            // Set color string
+            if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
+                // Returns CSS-wide keyword ('none' will return 'transparent')
+                value = input.val() === 'none' ? 'transparent' : input.val();
+            } else if (format === 'rgb') {
+                // Returns RGB(A) string
+                var rgb = hex2rgb(hex),
+                    opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
+                if( isNaN( opacity ) ) opacity = 1;
+
+                if( input.minicolors('rgbObject').a < 1 && rgb ) {
+                    // Set RGBA string if alpha
+                    value = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat( opacity ) + ')';
+                } else {
+                    // Set RGB string (alpha = 1)
+                    value = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+                }
+            } else {
+                // Returns hex color
+                value = convertCase( hex, settings.letterCase );
+            }
+
+            // Update value from picker
+            input.val( value );
         }
 
         // Set swatch color
@@ -466,7 +499,7 @@
         });
 
         // Handle change event
-        doChange(input, hex, opacity);
+        doChange(input, value, opacity);
 
     }
 
@@ -475,6 +508,8 @@
 
         var hex,
             hsb,
+            format = input.attr('data-format'),
+            keywords = input.attr('data-keywords'),
             opacity,
             x, y, r, phi,
 
@@ -494,14 +529,36 @@
             opacityPicker = opacitySlider.find('[class$=-picker]');
 
         // Determine hex/HSB values
-        hex = convertCase(parseHex(input.val(), true), settings.letterCase);
+        if( isRgb(input.val()) ) {
+            // If input value is a rgb(a) string, convert it to hex color and update opacity
+            hex = rgbString2hex(input.val());
+            alpha = keepWithin(parseFloat(getAlpha(input.val())).toFixed(2), 0, 1);
+            if( alpha ) {
+                input.attr('data-opacity', alpha);
+            }
+        } else {
+            hex = convertCase(parseHex(input.val(), true), settings.letterCase);
+        }
+
         if( !hex ){
-            hex = convertCase(parseHex(settings.defaultValue, true), settings.letterCase);
+            hex = convertCase(parseInput(settings.defaultValue, true), settings.letterCase);
         }
         hsb = hex2hsb(hex);
 
+        // Set color string
+        if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
+            // Returns CSS-wide keyword ('none' will return 'transparent')
+            value = input.val() === 'none' ? 'transparent' : input.val();
+        } else if (format === 'rgb') {
+            // Returns RGB(A) string
+            value = isRgb(input.val()) ? parseRgb(input.val()) : '';
+        } else {
+            // Returns hex color
+            value = hex;
+        }
+
         // Update input value
-        if( !preserveInputValue ) input.val(hex);
+        if( !preserveInputValue ) input.val(value);
 
         // Determine opacity value
         if( settings.opacity ) {
@@ -514,6 +571,11 @@
             // Set opacity picker position
             y = keepWithin(opacitySlider.height() - (opacitySlider.height() * opacity), 0, opacitySlider.height());
             opacityPicker.css('top', y + 'px');
+        }
+
+        // Set opacity to zero if input value is transparent
+        if( input.val() === 'transparent' ) {
+            swatch.find('SPAN').css('opacity', 0);
         }
 
         // Update swatch
@@ -599,23 +661,23 @@
 
         // Fire change event, but only if minicolors is fully initialized
         if( input.data('minicolors-initialized') ) {
-            doChange(input, hex, opacity);
+            doChange(input, value, opacity);
         }
 
     }
 
     // Runs the change and changeDelay callbacks
-    function doChange(input, hex, opacity) {
+    function doChange(input, value, opacity) {
 
         var settings = input.data('minicolors-settings'),
             lastChange = input.data('minicolors-lastChange');
 
         // Only run if it actually changed
-        if( !lastChange || lastChange.hex !== hex || lastChange.opacity !== opacity ) {
+        if( !lastChange || lastChange.value !== value || lastChange.opacity !== opacity ) {
 
             // Remember last-changed value
             input.data('minicolors-lastChange', {
-                hex: hex,
+                value: value,
                 opacity: opacity
             });
 
@@ -625,11 +687,11 @@
                     // Call after a delay
                     clearTimeout(input.data('minicolors-changeTimeout'));
                     input.data('minicolors-changeTimeout', setTimeout( function() {
-                        settings.change.call(input.get(0), hex, opacity);
+                        settings.change.call(input.get(0), value, opacity);
                     }, settings.changeDelay));
                 } else {
                     // Call immediately
-                    settings.change.call(input.get(0), hex, opacity);
+                    settings.change.call(input.get(0), value, opacity);
                 }
             }
             input.trigger('change').trigger('input');
@@ -647,7 +709,7 @@
         return rgb;
     }
 
-    // Genearates an RGB(A) string based on the input's value
+    // Generates an RGB(A) string based on the input's value
     function rgbString(input, alpha) {
         var hex = parseHex($(input).val(), true),
             rgb = hex2rgb(hex),
@@ -676,6 +738,33 @@
         return '#' + string;
     }
 
+    // Parses a string and returns a valid RGB(A) string when possible
+    function parseRgb(string) {
+        values = string.replace(/[^\d,.]/g, "");
+        rgba = values.split(",");
+        if( rgba[3] && rgba[3] < 1 ) {
+            output = 'rgba(' + keepWithin(rgba[0], 0, 255) +
+                ', ' + keepWithin(rgba[1], 0, 255) +
+                ', ' + keepWithin(rgba[2], 0, 255) +
+                ', ' + keepWithin(rgba[3], 0, 1) + ')';
+        } else {
+            output = 'rgb(' + keepWithin(rgba[0], 0, 255) +
+                ', ' + keepWithin(rgba[1], 0, 255) +
+                ', ' + keepWithin(rgba[2], 0, 255) + ')';
+        }
+        return (isRgb(string)) ? output : false;
+    }
+
+    // Parses a string and returns a valid color string when possible
+    function parseInput(string, expand) {
+        if( isRgb(string) ) {
+            // Returns a valid rgb(a) string
+            return parseRgb(string);
+        } else {
+            return parseHex(string, expand);
+        }
+    }
+
     // Keeps value within min and max
     function keepWithin(value, min, max) {
         if( value < min ) value = min;
@@ -683,7 +772,19 @@
         return value;
     }
 
-    // Converts an HSB object to an RGB object
+    // Checks if a string is a valid RGB(A) string
+    function isRgb(string) {
+        rgb = string.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        return (rgb && rgb.length === 4) ? true : false;
+    }
+
+    // Function to get alpha from a RGB(A) string
+    function getAlpha(rgba) {
+        rgba = rgba.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+(\.\d{1,2})?|\.\d{1,2})[\s+]?/i);
+        return (rgba && rgba.length === 6) ? rgba[4] : '1';
+    }
+
+   // Converts an HSB object to an RGB object
     function hsb2rgb(hsb) {
         var rgb = {};
         var h = Math.round(hsb.h);
@@ -709,6 +810,15 @@
             g: Math.round(rgb.g),
             b: Math.round(rgb.b)
         };
+    }
+
+    // Converts an RGB string to a hex string
+    function rgbString2hex(rgb){
+        rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        return (rgb && rgb.length === 4) ? "#" +
+        ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
     }
 
     // Converts an RGB object to a hex string
@@ -815,14 +925,27 @@
         // Fix hex on blur
         .on('blur.minicolors', '.minicolors-input', function() {
             var input = $(this),
+                keywords = input.attr('data-keywords'),
                 settings = input.data('minicolors-settings');
             if( !input.data('minicolors-initialized') ) return;
 
-            // Parse Hex
-            input.val(parseHex(input.val(), true));
+            // Set color string
+            if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
+                // Returns CSS-wide keyword ('none' will return 'transparent')
+                value = input.val() === 'none' ? 'transparent' : input.val();
+            } else if( isRgb(input.val()) ) {
+                // Returns RGB(A) string
+                value = parseRgb(input.val());
+            } else {
+                // Returns hex color
+                value = parseHex(input.val(), true);
+            }
+
+            // Set input value
+            input.val(value);
 
             // Is it blank?
-            if( input.val() === '' ) input.val(parseHex(settings.defaultValue, true));
+            if( input.val() === '' ) input.val(parseInput(settings.defaultValue, true));
 
             // Adjust case
             input.val( convertCase(input.val(), settings.letterCase) );

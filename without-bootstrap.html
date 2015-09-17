@@ -5,7 +5,7 @@
     <meta charset="utf-8">
 
     <!-- jQuery -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
     <!-- MiniColors -->
     <script src="jquery.minicolors.js"></script>
@@ -49,6 +49,8 @@
                 $(this).minicolors({
                     control: $(this).attr('data-control') || 'hue',
                     defaultValue: $(this).attr('data-defaultValue') || '',
+                    format: $(this).attr('data-format') || 'hex',
+                    keywords: $(this).attr('data-keywords') || '',
                     inline: $(this).attr('data-inline') === 'true',
                     letterCase: $(this).attr('data-letterCase') || 'lowercase',
                     opacity: $(this).attr('data-opacity'),
@@ -132,12 +134,30 @@
         <input type="text" id="position-top-right" class="demo" data-position="top right" value="#0088cc">
     </div>
 
+    <!-- RGB(A) -->
+    <h3>RGB(A)</h3>
+    <div class="form-group">
+        <label for="rgb">rgb</label>
+        <br>
+        <input type="text" id="rgb" class="demo" data-format="rgb" value="rgb(33, 147, 58)">
+    </div>
+    <div class="form-group">
+        <label for="rgba">rgb(a)</label>
+        <br>
+        <input type="text" id="rgba" class="demo" data-format="rgb" data-opacity=".5" value="rgba(52, 64, 158, 0.5)">
+    </div>
+
     <!-- and more -->
     <h3>&hellip;and more!</h3>
     <div class="form-group">
         <label for="opacity">Opacity</label>
         <br>
         <input type="text" id="opacity" class="demo" data-opacity=".5" value="#766fa8">
+    </div>
+    <div class="form-group">
+        <label for="keywords">Keywords</label>
+        <br>
+        <input type="text" id="keywords" class="demo" data-keywords="transparent, inherit, initial" value="transparent">
     </div>
     <div class="form-group">
         <label for="default-value">Default Value</label>
