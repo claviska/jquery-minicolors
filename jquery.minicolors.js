@@ -942,6 +942,7 @@
             var input = $(this),
                 keywords = input.attr('data-keywords'),
                 settings = input.data('minicolors-settings'),
+                hex,
                 rgba,
                 swatchOpacity;
 
@@ -961,11 +962,14 @@
                 if( isRgb(input.val()) ) {
                     rgba = parseRgb(input.val(), true);
                 } else {
-                    rgba = hex2rgb(parseHex(input.val(), true));
+                    hex = parseHex(input.val(), true);
+                    rgba = hex ? hex2rgb(hex) : null;
                 }
 
                 // Convert to format
-                if( settings.format === 'rgb' ) {
+                if( rgba === null ) {
+                    value = settings.defaultValue;
+                } else if( settings.format === 'rgb' ) {
                     value = settings.opacity ?
                         parseRgb('rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + input.attr('data-opacity') + ')') :
                         parseRgb('rgb(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ')');
