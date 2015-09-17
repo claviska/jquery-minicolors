@@ -741,8 +741,8 @@
 
     // Parses a string and returns a valid RGB(A) string when possible
     function parseRgb(string) {
-        values = string.replace(/[^\d,.]/g, "");
-        rgba = values.split(",");
+        values = string.replace(/[^\d,.]/g, '');
+        rgba = values.split(',');
         if( rgba[3] && rgba[3] < 1 ) {
             output = 'rgba(' + keepWithin(rgba[0], 0, 255) +
                 ', ' + keepWithin(rgba[1], 0, 255) +
@@ -816,10 +816,10 @@
     // Converts an RGB string to a hex string
     function rgbString2hex(rgb){
         rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-        return (rgb && rgb.length === 4) ? "#" +
-        ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-        ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-        ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+        return (rgb && rgb.length === 4) ? '#' +
+        ('0' + parseInt(rgb[1],10).toString(16)).slice(-2) +
+        ('0' + parseInt(rgb[2],10).toString(16)).slice(-2) +
+        ('0' + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
     }
 
     // Converts an RGB object to a hex string
