@@ -550,12 +550,8 @@
         // Set color string
         if( input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1 ) {
             value = convertCase(input.val());
-        } else if (format === 'rgb') {
-            // Returns RGB(A) string
-            value = isRgb(input.val()) ? parseRgb(input.val()) : '';
         } else {
-            // Returns hex color
-            value = hex;
+            value = isRgb(input.val()) ? parseRgb(input.val()) : hex;
         }
 
         // Update input value
@@ -923,7 +919,7 @@
             if( !input.data('minicolors-initialized') ) return;
             show(input);
         })
-        // Fix hex on blur
+        // Update value on blur
         .on('blur.minicolors', '.minicolors-input', function() {
             var input = $(this),
                 keywords = input.attr('data-keywords'),
@@ -938,12 +934,8 @@
             // Set color string
             if( input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1 ) {
                 value = convertCase(input.val());
-            } else if( isRgb(input.val()) ) {
-                // Returns RGB(A) string
-                value = parseRgb(input.val());
             } else {
-                // Returns hex color
-                value = parseHex(input.val(), true);
+                value = isRgb(input.val()) ? parseRgb(input.val()) : parseHex(input.val(), true);
             }
 
             // Set input value
