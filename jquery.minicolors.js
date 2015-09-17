@@ -490,7 +490,7 @@
         }
 
         // Set swatch color
-        swatch.find('SPAN').css({
+        swatch.find('span').css({
             backgroundColor: hex,
             opacity: opacity
         });
@@ -567,7 +567,7 @@
             opacity = input.attr('data-opacity') === '' ? 1 : keepWithin(parseFloat(input.attr('data-opacity')).toFixed(2), 0, 1);
             if( isNaN(opacity) ) opacity = 1;
             input.attr('data-opacity', opacity);
-            swatch.find('SPAN').css('opacity', opacity);
+            swatch.find('span').css('opacity', opacity);
 
             // Set opacity picker position
             y = keepWithin(opacitySlider.height() - (opacitySlider.height() * opacity), 0, opacitySlider.height());
@@ -576,11 +576,11 @@
 
         // Set opacity to zero if input value is transparent
         if( input.val() === 'transparent' ) {
-            swatch.find('SPAN').css('opacity', 0);
+            swatch.find('span').css('opacity', 0);
         }
 
         // Update swatch
-        swatch.find('SPAN').css('backgroundColor', hex);
+        swatch.find('span').css('backgroundColor', hex);
 
         // Determine picker locations
         switch(settings.control) {
