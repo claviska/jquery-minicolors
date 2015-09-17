@@ -33,10 +33,11 @@
             control: 'hue',
             dataUris: true,
             defaultValue: '',
+            format: 'hex',
             hide: null,
             hideSpeed: 100,
-            keywords: '',
             inline: false,
+            keywords: '',
             letterCase: 'lowercase',
             opacity: false,
             position: 'bottom left',
@@ -62,6 +63,20 @@
                 // Hide the color picker
                 case 'hide':
                     hide();
+                    return $(this);
+
+                // Get/set format
+                case 'format':
+                    // Getter
+                    if( data === undefined ) {
+                        // Getter
+                        return $(this).attr('data-format');
+                    } else {
+                        // Setter
+                        $(this).each( function() {
+                            updateFromInput($(this).attr('data-format', data));
+                        });
+                    }
                     return $(this);
 
                 // Get/set opacity
@@ -136,7 +151,10 @@
     function init(input, settings) {
 
         var minicolors = $('<div class="minicolors" />'),
-            defaults = $.minicolors.defaults;
+            defaults = $.minicolors.defaults,
+            format = input.attr('data-format'),
+            keywords = input.attr('data-keywords'),
+            opacity = input.attr('data-opacity');
 
         // Do nothing if already initialized
         if( input.data('minicolors-initialized') ) return;
@@ -158,10 +176,10 @@
         }
 
         // Input size
-        if( settings.opacity ) {
-            $input_size = '25';
+        if( format === 'rgb' ) {
+            $input_size = opacity ? '25' : '20';
         } else {
-            $input_size = settings.keywords ? '11' : '7';
+            $input_size = keywords ? '11' : '7';
         }
 
         // The input
@@ -350,6 +368,8 @@
         var hue, saturation, brightness, x, y, r, phi,
 
             hex = input.val(),
+            format = input.attr('data-format'),
+            keywords = input.attr('data-keywords'),
             opacity = input.attr('data-opacity'),
 
             // Helpful references
@@ -454,24 +474,31 @@
 
             // Handle opacity
             if( settings.opacity ) {
-            	opacity = parseFloat(1 - (opacityPos.y / opacitySlider.height())).toFixed(2);
+                opacity = parseFloat(1 - (opacityPos.y / opacitySlider.height())).toFixed(2);
             } else {
-            	opacity = 1;
+                opacity = 1;
             }
             if( settings.opacity ) input.attr('data-opacity', opacity);
 
-            var rgb = hex2rgb(hex),
-                opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
-            if( isNaN( opacity ) ) opacity = 1;
+            // Set color string
+            if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
+                // Returns CSS-wide keyword ('none' will return 'transparent')
+                value = input.val() === 'none' ? 'transparent' : input.val();
+            } else if (format === 'rgb') {
+                // Returns RGB(A) string
+                var rgb = hex2rgb(hex),
+                    opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
+                if( isNaN( opacity ) ) opacity = 1;
 
-            if( settings.opacity && opacity == 0 && settings.keywords.indexOf('transparent') >= 0 ) {
-                // Set transparent if alpha is zero and transparent in keywords
-                value = 'transparent';
-            } else if( input.minicolors('rgbObject').a < 1 && rgb ) {
-                // Set a rgba string if opacity is enabled
-                value = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat( opacity ) + ')';
+                if( input.minicolors('rgbObject').a < 1 && rgb ) {
+                    // Set RGBA string if alpha
+                    value = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat( opacity ) + ')';
+                } else {
+                    // Set RGB string (alpha = 1)
+                    value = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+                }
             } else {
-                // Use hex color (opacity is 100%) and ajust case
+                // Returns hex color
                 value = convertCase( hex, settings.letterCase );
             }
 
@@ -486,7 +513,7 @@
         });
 
         // Handle change event
-        doChange(input, hex, opacity);
+        doChange(input, value, opacity);
 
     }
 
@@ -495,6 +522,8 @@
 
         var hex,
             hsb,
+            format = input.attr('data-format'),
+            keywords = input.attr('data-keywords'),
             opacity,
             x, y, r, phi,
 
@@ -514,22 +543,29 @@
             opacityPicker = opacitySlider.find('[class$=-picker]');
 
         // Determine hex/HSB values
-        hex = convertCase(parseHex(input.val(), true), settings.letterCase);
+        if( isRgb(input.val()) ) {
+            // If rgb(a) string, converts it to hex and update opacity
+            hex = rgbString2hex(input.val());
+            alpha = keepWithin(parseFloat(getAlpha(input.val())).toFixed(2), 0, 1);
+            if( alpha ) {
+                input.attr('data-opacity', alpha);
+            }
+        } else {
+            hex = convertCase(parseHex(input.val(), true), settings.letterCase);
+        }
+
         if( !hex ){
-            hex = convertCase(parseHex(settings.defaultValue, true), settings.letterCase);
+            hex = convertCase(parseInput(settings.defaultValue, true), settings.letterCase);
         }
         hsb = hex2hsb(hex);
 
-        var rgb = hex2rgb(hex),
-            opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
-        if( isNaN(opacity) ) opacity = 1;
-
-        if( settings.keywords.indexOf(input.val()) >= 0 ) {
-            // Transparent ('none' will return 'transparent') and CSS-wide keywords
-            value = input.val();
-        } else if( settings.opacity && input.minicolors('rgbObject').a < 1 && rgb ) {
-            // Creates rgba string
-            value = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat( opacity ) + ')';
+        // Set color string
+        if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
+            // Returns CSS-wide keyword ('none' will return 'transparent')
+            value = input.val() === 'none' ? 'transparent' : input.val();
+        } else if (format === 'rgb') {
+            // Returns RGB(A) string
+            value = isRgb(input.val()) ? parseRgb(input.val()) : '';
         } else {
             // Returns hex color
             value = hex;
@@ -537,16 +573,6 @@
 
         // Update input value
         if( !preserveInputValue ) input.val(value);
-
-        // If rgba string, converts it to hex, generates new hsb value and update opacity
-        if( isRgba(input.val(), true) ) {
-            hex = rgbString2hex(input.val());
-            hsb = hex2hsb(hex);
-            alpha = keepWithin(parseFloat(getAlpha(input.val())).toFixed(2), 0, 1);
-            if( alpha ) {
-                input.attr('data-opacity', alpha);
-            }
-        }
 
         // Determine opacity value
         if( settings.opacity ) {
@@ -649,23 +675,23 @@
 
         // Fire change event, but only if minicolors is fully initialized
         if( input.data('minicolors-initialized') ) {
-            doChange(input, hex, opacity);
+            doChange(input, value, opacity);
         }
 
     }
 
     // Runs the change and changeDelay callbacks
-    function doChange(input, hex, opacity) {
+    function doChange(input, value, opacity) {
 
         var settings = input.data('minicolors-settings'),
             lastChange = input.data('minicolors-lastChange');
 
         // Only run if it actually changed
-        if( !lastChange || lastChange.hex !== hex || lastChange.opacity !== opacity ) {
+        if( !lastChange || lastChange.value !== value || lastChange.opacity !== opacity ) {
 
             // Remember last-changed value
             input.data('minicolors-lastChange', {
-                hex: hex,
+                value: value,
                 opacity: opacity
             });
 
@@ -675,11 +701,11 @@
                     // Call after a delay
                     clearTimeout(input.data('minicolors-changeTimeout'));
                     input.data('minicolors-changeTimeout', setTimeout( function() {
-                        settings.change.call(input.get(0), hex, opacity);
+                        settings.change.call(input.get(0), value, opacity);
                     }, settings.changeDelay));
                 } else {
                     // Call immediately
-                    settings.change.call(input.get(0), hex, opacity);
+                    settings.change.call(input.get(0), value, opacity);
                 }
             }
             input.trigger('change').trigger('input');
@@ -726,6 +752,33 @@
         return '#' + string;
     }
 
+    // Parses a string and returns a valid RGB(A) string when possible
+    function parseRgb(string) {
+        values = string.replace(/[^\d,.]/g, "");
+        rgba = values.split(",");
+        if( rgba[3] && rgba[3] < 1 ) {
+            output = 'rgba(' + keepWithin(rgba[0], 0, 255) +
+                ', ' + keepWithin(rgba[1], 0, 255) +
+                ', ' + keepWithin(rgba[2], 0, 255) +
+                ', ' + keepWithin(rgba[3], 0, 1) + ')';
+        } else {
+            output = 'rgb(' + keepWithin(rgba[0], 0, 255) +
+                ', ' + keepWithin(rgba[1], 0, 255) +
+                ', ' + keepWithin(rgba[2], 0, 255) + ')';
+        }
+        return (isRgb(string)) ? output : false;
+    }
+
+    // Parses a string and returns a valid color string when possible
+    function parseInput(string, expand) {
+        if( isRgb(string) ) {
+            // Returns a valid rgb(a) string
+            return parseRgb(string);
+        } else {
+            return parseHex(string, expand);
+        }
+    }
+
     // Keeps value within min and max
     function keepWithin(value, min, max) {
         if( value < min ) value = min;
@@ -733,16 +786,16 @@
         return value;
     }
 
-    // Checks if a string is a valid rgba string
-    function isRgba(string) {
+    // Checks if a string is a valid RGB(A) string
+    function isRgb(string) {
         rgb = string.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
         return (rgb && rgb.length === 4) ? true : false;
     }
 
-    // Function to get alpha from a rgba string
+    // Function to get alpha from a RGB(A) string
     function getAlpha(rgba) {
-        rgba = rgba.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+(\.\d{1,2}))[\s+]?/i);
-        return (rgba && rgba.length === 6) ? rgba[4] : '0';
+        rgba = rgba.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+(\.\d{1,2})?|\.\d{1,2})[\s+]?/i);
+        return (rgba && rgba.length === 6) ? rgba[4] : '1';
     }
 
    // Converts an HSB object to an RGB object
@@ -886,32 +939,27 @@
         // Fix hex on blur
         .on('blur.minicolors', '.minicolors-input', function() {
             var input = $(this),
+                keywords = input.attr('data-keywords'),
                 settings = input.data('minicolors-settings');
             if( !input.data('minicolors-initialized') ) return;
 
-            var opacity = input.minicolors('rgbObject').a,
-                rgba = isRgba(input.val(), true),
-                hex = parseHex(input.val(), true);
-
-            if( settings.keywords.indexOf(input.val()) >= 0 ) {
-                // Transparent ('none' will return 'transparent') and CSS-wide keywords
+            // Set color string
+            if( keywords && keywords.indexOf(input.val()) >= 0 && input.val() !== '' ) {
+                // Returns CSS-wide keyword ('none' will return 'transparent')
                 value = input.val() === 'none' ? 'transparent' : input.val();
-            } else if( settings.opacity && opacity < 1 && rgba ) {
-                // Generates rgba string
-                value = rgbString(input.val(), true);
-            } else if( hex && input.val() !== 'transparent') {
-                // Returns hex color
-                value = hex;
+            } else if( isRgb(input.val()) ) {
+                // Returns RGB(A) string
+                value = parseRgb(input.val());
             } else {
-                // Input value is not an accepted color value
-                value = '';
+                // Returns hex color
+                value = parseHex(input.val(), true);
             }
 
             // Set input value
             input.val(value);
 
             // Is it blank?
-            if( input.val() === '' ) input.val(parseHex(settings.defaultValue, true));
+            if( input.val() === '' ) input.val(parseInput(settings.defaultValue, true));
 
             // Adjust case
             input.val( convertCase(input.val(), settings.letterCase) );
