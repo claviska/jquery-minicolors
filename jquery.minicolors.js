@@ -65,20 +65,6 @@
                     hide();
                     return $(this);
 
-                // Get/set format
-                case 'format':
-                    // Getter
-                    if( data === undefined ) {
-                        // Getter
-                        return $(this).attr('data-format');
-                    } else {
-                        // Setter
-                        $(this).each( function() {
-                            updateFromInput($(this).attr('data-format', data));
-                        });
-                    }
-                    return $(this);
-
                 // Get/set opacity
                 case 'opacity':
                     // Getter
