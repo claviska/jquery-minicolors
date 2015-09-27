@@ -730,7 +730,6 @@
         string = string.replace(/^#/g, '');
         if( !string.match(/^[A-F0-9]{3,6}/ig) ) return '';
         if( string.length !== 3 && string.length !== 6 ) return '';
-        console.log(string);
         if( string.length === 3 && expand ) {
             string = string[0] + string[0] + string[1] + string[1] + string[2] + string[2];
         }
