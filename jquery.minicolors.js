@@ -471,9 +471,9 @@
                 // Returns RGB(A) string
                 var rgb = hex2rgb(hex),
                     opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
-                if( isNaN( opacity ) ) opacity = 1;
+                if( isNaN( opacity ) || !settings.opacity ) opacity = 1;
 
-                if( input.minicolors('rgbObject').a < 1 && rgb ) {
+                if( input.minicolors('rgbObject').a <= 1 && rgb && settings.opacity) {
                     // Set RGBA string if alpha
                     value = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat( opacity ) + ')';
                 } else {
@@ -761,7 +761,7 @@
         }
 
         // Return RGBA string
-        if( rgba[3] ) {
+        if(typeof(rgba[3]) !== 'undefined' && rgba[3] <= 1) {
             return 'rgba(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ', ' + rgba[3] + ')';
         } else {
             return 'rgb(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ')';
