@@ -761,7 +761,7 @@
         }
 
         // Return RGBA string
-        if(typeof(rgba[3]) !== 'undefined' && rgba[3] <= 1) {
+        if( typeof(rgba[3]) !== undefined && rgba[3] <= 1 ) {
             return 'rgba(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ', ' + rgba[3] + ')';
         } else {
             return 'rgb(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ')';
