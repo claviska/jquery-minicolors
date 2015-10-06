@@ -78,11 +78,11 @@
                     letterCase: $(this).attr('data-letterCase') || 'lowercase',
                     opacity: $(this).attr('data-opacity'),
                     position: $(this).attr('data-position') || 'bottom left',
-                    change: function(hex, opacity) {
-                        if( !hex ) return;
-                        if( opacity ) hex += ', ' + opacity;
+                    change: function(value, opacity) {
+                        if( !value ) return;
+                        if( opacity ) value += ', ' + opacity;
                         if( typeof console === 'object' ) {
-                            console.log(hex);
+                            console.log(value);
                         }
                     },
                     theme: 'bootstrap'
@@ -634,8 +634,8 @@ rgba(0, 82, 148, .75)
                     <p>Fires when the value of the color picker changes. The <code>this</code> keyword will reference the original input element.
 <pre>
 $(<em>selector</em>).minicolors({
-    change: function(hex, opacity) {
-        console.log(hex + ' - ' + opacity);
+    change: function(value, opacity) {
+        console.log(value + ' - ' + opacity);
     }
 });
 </pre>
