@@ -115,7 +115,17 @@
                     } else {
                         // Setter
                         $(this).each( function() {
-                            updateFromInput($(this).val(data));
+                            if( typeof(data) === 'object' ) {
+                                if( data.opacity ) {
+                                    $(this).attr('data-opacity', keepWithin(data.opacity, 0, 1));
+                                }
+                                if( data.color ) {
+                                    $(this).val(data.color);
+                                }
+                            } else {
+                                $(this).val(data);
+                            }
+                            updateFromInput($(this));
                         });
                     }
                     return $(this);
