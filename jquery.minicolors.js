@@ -148,8 +148,6 @@
 
         var minicolors = $('<div class="minicolors" />'),
             defaults = $.minicolors.defaults,
-            format = input.attr('data-format'),
-            keywords = input.attr('data-keywords'),
             opacity = input.attr('data-opacity');
 
         // Do nothing if already initialized
@@ -172,10 +170,10 @@
         }
 
         // Input size
-        if( format === 'rgb' ) {
-            $input_size = opacity ? '25' : '20';
+        if( settings.format === 'rgb' ) {
+            $input_size = settings.opacity ? '25' : '20';
         } else {
-            $input_size = keywords ? '11' : '7';
+            $input_size = settings.keywords ? '11' : '7';
         }
 
         // The input
@@ -364,8 +362,6 @@
         var hue, saturation, brightness, x, y, r, phi,
 
             hex = input.val(),
-            format = input.attr('data-format'),
-            keywords = input.attr('data-keywords'),
             opacity = input.attr('data-opacity'),
 
             // Helpful references
@@ -477,7 +473,7 @@
             if( settings.opacity ) input.attr('data-opacity', opacity);
 
             // Set color string
-            if( format === 'rgb' ) {
+            if( settings.format === 'rgb' ) {
                 // Returns RGB(A) string
                 var rgb = hex2rgb(hex),
                     opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
@@ -515,9 +511,8 @@
 
         var hex,
             hsb,
-            format = input.attr('data-format'),
-            keywords = input.attr('data-keywords'),
             opacity,
+            keywords,
             x, y, r, phi,
 
             // Helpful references
@@ -553,7 +548,7 @@
         hsb = hex2hsb(hex);
 
         // Get array of lowercase keywords
-        keywords = !keywords ? [] : $.map(keywords.split(','), function(a) {
+        keywords = !settings.keywords ? [] : $.map(settings.keywords.split(','), function(a) {
             return $.trim(a.toLowerCase());
         });
 
@@ -949,8 +944,8 @@
         // Update value on blur
         .on('blur.minicolors', '.minicolors-input', function() {
             var input = $(this),
-                keywords = input.attr('data-keywords'),
                 settings = input.data('minicolors-settings'),
+                keywords,
                 hex,
                 rgba,
                 swatchOpacity;
@@ -958,7 +953,7 @@
             if( !input.data('minicolors-initialized') ) return;
 
             // Get array of lowercase keywords
-            keywords = !keywords ? [] : $.map(keywords.split(','), function(a) {
+            keywords = !settings.keywords ? [] : $.map(settings.keywords.split(','), function(a) {
                 return $.trim(a.toLowerCase());
             });
 
