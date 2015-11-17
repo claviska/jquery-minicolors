@@ -23,6 +23,8 @@
     /* jshint ignore:end */
 }(function ($) {
 
+    'use strict';
+
     // Defaults
     $.minicolors = {
         defaults: {
@@ -148,7 +150,8 @@
 
         var minicolors = $('<div class="minicolors" />'),
             defaults = $.minicolors.defaults,
-            opacity = input.attr('data-opacity');
+            opacity = input.attr('data-opacity'),
+            size;
 
         // Do nothing if already initialized
         if( input.data('minicolors-initialized') ) return;
@@ -171,9 +174,9 @@
 
         // Input size
         if( settings.format === 'rgb' ) {
-            $input_size = settings.opacity ? '25' : '20';
+            size = settings.opacity ? '25' : '20';
         } else {
-            $input_size = settings.keywords ? '11' : '7';
+            size = settings.keywords ? '11' : '7';
         }
 
         // The input
@@ -181,7 +184,7 @@
             .addClass('minicolors-input')
             .data('minicolors-initialized', false)
             .data('minicolors-settings', settings)
-            .prop('size', $input_size)
+            .prop('size', size)
             .wrap(minicolors)
             .after(
                 '<div class="minicolors-panel minicolors-slider-' + settings.control + '">' +
@@ -363,6 +366,7 @@
 
             hex = input.val(),
             opacity = input.attr('data-opacity'),
+            value,
 
             // Helpful references
             minicolors = input.parent(),
@@ -513,6 +517,8 @@
             hsb,
             opacity,
             keywords,
+            alpha,
+            value,
             x, y, r, phi,
 
             // Helpful references
@@ -793,13 +799,13 @@
 
     // Checks if a string is a valid RGB(A) string
     function isRgb(string) {
-        rgb = string.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        var rgb = string.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
         return (rgb && rgb.length === 4) ? true : false;
     }
 
     // Function to get alpha from a RGB(A) string
     function getAlpha(rgba) {
-        rgba = rgba.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+(\.\d{1,2})?|\.\d{1,2})[\s+]?/i);
+        var rgba = rgba.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+(\.\d{1,2})?|\.\d{1,2})[\s+]?/i);
         return (rgba && rgba.length === 6) ? rgba[4] : '1';
     }
 
@@ -948,7 +954,8 @@
                 keywords,
                 hex,
                 rgba,
-                swatchOpacity;
+                swatchOpacity,
+                value;
 
             if( !input.data('minicolors-initialized') ) return;
 
