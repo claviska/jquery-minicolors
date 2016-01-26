@@ -993,8 +993,8 @@
         // Selected a swatch
         .on('click.minicolors', '.minicolors-swatches li', function(event) {
             event.preventDefault();
-            var target = $(this), input = target.parents('.minicolors').find('.minicolors-input');
-            input.val(target.data('swatch-color'));
+            var target = $(this), input = target.parents('.minicolors').find('.minicolors-input'), color = target.data('swatch-color');
+            input.val(color).attr('data-opacity', getAlpha(color));
             updateFromInput(input);
         })
         // Show panel when swatch is clicked
