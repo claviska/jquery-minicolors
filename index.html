@@ -78,6 +78,7 @@
                     letterCase: $(this).attr('data-letterCase') || 'lowercase',
                     opacity: $(this).attr('data-opacity'),
                     position: $(this).attr('data-position') || 'bottom left',
+                    swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
                     change: function(value, opacity) {
                         if( !value ) return;
                         if( opacity ) value += ', ' + opacity;
@@ -341,6 +342,18 @@
                             </div>
                             <span class="help-block">
                                 Input group example with addon.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="letter-case">Swatches</label>
+                            <br>
+                            <input type="text" id="swatches" class="form-control demo" data-format="rgb" data-opacity="1" data-swatches="#fff|#000|#f00|#0f0|#00f|#ff0|rgba(0,0,255,0.5)"  value="#abcdef">
+                            <span class="help-block">
+                                Example with swatches.
                             </span>
                         </div>
                     </div>

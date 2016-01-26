@@ -54,6 +54,10 @@
     display: none;
 }
 
+.minicolors-panel.with-swatches {
+	height: 182px;
+}
+
 .minicolors-panel.minicolors-visible {
     display: block;
 }
@@ -193,6 +197,28 @@
     box-sizing: content-box;
 }
 
+/* Swatches */
+.minicolors-swatches,.minicolors-swatches li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	overflow: hidden;
+	position: absolute;
+	top: 157px;
+	left: 5px;
+}
+
+.minicolors-swatches .minicolors-swatch {
+	position: relative;
+	float: left;
+	cursor: pointer;
+	margin:0 4px 0 0;
+}
+
+.minicolors-swatch.selected {
+	border-color:#000;
+}
+
 /* Inline controls */
 .minicolors-inline {
     display: inline-block;
@@ -217,6 +243,15 @@
     left: 5px;
     width: 18px;
     height: 18px;
+}
+.minicolors-theme-default .minicolors-swatches .minicolors-swatch {
+    top: 0;
+    left: 0;
+    width: 18px;
+    height: 18px;
+}
+.minicolors-theme-default .minicolors-swatches {
+	height: 20px;
 }
 .minicolors-theme-default.minicolors-position-right .minicolors-swatch {
     left: auto;
@@ -245,6 +280,12 @@
     width: 28px;
     height: 28px;
     border-radius: 3px;
+}
+.minicolors-theme-bootstrap .minicolors-swatches .minicolors-swatch {
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
 }
 .minicolors-theme-bootstrap .minicolors-swatch-color {
     border-radius: inherit;
