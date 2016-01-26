@@ -78,6 +78,7 @@
                     letterCase: $(this).attr('data-letterCase') || 'lowercase',
                     opacity: $(this).attr('data-opacity'),
                     position: $(this).attr('data-position') || 'bottom left',
+                    swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
                     change: function(value, opacity) {
                         if( !value ) return;
                         if( opacity ) value += ', ' + opacity;
@@ -345,6 +346,28 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="letter-case">Swatches</label>
+                            <br>
+                            <input type="text" id="swatches" class="form-control demo" data-swatches="#fff|#000|#f00|#0f0|#00f|#ff0|#0ff"  value="#abcdef">
+                            <span class="help-block">
+                                Example with swatches.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="letter-case">Swatches and opacity</label>
+                            <br>
+                            <input type="text" id="swatches" class="form-control demo" data-format="rgb" data-opacity="1" data-swatches="#fff|#000|#f00|#0f0|#00f|#ff0|rgba(0,0,255,0.5)"  value="#abcdef">
+                            <span class="help-block">
+                                Example with swatches and opacity.
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- API -->
@@ -383,7 +406,8 @@ $.minicolors = {
         position: 'bottom left',
         show: null,
         showSpeed: 100,
-        theme: 'default'
+        theme: 'default',
+        swatches: []
     }
 };
 </pre>
@@ -551,6 +575,14 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
 }
 </pre>
                     </div>
+                </dd>
+                
+                <dt>swatches</dt>
+                <dd>
+                    <p>
+                        An array containing some colors, in either rgb(a) or hex format, that will
+                        show up under the main color grid. There can be only up to 7 colors.
+                    </p>
                 </dd>
             </dl>
 

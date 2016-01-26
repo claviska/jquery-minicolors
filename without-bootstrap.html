@@ -55,6 +55,7 @@
                     letterCase: $(this).attr('data-letterCase') || 'lowercase',
                     opacity: $(this).attr('data-opacity'),
                     position: $(this).attr('data-position') || 'bottom left',
+                    swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
                     change: function(hex, opacity) {
                         var log;
                         try {
@@ -168,6 +169,16 @@
         <label for="letter-case">Letter Case</label>
         <br>
         <input type="text" id="letter-case" class="demo" data-letterCase="uppercase">
+    </div>
+    <div class="form-group">
+        <label for="letter-case">Swatches</label>
+        <br>
+        <input type="text" id="swatches" class="demo" data-swatches="#fff|#000|#f00|#0f0|#00f|#ff0|#0ff" value="#f00">
+    </div>
+    <div class="form-group">
+        <label for="letter-case">Swatches and opacity</label>
+        <br>
+        <input type="text" id="swatches-opacity" class="demo" data-format="rgb" data-opacity="1" data-swatches="#fff|#000|#f00|#0f0|#00f|#ff0|rgba(0,0,255,0.5)" value="#f00">
     </div>
 
 </body>

@@ -45,7 +45,8 @@
             position: 'bottom left',
             show: null,
             showSpeed: 100,
-            theme: 'default'
+            theme: 'default',
+            swatches: []
         }
     };
 
@@ -151,7 +152,11 @@
         var minicolors = $('<div class="minicolors" />'),
             defaults = $.minicolors.defaults,
             opacity = input.attr('data-opacity'),
-            size;
+            size,
+            swatches,
+            swatch,
+            panel,
+            i;
 
         // Do nothing if already initialized
         if( input.data('minicolors-initialized') ) return;
@@ -200,18 +205,43 @@
                     '</div>' +
                 '</div>'
             );
-
+        
         // The swatch
         if( !settings.inline ) {
-            input.after('<span class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color"></span></span>');
-            input.next('.minicolors-swatch').on('click', function(event) {
+            input.after('<span class="minicolors-swatch minicolors-sprite minicolors-input-swatch"><span class="minicolors-swatch-color"></span></span>');
+            input.next('.minicolors-input-swatch').on('click', function(event) {
                 event.preventDefault();
                 input.focus();
             });
         }
 
         // Prevent text selection in IE
-        input.parent().find('.minicolors-panel').on('selectstart', function() { return false; }).end();
+        panel = input.parent().find('.minicolors-panel');
+        panel.on('selectstart', function() { return false; }).end();
+        
+        // Swatches
+        if (settings.swatches && settings.swatches.length !== 0) {
+            if (settings.swatches.length > 7) {
+                settings.swatches.length = 7;
+            }
+            panel.addClass('minicolors-with-swatches');
+            swatches = $('<ul class="minicolors-swatches"></ul>')
+                .appendTo(panel);
+            for(i = 0; i < settings.swatches.length; ++i) {
+                swatch = settings.swatches[i];
+                swatch = isRgb(swatch) ? parseRgb(swatch, true) : hex2rgb(parseHex(swatch, true));
+                $('<li class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color"></span></li>')
+                    .appendTo(swatches)
+                    .data('swatch-color', settings.swatches[i])
+                    .find('.minicolors-swatch-color')
+                    .css({
+                        backgroundColor: rgb2hex(swatch),
+                        opacity: swatch.a
+                    });
+                settings.swatches[i] = swatch;
+            }
+                
+        }
 
         // Inline controls
         if( settings.inline ) input.parent().addClass('minicolors-inline');
@@ -371,7 +401,7 @@
             // Helpful references
             minicolors = input.parent(),
             settings = input.data('minicolors-settings'),
-            swatch = minicolors.find('.minicolors-swatch'),
+            swatch = minicolors.find('.minicolors-input-swatch'),
 
             // Panel objects
             grid = minicolors.find('.minicolors-grid'),
@@ -524,7 +554,7 @@
             // Helpful references
             minicolors = input.parent(),
             settings = input.data('minicolors-settings'),
-            swatch = minicolors.find('.minicolors-swatch'),
+            swatch = minicolors.find('.minicolors-input-swatch'),
 
             // Panel objects
             grid = minicolors.find('.minicolors-grid'),
@@ -678,16 +708,41 @@
     function doChange(input, value, opacity) {
 
         var settings = input.data('minicolors-settings'),
-            lastChange = input.data('minicolors-lastChange');
+            lastChange = input.data('minicolors-lastChange'),
+            obj,
+            sel,
+            i;
 
         // Only run if it actually changed
         if( !lastChange || lastChange.value !== value || lastChange.opacity !== opacity ) {
-
+            
             // Remember last-changed value
             input.data('minicolors-lastChange', {
                 value: value,
                 opacity: opacity
             });
+
+            // Check and select applicable swatch
+            if (settings.swatches && settings.swatches.length !== 0) {
+                if(!isRgb(value)) {
+                    obj = hex2rgb(value);
+                }
+                else {
+                    obj = parseRgb(value, true);
+                }
+                sel = -1;
+                for(i = 0; i < settings.swatches.length; ++i) {
+                    if (obj.r === settings.swatches[i].r && obj.g === settings.swatches[i].g && obj.b === settings.swatches[i].b && obj.a === settings.swatches[i].a) {
+                        sel = i;
+                        break;
+                    }
+                }
+                
+                input.parent().find('.minicolors-swatches .minicolors-swatch').removeClass('selected');
+                if (i !== -1) {
+                    input.parent().find('.minicolors-swatches .minicolors-swatch').eq(i).addClass('selected');
+                }
+            }
 
             // Fire change event
             if( settings.change ) {
@@ -935,8 +990,15 @@
         .on('mouseup.minicolors touchend.minicolors', function() {
             $(this).removeData('minicolors-target');
         })
+        // Selected a swatch
+        .on('click.minicolors', '.minicolors-swatches li', function(event) {
+            event.preventDefault();
+            var target = $(this), input = target.parents('.minicolors').find('.minicolors-input'), color = target.data('swatch-color');
+            input.val(color).attr('data-opacity', getAlpha(color));
+            updateFromInput(input);
+        })
         // Show panel when swatch is clicked
-        .on('mousedown.minicolors touchstart.minicolors', '.minicolors-swatch', function(event) {
+        .on('mousedown.minicolors touchstart.minicolors', '.minicolors-input-swatch', function(event) {
             var input = $(this).parent().find('.minicolors-input');
             event.preventDefault();
             show(input);
@@ -993,7 +1055,7 @@
             if( value.toLowerCase() === 'transparent' ) swatchOpacity = 0;
             input
                 .closest('.minicolors')
-                .find('.minicolors-swatch > span')
+                .find('.minicolors-input-swatch > span')
                 .css('opacity', swatchOpacity);
 
             // Set input value
