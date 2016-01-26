@@ -224,7 +224,7 @@
             if (settings.swatches.length > 7) {
                 settings.swatches.length = 7;
             }
-            panel.addClass('with-swatches');
+            panel.addClass('minicolors-with-swatches');
             swatches = $('<ul class="minicolors-swatches"></ul>')
                 .appendTo(panel);
             for(i = 0; i < settings.swatches.length; ++i) {

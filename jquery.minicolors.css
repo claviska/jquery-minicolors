@@ -54,7 +54,7 @@
     display: none;
 }
 
-.minicolors-panel.with-swatches {
+.minicolors-panel.minicolors-with-swatches {
 	height: 182px;
 }
 
@@ -213,6 +213,10 @@
 	float: left;
 	cursor: pointer;
 	margin:0 4px 0 0;
+}
+
+.minicolors-with-opacity .minicolors-swatches .minicolors-swatch {
+	margin-right:7px;
 }
 
 .minicolors-swatch.selected {
