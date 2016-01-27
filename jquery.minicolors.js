@@ -151,7 +151,6 @@
 
         var minicolors = $('<div class="minicolors" />'),
             defaults = $.minicolors.defaults,
-            opacity = input.attr('data-opacity'),
             size,
             swatches,
             swatch,
@@ -396,7 +395,6 @@
 
             hex = input.val(),
             opacity = input.attr('data-opacity'),
-            value,
 
             // Helpful references
             minicolors = input.parent(),
@@ -497,47 +495,84 @@
                     break;
 
             }
-
+            
             // Handle opacity
             if( settings.opacity ) {
                 opacity = parseFloat(1 - (opacityPos.y / opacitySlider.height())).toFixed(2);
             } else {
                 opacity = 1;
             }
-            if( settings.opacity ) input.attr('data-opacity', opacity);
+            
+            updateInput(input, hex, opacity);
+        }
+        else {
+            // Set swatch color
+            swatch.find('span').css({
+                backgroundColor: hex,
+                opacity: opacity
+            });
 
-            // Set color string
-            if( settings.format === 'rgb' ) {
-                // Returns RGB(A) string
-                var rgb = hex2rgb(hex),
-                    opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
-                if( isNaN( opacity ) || !settings.opacity ) opacity = 1;
-
-                if( input.minicolors('rgbObject').a <= 1 && rgb && settings.opacity) {
-                    // Set RGBA string if alpha
-                    value = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat( opacity ) + ')';
-                } else {
-                    // Set RGB string (alpha = 1)
-                    value = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
-                }
-            } else {
-                // Returns hex color
-                value = convertCase( hex, settings.letterCase );
+            // Handle change event
+            doChange(input, hex, opacity);
+        }
+    }
+    
+    // Sets the value of the input and does the appropriate conversions
+    // to respect settings, also updates the swatch
+    function updateInput(input, value, opacity) {
+        var rgb,
+        
+        // Helpful references
+        minicolors = input.parent(),
+        settings = input.data('minicolors-settings'),
+        swatch = minicolors.find('.minicolors-input-swatch');
+        
+        if( settings.opacity ) input.attr('data-opacity', opacity);
+        
+        // Set color string
+        if( settings.format === 'rgb' ) {
+            // Returns RGB(A) string
+            
+            // Checks for input format and does the conversion
+            if ( isRgb(value) ) {
+                rgb = parseRgb(value, true);
             }
+            else {
+                rgb = hex2rgb(parseHex(value, true));
+            }
+            
+            opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
+            if( isNaN( opacity ) || !settings.opacity ) opacity = 1;
 
-            // Update value from picker
-            input.val( value );
+            if( input.minicolors('rgbObject').a <= 1 && rgb && settings.opacity) {
+                // Set RGBA string if alpha
+                value = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat( opacity ) + ')';
+            } else {
+                // Set RGB string (alpha = 1)
+                value = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+            }
+        } else {
+            // Returns hex color
+            
+            // Checks for input format and does the conversion
+            if ( isRgb(value) ) {
+                value = rgbString2hex(value);
+            }
+            
+            value = convertCase( value, settings.letterCase );
         }
 
+        // Update value from picker
+        input.val( value );
+        
         // Set swatch color
         swatch.find('span').css({
-            backgroundColor: hex,
+            backgroundColor: value,
             opacity: opacity
         });
 
         // Handle change event
         doChange(input, value, opacity);
-
     }
 
     // Sets the color picker values from the input
@@ -806,8 +841,7 @@
     function parseRgb(string, obj) {
 
         var values = string.replace(/[^\d,.]/g, ''),
-            rgba = values.split(','),
-            output;
+            rgba = values.split(',');
 
         rgba[0] = keepWithin(parseInt(rgba[0], 10), 0, 255);
         rgba[1] = keepWithin(parseInt(rgba[1], 10), 0, 255);
@@ -860,7 +894,7 @@
 
     // Function to get alpha from a RGB(A) string
     function getAlpha(rgba) {
-        var rgba = rgba.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+(\.\d{1,2})?|\.\d{1,2})[\s+]?/i);
+        rgba = rgba.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+(\.\d{1,2})?|\.\d{1,2})[\s+]?/i);
         return (rgba && rgba.length === 6) ? rgba[4] : '1';
     }
 
@@ -994,7 +1028,7 @@
         .on('click.minicolors', '.minicolors-swatches li', function(event) {
             event.preventDefault();
             var target = $(this), input = target.parents('.minicolors').find('.minicolors-input'), color = target.data('swatch-color');
-            input.val(color).attr('data-opacity', getAlpha(color));
+            updateInput(input, color, getAlpha(color));
             updateFromInput(input);
         })
         // Show panel when swatch is clicked
