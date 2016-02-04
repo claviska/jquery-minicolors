@@ -321,3 +321,13 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+/* Semantic Ui theme */
+.minicolors-theme-semanticui .minicolors-swatch {
+    top: 0;
+    left: 0;
+    padding: 18px;
+}
+.minicolors-theme-semanticui input {
+    text-indent: 30px;
+}
