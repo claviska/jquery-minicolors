@@ -48,7 +48,6 @@
     border: solid 1px #CCC;
     box-shadow: 0 0 20px rgba(0, 0, 0, .2);
     z-index: 99999;
-    -webkit-box-sizing: content-box;
     box-sizing: content-box;
     display: none;
 }
@@ -177,7 +176,6 @@
     height: 8px;
     border-radius: 8px;
     border: solid 2px white;
-    -webkit-box-sizing: content-box;
     box-sizing: content-box;
 }
 
@@ -190,7 +188,6 @@
     background: white;
     border: solid 1px black;
     margin-top: -2px;
-    -webkit-box-sizing: content-box;
     box-sizing: content-box;
 }
 
