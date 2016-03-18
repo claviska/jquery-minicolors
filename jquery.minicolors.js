@@ -204,7 +204,7 @@
                     '</div>' +
                 '</div>'
             );
-        
+
         // The swatch
         if( !settings.inline ) {
             input.after('<span class="minicolors-swatch minicolors-sprite minicolors-input-swatch"><span class="minicolors-swatch-color"></span></span>');
@@ -217,7 +217,7 @@
         // Prevent text selection in IE
         panel = input.parent().find('.minicolors-panel');
         panel.on('selectstart', function() { return false; }).end();
-        
+
         // Swatches
         if (settings.swatches && settings.swatches.length !== 0) {
             if (settings.swatches.length > 7) {
@@ -239,7 +239,7 @@
                     });
                 settings.swatches[i] = swatch;
             }
-                
+
         }
 
         // Inline controls
@@ -495,14 +495,14 @@
                     break;
 
             }
-            
+
             // Handle opacity
             if( settings.opacity ) {
                 opacity = parseFloat(1 - (opacityPos.y / opacitySlider.height())).toFixed(2);
             } else {
                 opacity = 1;
             }
-            
+
             updateInput(input, hex, opacity);
         }
         else {
@@ -516,23 +516,23 @@
             doChange(input, hex, opacity);
         }
     }
-    
+
     // Sets the value of the input and does the appropriate conversions
     // to respect settings, also updates the swatch
     function updateInput(input, value, opacity) {
         var rgb,
-        
+
         // Helpful references
         minicolors = input.parent(),
         settings = input.data('minicolors-settings'),
         swatch = minicolors.find('.minicolors-input-swatch');
-        
+
         if( settings.opacity ) input.attr('data-opacity', opacity);
-        
+
         // Set color string
         if( settings.format === 'rgb' ) {
             // Returns RGB(A) string
-            
+
             // Checks for input format and does the conversion
             if ( isRgb(value) ) {
                 rgb = parseRgb(value, true);
@@ -540,7 +540,7 @@
             else {
                 rgb = hex2rgb(parseHex(value, true));
             }
-            
+
             opacity = input.attr('data-opacity') === '' ? 1 : keepWithin( parseFloat( input.attr('data-opacity') ).toFixed(2), 0, 1 );
             if( isNaN( opacity ) || !settings.opacity ) opacity = 1;
 
@@ -553,18 +553,18 @@
             }
         } else {
             // Returns hex color
-            
+
             // Checks for input format and does the conversion
             if ( isRgb(value) ) {
                 value = rgbString2hex(value);
             }
-            
+
             value = convertCase( value, settings.letterCase );
         }
 
         // Update value from picker
         input.val( value );
-        
+
         // Set swatch color
         swatch.find('span').css({
             backgroundColor: value,
@@ -750,7 +750,7 @@
 
         // Only run if it actually changed
         if( !lastChange || lastChange.value !== value || lastChange.opacity !== opacity ) {
-            
+
             // Remember last-changed value
             input.data('minicolors-lastChange', {
                 value: value,
@@ -772,7 +772,7 @@
                         break;
                     }
                 }
-                
+
                 input.parent().find('.minicolors-swatches .minicolors-swatch').removeClass('selected');
                 if (i !== -1) {
                     input.parent().find('.minicolors-swatches .minicolors-swatch').eq(i).addClass('selected');
