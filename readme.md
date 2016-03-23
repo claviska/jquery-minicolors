@@ -7,6 +7,7 @@ This is a jQuery plugin that creates a colour picker from an input field. It is 
 - Added "limited" palette that allows the user to specify their only a set of allowed colour rather than any colour
 - Added "allowTransparency" setting which allows users to check a checkbox to select the colour "transparent"
 - Added "showColour" setting which determines if to show the selected colour as the text, as the background colour of the input field, or both
+- Added "returnName" setting which makes the widget return a name instead of HEX value when possible
 - Removed many unnecessary features 
 - Removed dependency on images and made the colour picker completely CSS
 

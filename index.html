@@ -18,7 +18,8 @@
 	    width: 300px;
 	  }
 	  .colourpicker {
-	    margin-top: 10px;
+      margin-top: 3px;
+	    margin-bottom: 20px;
 	  }
 	  .input-group {
 	    width: 300px;
@@ -27,10 +28,22 @@
   </head>
   <body>
 
-  <input type="text" id="col1" class="form-control">
-  <input type="text" id="col2" class="form-control" value = "#ff0000">
-  <input type="text" id="col3" class="form-control" value = "#abc123">
-  <input type="text" id="col4" class="form-control">
+  <div>
+    Value: <span></span>
+    <input type="text" id="col1" class="form-control my-cp">
+  </div>
+  <div>
+    Value: <span></span> 
+    <input type="text" id="col2" class="form-control my-cp" value = "#ff0000">
+  </div>
+  <div>
+    Value: <span></span>
+    <input type="text" id="col3" class="form-control my-cp" value = "#abc123">
+  </div>
+  <div>
+    Value: <span></span>
+    <input type="text" id="col4" class="form-control my-cp">
+  </div>
 
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -42,8 +55,18 @@
   <script>
     $("#col1").colourpicker();
 	  $("#col2").colourpicker({showColour : "background"});
-	  $("#col3").colourpicker({allowTransparent : true});
+	  $("#col3").colourpicker({allowTransparent : true, returnName : true});
 	  $("#col4").colourpicker({palette : "limited"});
+    
+    $.each($(".my-cp"), function(i, el) {
+      var value = $(el).colourpicker('value');
+      $($(el).parent().parent().find("span")[0]).text(value);
+    });
+    
+    $(document).on("change", ".my-cp", function(e) {
+      var value = $(e.target).colourpicker('value');
+      $($(e.target).parent().parent().find("span")[0]).text(value);
+    });
   </script>
   </body>
 </html>

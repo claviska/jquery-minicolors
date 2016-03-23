@@ -16,6 +16,13 @@
 .colourpicker .colourpicker-input[disabled] {
   background-color: #EEEEEE !important;
 }
+.colourpicker .colourpicker-input[readonly] {
+  -webkit-user-select: none;     
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
 .colourpicker-panel {
   position: absolute;
   background: white;
