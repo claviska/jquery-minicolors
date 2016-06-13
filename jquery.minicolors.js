@@ -118,7 +118,7 @@
                     } else {
                         // Setter
                         $(this).each( function() {
-                            if( typeof(data) === 'object' ) {
+                            if( typeof(data) === 'object' && typeof(data) !== null ) {
                                 if( data.opacity ) {
                                     $(this).attr('data-opacity', keepWithin(data.opacity, 0, 1));
                                 }
