@@ -289,7 +289,7 @@
 .minicolors-theme-bootstrap .minicolors-swatch-color {
     border-radius: inherit;
 }
-.minicolors-theme-bootstrap.minicolors-position-right .minicolors-swatch {
+.minicolors-theme-bootstrap.minicolors-position-right > .minicolors-swatch {
     left: auto;
     right: 3px;
 }
