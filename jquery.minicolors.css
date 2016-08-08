@@ -192,7 +192,8 @@
 }
 
 /* Swatches */
-.minicolors-swatches,.minicolors-swatches li {
+.minicolors-swatches,
+.minicolors-swatches li {
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -210,11 +211,11 @@
 }
 
 .minicolors-with-opacity .minicolors-swatches .minicolors-swatch {
-	margin-right:7px;
+	margin-right: 7px;
 }
 
 .minicolors-swatch.selected {
-	border-color:#000;
+	border-color: #000;
 }
 
 /* Inline controls */
