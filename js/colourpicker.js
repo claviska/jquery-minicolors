@@ -9,6 +9,7 @@
   *
   * @license: http://opensource.org/licenses/MIT
   *
+  * v1.0
   */
   (function (factory) {
     /* jshint ignore:start */
