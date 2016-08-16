@@ -5,6 +5,8 @@
   * Dean Attali, http://deanattali.com
   * Cory LaViska for A Beautiful Site, LLC: http://www.abeautifulsite.net/
   *
+  * Version: 1.1
+  *
   * Contribute: https://github.com/daattali/jquery-colourpicker
   *
   * @license: http://opensource.org/licenses/MIT
@@ -430,7 +432,7 @@
       // Update select colour
       if( settings.palette == 'limited') {
         colourpicker.find('.cp-list-col').removeClass('selected-col');
-        colourpicker.find('.cp-list-col[data-cp-col=' + hex + ']')
+        colourpicker.find('.cp-list-col[data-cp-col="' + hex + '"]')
           .addClass('selected-col')
           .addClass(isColDark(hex) ? 'dark' : 'light');
       }      
@@ -487,7 +489,7 @@
       // Update select colour
       if( settings.palette == 'limited') {
         colourpicker.find('.cp-list-col').removeClass('selected-col');
-        colourpicker.find('.cp-list-col[data-cp-col=' + hex + ']')
+        colourpicker.find('.cp-list-col[data-cp-col="' + hex + '"]')
           .addClass('selected-col')
           .addClass(isColDark(hex) ? 'dark' : 'light');
       }

@@ -2,6 +2,8 @@
 
 > *Copyright 2016 [Dean Attali](http://deanattali.com) and [Cory LaViska](http://www.abeautifulsite.net/). Licensed under the MIT license.*
 
+v1.1
+
 This is a jQuery plugin that creates a colour picker from an input field. It is a fork of [another plugin](https://github.com/claviska/jquery-minicolors) with many modifications made to make it more suited to integrate with [Shiny](http://shiny.rstudio.com/) and to add some useful features.
 
 ## Modifications by Dean Attali:  
@@ -15,7 +17,7 @@ This is a jQuery plugin that creates a colour picker from an input field. It is 
 
 This plugin works for IE8+, Chrome, Firefox, mobile, and should work for all other major browsers.
 
-Modified plugin is being used in [shinyjs](https://github.com/daattali/shinyjs/) - an R package for easily performing JavaScript operations in shiny applications.
+Modified plugin is being used in [colourpicker](https://github.com/daattali/colourpicker/) - an R package providing colour pickers for Shiny apps.
 
 The [`index.html`](./index.html) page contains very basic examples of how to use this plugin.
 
