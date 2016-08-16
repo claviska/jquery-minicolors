@@ -1,4 +1,4 @@
-/*
+/**
   * jQuery Colour picker: A tiny colour picker with useful extra features
   *
   * Copyright:
@@ -10,8 +10,6 @@
   * Contribute: https://github.com/daattali/jquery-colourpicker
   *
   * @license: http://opensource.org/licenses/MIT
-  *
-  * v1.0
   */
   (function (factory) {
     /* jshint ignore:start */
