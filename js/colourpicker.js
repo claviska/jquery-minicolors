@@ -5,7 +5,7 @@
   * Dean Attali, http://deanattali.com
   * Cory LaViska for A Beautiful Site, LLC: http://www.abeautifulsite.net/
   *
-  * Version: 1.1
+  * Version: 1.2
   *
   * Contribute: https://github.com/daattali/jquery-colourpicker
   *
@@ -227,6 +227,8 @@
       // If only background colour is shown, don't let the user select the text
       if ( settings.showColour == "background" ) {
         input.attr('readonly', 'readonly');
+      } else {
+        input.removeAttr('readonly');
       }
       
       // Return a colour name instead of HEX when possible
