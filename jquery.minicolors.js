@@ -859,12 +859,20 @@
 
         // Return RGBA object
         if( obj ) {
-            return {
-                r: rgba[0],
-                g: rgba[1],
-                b: rgba[2],
-                a: rgba[3] ? rgba[3] : null
-            };
+            if (rgba[3]) {
+                return {
+                    r: rgba[0],
+                    g: rgba[1],
+                    b: rgba[2],
+                    a: rgba[3]
+                };
+            } else {
+                return {
+                    r: rgba[0],
+                    g: rgba[1],
+                    b: rgba[2]
+                };
+            }
         }
 
         // Return RGBA string
