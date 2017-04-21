@@ -1,6 +1,6 @@
 {
   "name": "@claviska/jquery-minicolors",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "homepage": "https://github.com/claviska/jquery-minicolors",
   "author": "Cory LaViska",
   "description": "jQuery MiniColors Plugin",
@@ -11,7 +11,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "jquery" : ">= 1.7.x"
+    "jquery": ">= 1.7.x"
   },
   "repository": {
     "type": "git",
