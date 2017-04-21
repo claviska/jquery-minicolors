@@ -311,11 +311,28 @@
     // Moves the selected picker
     function move(target, event, animate) {
 
+        // Fix offset for WebKit based browser when viewport is zoomed-in
+        // see https://github.com/jquery/jquery/issues/3187
+        var offset = target.offset();
+        //get document element width without scrollbar
+        var prevStyle = document.body.style.overflow || '';
+        document.body.style.overflow = 'hidden';
+        var docWidth = document.documentElement.clientWidth;
+        document.body.style.overflow = prevStyle;
+        //kind of a hack to determine if the viewport has been scaled
+        if(docWidth / window.innerWidth !== 1) {
+            var docRect = document.documentElement.getBoundingClientRect();
+            offset = {
+                top: offset.top - window.pageYOffset - docRect.top,
+                left: offset.left - window.pageXOffset - docRect.left
+            };
+        }
+
         var input = target.parents('.minicolors').find('.minicolors-input'),
             settings = input.data('minicolors-settings'),
             picker = target.find('[class$=-picker]'),
-            offsetX = target.offset().left,
-            offsetY = target.offset().top,
+            offsetX = offset.left,
+            offsetY = offset.top,
             x = Math.round(event.pageX - offsetX),
             y = Math.round(event.pageY - offsetY),
             duration = animate ? settings.animationSpeed : 0,
