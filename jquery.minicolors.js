@@ -226,7 +226,6 @@
         });
         settings.swatches[i] = swatch;
       }
-
     }
 
     // Inline controls
@@ -235,7 +234,6 @@
     updateFromInput(input, false);
 
     input.data('minicolors-initialized', true);
-
   }
 
   // Returns the input back to its original state
@@ -352,7 +350,6 @@
         updateFromControl(input, target);
       });
     }
-
   }
 
   // Sets the input based on the color picker values
@@ -703,7 +700,6 @@
     if(input.data('minicolors-initialized')) {
       doChange(input, value, opacity);
     }
-
   }
 
   // Runs the change and changeDelay callbacks
@@ -758,27 +754,36 @@
       }
       input.trigger('change').trigger('input');
     }
-
   }
 
   // Generates an RGB(A) object based on the input's value
   function rgbObject(input) {
-    var hex = parseHex($(input).val(), true);
-    var rgb = hex2rgb(hex);
-    var opacity = $(input).attr('data-opacity');
-    if(!rgb) return null;
-    if(opacity !== undefined) $.extend(rgb, { a: parseFloat(opacity) });
+    var rgb,
+      opacity = $(input).attr('data-opacity');
+    if( isRgb($(input).val()) ) {
+      rgb = parseRgb($(input).val(), true);
+    } else {
+      var hex = parseHex($(input).val(), true);
+      rgb = hex2rgb(hex);
+    }
+    if( !rgb ) return null;
+    if( opacity !== undefined ) $.extend(rgb, { a: parseFloat(opacity) });
     return rgb;
   }
 
   // Generates an RGB(A) string based on the input's value
   function rgbString(input, alpha) {
-    var hex = parseHex($(input).val(), true);
-    var rgb = hex2rgb(hex);
-    var opacity = $(input).attr('data-opacity');
-    if(!rgb) return null;
-    if(opacity === undefined) opacity = 1;
-    if(alpha) {
+    var rgb,
+      opacity = $(input).attr('data-opacity');
+    if( isRgb($(input).val()) ) {
+      rgb = parseRgb($(input).val(), true);
+    } else {
+      var hex = parseHex($(input).val(), true);
+      rgb = hex2rgb(hex);
+    }
+    if( !rgb ) return null;
+    if( opacity === undefined ) opacity = 1;
+    if( alpha ) {
       return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat(opacity) + ')';
     } else {
       return 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
@@ -814,13 +819,21 @@
     }
 
     // Return RGBA object
-    if(obj) {
-      return {
-        r: rgba[0],
-        g: rgba[1],
-        b: rgba[2],
-        a: rgba[3] ? rgba[3] : null
-      };
+    if( obj ) {
+      if (rgba[3]) {
+        return {
+          r: rgba[0],
+          g: rgba[1],
+          b: rgba[2],
+          a: rgba[3]
+        };
+      } else {
+        return {
+          r: rgba[0],
+          g: rgba[1],
+          b: rgba[2]
+        };
+      }
     }
 
     // Return RGBA string
