@@ -1,48 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-	
-	<link href="css/colourpicker.css" rel="stylesheet">
-	
-	<style>
-	  body {
-	    padding: 30px;
-	  }
-	  .form-control {
-	    width: 300px;
-	  }
-	  .colourpicker {
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="css/colourpicker.css" rel="stylesheet">
+
+  <style>
+    body {
+      padding: 30px;
+    }
+    
+    .colourpicker {
       margin-top: 3px;
-	    margin-bottom: 20px;
-	  }
-	  .input-group {
-	    width: 300px;
-	  }
-	</style>
-  </head>
-  <body>
+      margin-bottom: 20px;
+      width: 300px;
+    }
+
+  </style>
+</head>
+
+<body>
 
   <div>
-    Value: <span></span>
+    Default settings
+    <br> Value: <span></span>
     <input type="text" id="col1" class="form-control my-cp">
   </div>
   <div>
-    Value: <span></span> 
-    <input type="text" id="col2" class="form-control my-cp" value = "#ff0000">
+    {showColour: background}
+    <br> Value: <span></span>
+    <input type="text" id="col2" class="form-control my-cp" value="#ff0000">
   </div>
   <div>
-    Value: <span></span>
-    <input type="text" id="col3" class="form-control my-cp" value = "#abc123">
+    {allowTransparent: true}
+    <Br> Value: <span></span>
+    <input type="text" id="col3" class="form-control my-cp" value="#abc123">
   </div>
   <div>
-    Value: <span></span>
+    {palette: "limited", returnName: true}
+    <br> Value: <span></span>
     <input type="text" id="col4" class="form-control my-cp">
+  </div>
+  <div>
+    {allowAlpha: true, showColour: "text"}
+    <Br> Value: <span></span>
+    <input type="text" id="col5" class="form-control my-cp">
+  </div>
+  <div>
+    {allowAlpha: true, showColour: "both"}
+    <Br> Value: <span></span>
+    <input type="text" id="col6" class="form-control my-cp">
+  </div>
+  <div>
+    {palette: "limited", allowAlpha: true, returnName: true, <br>
+    allowedCols: ["transparent", "red'", "green", "blue", "yellow"]}
+    <br> Value: <span></span>
+    <input type="text" id="col7" class="form-control my-cp" value="#ff0000">
+  </div>
+  <div>
+    {palette: "limited", allowAlpha: false, returnName: true, <br>
+    allowedCols: ["transparent", "red", "green", "blue", "yellow","#12323480", "rgba(132, 167, 23, .7)"]}
+    <br> Value: <span></span>
+    <input type="text" id="col8" class="form-control my-cp" value="#abc123">
+  </div>
+  <div>
+    {allowAlpha: true, showColour: "background", allowTransparent: true, returnName: true}
+    <br> Value: <span></span>
+    <input type="text" id="col9" class="form-control my-cp">
   </div>
 
 
@@ -50,23 +80,59 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  
+
   <script src="js/colourpicker.js"></script>
   <script>
     $("#col1").colourpicker();
-	  $("#col2").colourpicker({showColour : "background"});
-	  $("#col3").colourpicker({allowTransparent : true, returnName : true});
-	  $("#col4").colourpicker({palette : "limited"});
-    
+    $("#col2").colourpicker({
+      showColour: "background"
+    });
+    $("#col3").colourpicker({
+      allowTransparent: true,
+      returnName: true
+    });
+    $("#col4").colourpicker({
+      palette: "limited",
+      returnName: true
+    });
+    $("#col5").colourpicker({
+      allowAlpha: true,
+      showColour: "text"
+    });
+    $("#col6").colourpicker({
+      allowAlpha: true,
+      showColour: "both"
+    });
+    $('#col7').colourpicker({
+      palette: "limited",
+      allowAlpha: true,
+      returnName: true,
+      allowedCols: "transparent red green blue yellow"
+    });
+    $('#col8').colourpicker({
+      palette: "limited",
+      allowAlpha: false,
+      returnName: true,
+      allowedCols: ["transparent", "red", "green", "blue", "yellow", "#12323480", "rgba(132, 167, 23, .7)"]
+    });
+    $("#col9").colourpicker({
+      allowAlpha: true,
+      showColour: "background",
+      allowTransparent: true,
+      returnName: true
+    });
+
+
     $.each($(".my-cp"), function(i, el) {
       var value = $(el).colourpicker('value');
-      $($(el).parent().parent().find("span")[0]).text(value);
+      $($(el).closest('.colourpicker').parent().find("span")[0]).text(value);
     });
-    
+
     $(document).on("change", ".my-cp", function(e) {
       var value = $(e.target).colourpicker('value');
-      $($(e.target).parent().parent().find("span")[0]).text(value);
+      $($(e.target).closest('.colourpicker').parent().find("span")[0]).text(value);
     });
   </script>
-  </body>
+</body>
+
 </html>
