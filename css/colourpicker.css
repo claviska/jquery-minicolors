@@ -36,8 +36,8 @@
 
 .colourpicker-panel {
   position: absolute;
-  background: white;
-  border: solid 1px #CCC;
+  background: #fff;
+  border: 1px solid #CCC;
   box-shadow: 0 0 20px rgba(0, 0, 0, .2);
   z-index: 99999;
   -moz-box-sizing: content-box;
@@ -76,13 +76,13 @@
   margin-top: 4px;
   float: left;
   margin-left: 4px;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #DDD;
   cursor: pointer;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAElBMVEXs7Ozt7e3u7u79/f3+/v7////P4ouPAAAAI0lEQVQIW2NkAAJGZkYQSZAJIcAkC5D4//8/iMkKYv4ligkAoE4PJIKs1ewAAAAASUVORK5CYII=);
 }
 
 .colourpicker .cp-list-col-outer:hover {
-  border-color: #444444;
+  border-color: #444;
 }
 
 .colourpicker .cp-list-col.selected-col.light {
@@ -133,7 +133,7 @@
   width: 8px;
   height: 8px;
   border-radius: 8px;
-  border: solid 1px white;
+  border: 1px solid #fff;
   background-color: #111;
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -156,8 +156,8 @@
   left: 0;
   width: 18px;
   height: 2px;
-  background: white;
-  border: solid 1px black;
+  background: #fff;
+  border: 1px solid #000;
   margin-top: -2px;
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -205,6 +205,6 @@
   }
 
   .input-group {
-    border: 1px #ccc solid;
+    border: 1px solid #ccc;
   }
 }
