@@ -58,9 +58,9 @@
 }
 
 .palette-limited .colourpicker-panel {
-  width: 196px;
+  width: 184px;
   height: auto;
-  padding: 0px 0px 4px 0px;
+  padding: 1px 4px 4px 1px;
   background-color: #F8F8F8;
 }
 
@@ -73,9 +73,9 @@
 .colourpicker .cp-list-col-outer {
   width: 20px;
   height: 20px;
-  margin-top: 4px;
+  margin-top: 3px;
   float: left;
-  margin-left: 4px;
+  margin-left: 3px;
   border: 1px solid #DDD;
   cursor: pointer;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAElBMVEXs7Ozt7e3u7u79/f3+/v7////P4ouPAAAAI0lEQVQIW2NkAAJGZkYQSZAJIcAkC5D4//8/iMkKYv4ligkAoE4PJIKs1ewAAAAASUVORK5CYII=);

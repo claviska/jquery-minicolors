@@ -249,7 +249,6 @@
       // If only background colour is shown, don't let the user select the text
       if ( settings.showColour == "background" ) {
         input.attr('readonly', 'readonly');
-        input.on('focus',function() {this.blur();});
       } else {
         input.removeAttr('readonly');
       }
