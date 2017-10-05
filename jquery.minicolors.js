@@ -110,7 +110,7 @@
         } else {
           // Setter
           $(this).each(function() {
-            if(typeof(data) === 'object' && data !== 'null') {
+            if(typeof(data) === 'object' && data !== null) {
               if(data.opacity) {
                 $(this).attr('data-opacity', keepWithin(data.opacity, 0, 1));
               }
