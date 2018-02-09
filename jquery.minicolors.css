@@ -78,6 +78,7 @@
   left: 1px;
   width: 150px;
   height: 150px;
+  margin-bottom: 2px;
   background-position: -120px 0;
   cursor: crosshair;
 }
