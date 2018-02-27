@@ -10,7 +10,7 @@
     "colorpicker"
   ],
   "license": "MIT",
-  "dependencies": {
+  "peerDependencies": {
     "jquery": ">= 1.7.x"
   },
   "devDependencies": {
