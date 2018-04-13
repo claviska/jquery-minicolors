@@ -111,7 +111,7 @@
           // Setter
           $(this).each(function() {
             if(typeof(data) === 'object' && data !== null) {
-              if(data.opacity) {
+              if(data.opacity !== undefined) {
                 $(this).attr('data-opacity', keepWithin(data.opacity, 0, 1));
               }
               if(data.color) {
