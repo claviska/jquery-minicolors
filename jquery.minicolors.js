@@ -142,6 +142,7 @@
   function init(input, settings) {
     var minicolors = $('<div class="minicolors" />');
     var defaults = $.minicolors.defaults;
+    var name;
     var size;
     var swatches;
     var swatch;
@@ -214,9 +215,16 @@
       swatches = $('<ul class="minicolors-swatches"></ul>')
       .appendTo(panel);
       for(i = 0; i < settings.swatches.length; ++i) {
-        swatch = settings.swatches[i];
+        // allow for custom objects as swatches
+        if($.type(settings.swatches[i]) === "object") {
+          name = settings.swatches[i].name;
+          swatch = settings.swatches[i].color;
+        } else {
+          name = '';
+          swatch = settings.swatches[i];
+        }
         swatch = isRgb(swatch) ? parseRgb(swatch, true) : hex2rgb(parseHex(swatch, true));
-        $('<li class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color"></span></li>')
+        $('<li class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color" title="' + name + '"></span></li>')
         .appendTo(swatches)
         .data('swatch-color', settings.swatches[i])
         .find('.minicolors-swatch-color')
