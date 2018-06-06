@@ -35,7 +35,7 @@
       keywords: '',
       letterCase: 'lowercase',
       opacity: false,
-      position: 'bottom left',
+      position: 'bottom',
       show: null,
       showSpeed: 100,
       theme: 'default',
