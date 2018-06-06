@@ -580,8 +580,13 @@ $.minicolors.defaults = $.extend($.minicolors.defaults, {
         <dt>swatches</dt>
         <dd>
           <p>
-            An array containing some colors, in either rgb(a) or hex format, that will
-            show up under the main color grid.
+            An array containing one or more strings of hex colors that will show up under the main
+            color grid.
+          </p>
+          <p>
+            Alternatively, this can be an array of <code>{ name, color }</code> objects where
+            <code>name</code> is a human-readable color name and <code>color</code> is a hex code.
+            In this case, the name will be used to set the swatch's <code>title</code> attribute.
           </p>
         </dd>
       </dl>
