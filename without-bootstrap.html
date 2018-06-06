@@ -54,7 +54,7 @@
           inline: $(this).attr('data-inline') === 'true',
           letterCase: $(this).attr('data-letterCase') || 'lowercase',
           opacity: $(this).attr('data-opacity'),
-          position: $(this).attr('data-position') || 'bottom left',
+          position: $(this).attr('data-position') || 'bottom',
           swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
           change: function(hex, opacity) {
             var log;
@@ -78,7 +78,9 @@
   <p>
     <a href="index.html">&laquo; Back to the Bootstrap demo</a>
   </p>
-
+  <p>
+    <a onclick="$(body).attr('dir')=='rtl'?$(body).removeAttr('dir'):$(body).attr('dir', 'rtl')">Toggle LTR/RTL</a>
+  </p>
   <!-- Control Types -->
   <h3>Control Types</h3>
   <div class="form-group">

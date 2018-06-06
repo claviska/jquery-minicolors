@@ -33,11 +33,17 @@
       border: none;
       background: rgba(128, 128, 128, .1);
     }
+    [dir=rtl] code {
+      direction: ltr;
+    }
     pre {
       background: #f8f8f8;
       border: none;
       color: #333;
       padding: 20px;
+    }
+    [dir=rtl] pre {
+      direction: ltr;
     }
     h2 {
       margin-top: 50px;
@@ -77,7 +83,7 @@
           inline: $(this).attr('data-inline') === 'true',
           letterCase: $(this).attr('data-letterCase') || 'lowercase',
           opacity: $(this).attr('data-opacity'),
-          position: $(this).attr('data-position') || 'bottom left',
+          position: $(this).attr('data-position') || 'bottom',
           swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
           change: function(value, opacity) {
             if( !value ) return;
@@ -144,6 +150,9 @@
       </p>
       <p>
         <a href="without-bootstrap.html" class="btn btn-primary">View Demo Without Bootstrap</a>
+      </p>
+      <p>
+        <a class="btn btn-primary" onclick="$(body).attr('dir')=='rtl'?$(body).removeAttr('dir'):$(body).attr('dir', 'rtl')">Toggle LTR/RTL</a>
       </p>
 
       <!-- Control types -->
