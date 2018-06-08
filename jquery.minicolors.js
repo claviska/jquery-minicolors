@@ -1088,7 +1088,7 @@
     .on('keydown.minicolors', '.minicolors-input', function(event) {
       var input = $(this);
       if(!input.data('minicolors-initialized')) return;
-      switch(event.keyCode) {
+      switch(event.which) {
       case 9: // tab
         hide();
         break;
