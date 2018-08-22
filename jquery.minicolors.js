@@ -276,11 +276,16 @@
     hide();
 
     minicolors.addClass('minicolors-focus');
-    panel
-    .stop(true, true)
-    .fadeIn(settings.showSpeed, function() {
-      if(settings.show) settings.show.call(input.get(0));
-    });
+    if (panel.animate) {
+      panel
+        .stop(true, true)
+        .fadeIn(settings.showSpeed, function () {
+          if (settings.show) settings.show.call(input.get(0));
+        });
+    } else {
+      panel.css('opacity', 1);
+      if (settings.show) settings.show.call(input.get(0));
+    }
   }
 
   // Hides all dropdown panels
@@ -291,11 +296,16 @@
       var panel = minicolors.find('.minicolors-panel');
       var settings = input.data('minicolors-settings');
 
-      panel.fadeOut(settings.hideSpeed, function() {
-        if(settings.hide) settings.hide.call(input.get(0));
+      if (panel.animate) {
+        panel.fadeOut(settings.hideSpeed, function () {
+          if (settings.hide) settings.hide.call(input.get(0));
+          minicolors.removeClass('minicolors-focus');
+        });
+      } else {
+        panel.css('opacity', 0);
+        if (settings.hide) settings.hide.call(input.get(0));
         minicolors.removeClass('minicolors-focus');
-      });
-
+      }
     });
   }
 
@@ -309,7 +319,7 @@
     var x = Math.round(event.pageX - offsetX);
     var y = Math.round(event.pageY - offsetY);
     var duration = animate ? settings.animationSpeed : 0;
-    var wx, wy, r, phi;
+    var wx, wy, r, phi, styles;
 
     // Touch support
     if(event.originalEvent.changedTouches) {
@@ -340,23 +350,22 @@
     }
 
     // Move the picker
+    styles = {
+      top: y + 'px'
+    };
     if(target.is('.minicolors-grid')) {
+      styles.left = x + 'px'
+    }
+    if (picker.animate) {
       picker
       .stop(true)
-      .animate({
-        top: y + 'px',
-        left: x + 'px'
-      }, duration, settings.animationEasing, function() {
+      .animate(styles, duration, settings.animationEasing, function() {
         updateFromControl(input, target);
       });
     } else {
       picker
-      .stop(true)
-      .animate({
-        top: y + 'px'
-      }, duration, settings.animationEasing, function() {
-        updateFromControl(input, target);
-      });
+      .css(styles);
+      updateFromControl(input, target);
     }
   }
 
