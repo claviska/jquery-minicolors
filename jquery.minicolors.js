@@ -146,6 +146,7 @@
     var size;
     var swatches;
     var swatch;
+    var swatchString;
     var panel;
     var i;
 
@@ -223,10 +224,11 @@
           name = '';
           swatch = settings.swatches[i];
         }
+        swatchString = swatch;
         swatch = isRgb(swatch) ? parseRgb(swatch, true) : hex2rgb(parseHex(swatch, true));
         $('<li class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color" title="' + name + '"></span></li>')
           .appendTo(swatches)
-          .data('swatch-color', settings.swatches[i])
+          .data('swatch-color', swatchString)
           .find('.minicolors-swatch-color')
           .css({
             backgroundColor: rgb2hex(swatch),
