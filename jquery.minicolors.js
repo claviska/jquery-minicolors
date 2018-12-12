@@ -285,7 +285,7 @@
           if (settings.show) settings.show.call(input.get(0));
         });
     } else {
-      panel.css('opacity', 1);
+      panel.show();
       if (settings.show) settings.show.call(input.get(0));
     }
   }
@@ -304,7 +304,7 @@
           minicolors.removeClass('minicolors-focus');
         });
       } else {
-        panel.css('opacity', 0);
+        panel.hide();
         if (settings.hide) settings.hide.call(input.get(0));
         minicolors.removeClass('minicolors-focus');
       }
