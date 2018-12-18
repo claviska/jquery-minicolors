@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/claviska/jquery-minicolors/issues"
   },
-  "scripts": {}
+  "scripts": {
+    "build": "gulp",
+    "watch": "gulp watch"
+  }
 }
