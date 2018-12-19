@@ -31,4 +31,4 @@ gulp.task('watch', 'Watch for changes!', () => {
 });
 
 // Default
-gulp.task('default', 'The default task.', ['watch']);
+gulp.task('default', 'The default task.', ['minify']);
