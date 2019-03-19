@@ -1,5 +1,5 @@
 # jQuery Colour Picker: A tiny colour picker with useful extra features
-
+test
 > *Copyright 2017 [Dean Attali](http://deanattali.com), [David Griswold](http://davidgriswoldhh.mtbos.org/) and [Cory LaViska](http://www.abeautifulsite.net/). Licensed under the MIT license.*
 
 v1.4
