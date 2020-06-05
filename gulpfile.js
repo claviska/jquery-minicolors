@@ -1,21 +1,23 @@
 /* eslint-env node, es6 */
 'use strict';
 
-const gulp = require('gulp-help')(require('gulp'));
+const gulp = require('gulp');
 const del = require('del');
 const rename = require('gulp-rename');
 const uglify = require('gulp-uglify');
 
 // Clean
-gulp.task('clean', 'Clean up!', () => {
+gulp.task('clean', gulp.series(() => {
   return del('jquery.minicolors.min.js');
-});
+}));
 
 // Minify
-gulp.task('minify', 'Minify it!', ['clean'], () => {
+gulp.task('minify', gulp.series('clean', () => {
   return gulp.src('jquery.minicolors.js')
     .pipe(uglify({
-      preserveComments: 'license'
+      output: {
+        comments: require('uglify-save-license')
+      }
     }))
     .on('error', (err) => {
       console.error(err);
@@ -23,12 +25,12 @@ gulp.task('minify', 'Minify it!', ['clean'], () => {
     })
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(__dirname));
-});
+}));
 
 // Watch for changes
-gulp.task('watch', 'Watch for changes!', () => {
+gulp.task('watch', gulp.series(() => {
   gulp.watch('jquery.minicolors.js', ['minify']);
-});
+}));
 
 // Default
-gulp.task('default', 'The default task.', ['minify']);
+gulp.task('default', gulp.series('minify'));
