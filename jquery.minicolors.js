@@ -125,13 +125,13 @@
         }
         return $(this);
 
-        // Initializes the control
-        default:
-          if(method !== 'create') data = method;
-          $(this).each(function() {
-            init($(this), data);
-          });
-          return $(this);
+      // Initializes the control
+      default:
+        if(method !== 'create') data = method;
+        $(this).each(function() {
+          init($(this), data);
+        });
+        return $(this);
 
       }
 
