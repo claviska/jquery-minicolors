@@ -202,7 +202,7 @@
       input.after('<span class="minicolors-swatch minicolors-sprite minicolors-input-swatch"><span class="minicolors-swatch-color"></span></span>');
       input.next('.minicolors-input-swatch').on('click', function(event) {
         event.preventDefault();
-        input.focus();
+        input.trigger('focus');
       });
     }
 
@@ -232,7 +232,7 @@
           .find('.minicolors-swatch-color')
           .css({
             backgroundColor: rgb2hex(swatch),
-            opacity: swatch.a
+            opacity: String(swatch.a)
           });
         settings.swatches[i] = swatch;
       }
@@ -501,7 +501,7 @@
       // Set swatch color
       swatch.find('span').css({
         backgroundColor: hex,
-        opacity: opacity
+        opacity: String(opacity)
       });
 
       // Handle change event
@@ -560,7 +560,7 @@
     // Set swatch color
     swatch.find('span').css({
       backgroundColor: value,
-      opacity: opacity
+      opacity: String(opacity)
     });
 
     // Handle change event
@@ -624,7 +624,7 @@
       opacity = input.attr('data-opacity') === '' ? 1 : keepWithin(parseFloat(input.attr('data-opacity')).toFixed(2), 0, 1);
       if(isNaN(opacity)) opacity = 1;
       input.attr('data-opacity', opacity);
-      swatch.find('span').css('opacity', opacity);
+      swatch.find('span').css('opacity', String(opacity));
 
       // Set opacity picker position
       y = keepWithin(opacitySlider.height() - (opacitySlider.height() * opacity), 0, opacitySlider.height());
@@ -633,7 +633,7 @@
 
     // Set opacity to zero if input value is transparent
     if(input.val().toLowerCase() === 'transparent') {
-      swatch.find('span').css('opacity', 0);
+      swatch.find('span').css('opacity', String(0));
     }
 
     // Update swatch
@@ -656,7 +656,7 @@
         y = 150 - (hsb.b / (100 / grid.height()));
         if(hex === '') y = 0;
         sliderPicker.css('top', y + 'px');
-
+        
         // Update panel color
         slider.css('backgroundColor', hsb2hex({ h: hsb.h, s: hsb.s, b: 100 }));
         break;
@@ -1083,7 +1083,7 @@
       input
         .closest('.minicolors')
         .find('.minicolors-input-swatch > span')
-        .css('opacity', swatchOpacity);
+        .css('opacity', String(swatchOpacity));
 
       // Set input value
       input.val(value);
