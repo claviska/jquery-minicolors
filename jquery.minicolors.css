@@ -193,6 +193,28 @@
   box-sizing: content-box;
 }
 
+/* opacity tooltip */
+.minicolors-opacity-slider .minicolors-picker:hover:before{
+  content: attr(data-opacity);
+  display: block;
+  background: black;
+  color: white;
+  position: absolute;
+  left: -22px;
+  font-size: 9px;
+  top: -6px;
+  width: 20px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 2px;
+}
+
+[dir=rtl] .minicolors-opacity-slider .minicolors-picker:hover:before{
+  right: -22px;
+  left: auto !important;
+}
+
 /* Swatches */
 .minicolors-swatches,
 .minicolors-swatches li {

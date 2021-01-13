@@ -518,8 +518,12 @@
     var minicolors = input.parent();
     var settings = input.data('minicolors-settings');
     var swatch = minicolors.find('.minicolors-input-swatch');
+    var opacityPicker = minicolors.find('.minicolors-opacity-slider [class$=-picker]');
 
-    if(settings.opacity) input.attr('data-opacity', opacity);
+    if(settings.opacity) {
+        input.attr('data-opacity', opacity);
+        opacityPicker.attr('data-opacity', opacity);
+    }
 
     // Set color string
     if(settings.format === 'rgb') {
@@ -629,6 +633,9 @@
       // Set opacity picker position
       y = keepWithin(opacitySlider.height() - (opacitySlider.height() * opacity), 0, opacitySlider.height());
       opacityPicker.css('top', y + 'px');
+
+      // Set opacity picker tooltip value
+      opacityPicker.attr('data-opacity', opacity);
     }
 
     // Set opacity to zero if input value is transparent
