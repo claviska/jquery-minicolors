@@ -217,7 +217,7 @@
         .appendTo(panel);
       for(i = 0; i < settings.swatches.length; ++i) {
         // allow for custom objects as swatches
-        if($.type(settings.swatches[i]) === 'object') {
+        if(typeof settings.swatches[i] === 'object') {
           name = settings.swatches[i].name;
           swatch = settings.swatches[i].color;
         } else {
@@ -605,7 +605,7 @@
 
     // Get array of lowercase keywords
     keywords = !settings.keywords ? [] : $.map(settings.keywords.split(','), function(a) {
-      return $.trim(a.toLowerCase());
+      return a.toLowerCase().trim();
     });
 
     // Set color string
@@ -1050,7 +1050,7 @@
 
       // Get array of lowercase keywords
       keywords = !settings.keywords ? [] : $.map(settings.keywords.split(','), function(a) {
-        return $.trim(a.toLowerCase());
+        return a.toLowerCase().trim();
       });
 
       // Set color string
