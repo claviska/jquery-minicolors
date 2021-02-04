@@ -231,7 +231,7 @@
           .data('swatch-color', swatchString)
           .find('.minicolors-swatch-color')
           .css({
-            backgroundColor: rgb2hex(swatch),
+            backgroundColor: ((swatchString !== 'transparent') ? rgb2hex(swatch) : 'transparent'),
             opacity: String(swatch.a)
           });
         settings.swatches[i] = swatch;
