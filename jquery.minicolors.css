@@ -10,11 +10,21 @@
   position: absolute;
   vertical-align: middle;
   background-position: -80px 0;
-  border: solid 1px #ccc;
   cursor: text;
   padding: 0;
   margin: 0;
   display: inline-block;
+}
+
+.minicolors-swatch::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15);
+  border-radius: 2px;
 }
 
 .minicolors-swatch-color {
@@ -40,7 +50,7 @@
   position: absolute;
   width: 173px;
   background: white;
-  border: solid 1px #CCC;
+  border-radius: 2px;
   box-shadow: 0 0 20px rgba(0, 0, 0, .2);
   z-index: 99999;
   box-sizing: content-box;
@@ -163,7 +173,7 @@
   left: 70px;
   width: 12px;
   height: 12px;
-  border: solid 1px black;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
   border-radius: 10px;
   margin-top: -6px;
   margin-left: -6px;
@@ -186,10 +196,12 @@
   top: 0;
   left: 0;
   width: 18px;
-  height: 2px;
+  height: 3px;
   background: white;
-  border: solid 1px black;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+  border-radius: 2px;
   margin-top: -2px;
+  margin-left: 1px;
   box-sizing: content-box;
 }
 
@@ -210,11 +222,11 @@
   position: relative;
   float: left; /* LTR */
   cursor: pointer;
-  margin:0 4px 0 0; /* LTR */
+  margin: 0 4px 0 0; /* LTR */
 }
 [dir=rtl] .minicolors-swatches .minicolors-swatch {
   float: right;
-  margin:0 0 0 4px;
+  margin: 0 0 0 4px;
 }
 
 .minicolors-with-opacity .minicolors-swatches .minicolors-swatch {
@@ -310,7 +322,7 @@
   left: 3px; /* LTR */
   width: 28px;
   height: 28px;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 [dir=rtl] .minicolors-theme-bootstrap .minicolors-swatch {
   right: 3px;
