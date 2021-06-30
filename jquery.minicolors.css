@@ -55,6 +55,7 @@
   z-index: 99999;
   box-sizing: content-box;
   display: none;
+  touch-action: none;
 }
 
 .minicolors-panel.minicolors-visible {
