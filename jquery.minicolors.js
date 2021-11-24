@@ -226,7 +226,8 @@
         }
         swatchString = swatch;
         swatch = isRgb(swatch) ? parseRgb(swatch, true) : hex2rgb(parseHex(swatch, true));
-        $('<li class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color" title="' + name + '"></span></li>')
+        $('<li class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color"></span></li>')
+          .attr("title", name)
           .appendTo(swatches)
           .data('swatch-color', swatchString)
           .find('.minicolors-swatch-color')
