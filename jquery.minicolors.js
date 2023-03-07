@@ -998,7 +998,7 @@
   $([document])
     // Hide on clicks outside of the control
     .on('mousedown.minicolors touchstart.minicolors', function(event) {
-      if(!$(event.target).parents().add(event.target).hasClass('minicolors')) {
+      if(!$(event.target).parents().addBack().hasClass('minicolors')) {
         hide();
       }
     })
